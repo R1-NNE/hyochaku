@@ -1,0 +1,692 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - Characters</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("418alt3.png");
+      background-position: center top, center top;
+      background-size: 100vw auto, 100vw auto;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Character Page Styles */
+
+    .character-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+
+    .character-name {
+      font-family: var(--font-main);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+      margin: clamp(18px, 3vw, 28px) 0 0 clamp(6px, 1vw, 12px);
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .character-description-label {
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.8);
+      margin: clamp(14px, 2vw, 20px) 0 0 clamp(6px, 1vw, 12px);
+    }
+
+    .character-content {
+      display: grid;
+      grid-template-columns: 0.75fr 1.25fr;
+      gap: clamp(24px, 4vw, 44px);
+      align-items: stretch;
+      margin-bottom: clamp(32px, 6vw, 52px);
+      min-height: clamp(350px, 60vw, 600px);
+    }
+
+    .character-description-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .character-description {
+      width: 100%;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      color: rgba(62, 76, 80, 0.95);
+      font-family: var(--font-ja);
+      line-height: 1.6;
+      margin: clamp(14px, 2vw, 20px) 0 0 clamp(6px, 1vw, 12px);
+      padding: 0;
+    }
+
+    .character-description-image {
+      width: 100%;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 150ms ease;
+      margin-top: clamp(16px, 3vw, 24px);
+      min-height: clamp(120px, 25vw, 240px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .character-description-image:hover {
+      border-color: var(--accent);
+    }
+
+    .character-description-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .character-image-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 150ms ease;
+    }
+
+    .character-image-area:hover {
+      border-color: var(--accent);
+    }
+
+    .character-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    /* Gallery Section */
+
+    .gallery-section {
+      margin-top: clamp(36px, 6vw, 56px);
+    }
+
+    .gallery-title {
+      font-family: var(--font-main);
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--ink);
+      margin: 0 0 clamp(16px, 3vw, 24px) clamp(6px, 1vw, 12px);
+      font-weight: 400;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(12px, 2.5vw, 20px);
+      width: 100%;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 150ms ease;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--accent);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(62, 76, 80, 0.4);
+      font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+      text-align: center;
+      padding: 8px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn 200ms ease;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    .modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 8px;
+      overflow: auto;
+      animation: slideIn 200ms ease;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    .modal-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 150ms ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-width: 900px) {
+      .character-content {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section character-header" aria-labelledby="character-title">
+      <h1 id="character-title" class="ribbon small">character</h1>
+    </section>
+<p>作業量過多のため参考画像には一部AIが含まれます。時間できたら手書きに差し替える予定</p>
+    <section class="section" aria-labelledby="character-name-title">
+      <h2 class="character-name" id="character-name-title">Stella.Ria</h2>
+      <p class="character-description-label">Age:23</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">研究室オーナー。<br>天真爛漫で常にぽやぽやしており、理論より感覚派。<br>優しそうだが意外とガサツだったり天然毒舌だったりもする。Evaとは大学からの友達。<br>
+         likes:おやつ、料理、雑談、研究室爆破<br>
+         dislikes:集中、繊細な行動、孤独
+         </p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Stella補足画像')">
+            <img src="Stella2.png" alt="Stella補足画像">
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Stella.png" alt="Stella.Ria">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title">
+      <h3 id="gallery-title" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
+          <img src="Stella3.png" alt="画像 1">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
+          <img src="Stella4.png" alt="画像 2">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
+          <img src="Stella5.png" alt="画像 3">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
+          <img src="Stella6.png" alt="画像 4">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
+          <img src="Stella7.png" alt="画像 5">
+        </div>
+      </div>
+    </section>
+
+    <!-- Character Template - Copy 2 -->
+    <section class="section" aria-labelledby="character-name-title-2">
+      <h2 class="character-name" id="character-name-title-2">Eva.Nescentia</h2>
+      <p class="character-description-label">Age:23S</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description"> 元医者。免職済。<br>普段は全くやる気が無く、規範意識も薄くドライだが追い込まれるとようやくやる気を出すタイプ。<br> 頭はQuanの次くらいに良い。<br>
+         likes:サボり、昼寝、高級寿司、医学、Quan<br>
+         dislikes:病院組織、生活、医者扱い、ネギ</p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Eva補足画像')">
+            <img src="Eva2.png" alt="Eva補足画像">
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Eva.png" alt="Eva.Nescentia">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title-2">
+      <h3 id="gallery-title-2" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
+          <img src="Eva3.png" alt="Eva画像 1">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
+          <img src="Eva4.png" alt="Eva画像 2">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
+          <img src="Eva5.png" alt="Eva画像 3">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
+          <img src="Eva6.png" alt="Eva画像 4">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
+          <img src="Eva7.png" alt="Eva画像 5">
+        </div>
+      </div>
+    </section>
+
+    <!-- Character Template - Copy 3 -->
+    <section class="section" aria-labelledby="character-name-title-3">
+      <h2 class="character-name" id="character-name-title-3">Veritas.Lys</h2>
+      <p class="character-description-label">Age:21</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">研究室唯一のしっかり者。<br>正義感・規範意識が強いがよくイジられてプンスコしてる。<br>密かに可愛いものが好き。<br>
+         likes:整理整頓、大声、幼児向けキャラクター<br>
+         dislikes:無秩序、高度推論、ポジティブ思考</p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Veris補足画像')">
+            <img src="Veris2.png" alt="Veris補足画像">
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Veris.png" alt="Veritas.Lys">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title-3">
+      <h3 id="gallery-title-3" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
+          <img src="Veris3.png" alt="Veris画像 1">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
+          <img src="Veris4.png" alt="Veris画像 2">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
+          <img src="Veris5.png" alt="Veris画像 3">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
+          <img src="Veris6.png" alt="Veris画像 4">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
+          <img src="Veris7.png" alt="Veris画像 5">
+        </div>
+      </div>
+    </section>
+
+    <!-- Character Template - Copy 4 -->
+    <section class="section" aria-labelledby="character-name-title-4">
+      <h2 class="character-name" id="character-name-title-4">Sol.Tlake</h2>
+      <p class="character-description-label">Age:21</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">お調子者であまり後先考えずによくふざける。頭はあまり良くない。<br>盲目だが非常に直感力・観察力に長けており、物事の核心を刺すことも。<br>
+         likes:ゲーム、悪ノリ、未開拓分野<br>
+         dislikes:拘束</p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Sol補足画像')">
+            <img src="Sol2.png" alt="Sol補足画像">
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Sol.png" alt="Sol.Tlake">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title-4">
+      <h3 id="gallery-title-4" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
+          <img src="Sol3.png" alt="Sol画像 1">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
+          <img src="Sol4.png" alt="Sol画像 2">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
+          <img src="Sol5.png" alt="Sol画像 3">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
+          <img src="Sol6.png" alt="Sol画像 4">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
+          <img src="Sol7.png" alt="Sol画像 5">
+        </div>
+      </div>
+    </section>
+
+    <!-- Character Template - Copy 5 -->
+    <section class="section" aria-labelledby="character-name-title-5">
+      <h2 class="character-name" id="character-name-title-5">Quan.Taiza</h2>
+      <p class="character-description-label">Age:23</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">超高IQだが感情が非常に希薄で他者への共感能力が皆無、物事を事実だけで判断して判断してオブラート無しに述べがち。<br>Evaとは古い付き合いで、悪態をつきながらも奥底では深い信頼関係がある。<br>
+         likes:推論全般、静寂、読書、Eva<br>
+         dislikes:騒音、運動、ナス、会話</p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Quan補足画像')">
+            <img src="Quan2.png" alt="Quan補足画像">
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Quan.png" alt="Quan.Taiza">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title-5">
+      <h3 id="gallery-title-5" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
+          <img src="Quan3.png" alt="Quan画像 1">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
+          <img src="Quan4.png" alt="Quan画像 2">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
+          <img src="Quan5.png" alt="Quan画像 3">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
+          <img src="Quan6.png" alt="Quan画像 4">
+        </div>
+        <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
+          <img src="Quan7.png" alt="Quan画像 5">
+        </div>
+      </div>
+    </section>
+ <!--
+    <section class="section sub-character-header" aria-labelledby="sub-character-title">
+      <h2 id="sub-character-title" class="ribbon small">sub characters</h2>
+    </section>
+
+   
+    <section class="section" aria-labelledby="character-name-title-6">
+      <h2 class="character-name" id="character-name-title-6">キャラクター6</h2>
+      <p class="character-description-label">(description)</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">このキャラクターの説明文をここに入れてください。</p>
+          <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'キャラクター6補足画像')">
+            <div class="gallery-placeholder">補足画像</div>
+          </div>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="" alt="キャラクター6">
+        </div>
+      </div>
+    </section>
+
+    <section class="section gallery-section" aria-labelledby="gallery-title-6">
+      <h3 id="gallery-title-6" class="gallery-title">関連画像</h3>
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openModal('./stub-image-1.jpg', '画像 1')">
+          <div class="gallery-placeholder">画像 1</div>
+        </div>
+        <div class="gallery-item" onclick="openModal('./stub-image-2.jpg', '画像 2')">
+          <div class="gallery-placeholder">画像 2</div>
+        </div>
+        <div class="gallery-item" onclick="openModal('./stub-image-3.jpg', '画像 3')">
+          <div class="gallery-placeholder">画像 3</div>
+        </div>
+        <div class="gallery-item" onclick="openModal('./stub-image-4.jpg', '画像 4')">
+          <div class="gallery-placeholder">画像 4</div>
+        </div>
+        <div class="gallery-item" onclick="openModal('./stub-image-5.jpg', '画像 5')">
+          <div class="gallery-placeholder">画像 5</div>
+        </div>
+      </div>
+    </section>
+-->
+    <a href="index.html" class="back-link">← 戻る</a>
+  </main>
+
+  <!-- Modal -->
+  <div id="imageModal" class="modal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <img id="modalImage" class="modal-image" src="" alt="">
+    </div>
+  </div>
+
+  <script>
+    function openModal(src, alt) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      
+      // 実画像がない場合はスキップ
+      if (src && src.includes('stub-image')) {
+        return;
+      }
+      
+      modalImage.src = src;
+      modalImage.alt = alt;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(event) {
+      if (event.target.id === 'imageModal') {
+        closeModal();
+      }
+    }
+
+    // ESC キーでモーダルを閉じる
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>
