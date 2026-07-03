@@ -245,6 +245,8 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+      transform: translateZ(0);
+      background-color: rgba(255,255,255,0.5);
     }
 
     .gallery-placeholder {
@@ -375,12 +377,12 @@
          dislikes:集中、繊細な行動、孤独
          </p>
           <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Stella補足画像')">
-            <img src="Stella2.png" alt="Stella補足画像">
+            <img src="Stella2.png" alt="Stella補足画像" loading="lazy" decoding="async">
           </div>
         </div>
 
         <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
-          <img src="Stella.png" alt="Stella.Ria">
+          <img src="Stella.png" alt="Stella.Ria" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -389,19 +391,19 @@
       <h3 id="gallery-title" class="gallery-title">関連画像</h3>
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
-          <img src="Stella3.png" alt="画像 1">
+          <img src="Stella3.png" alt="画像 1" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
-          <img src="Stella4.png" alt="画像 2">
+          <img src="Stella4.png" alt="画像 2" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
-          <img src="Stella5.png" alt="画像 3">
+          <img src="Stella5.png" alt="画像 3" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
-          <img src="Stella6.png" alt="画像 4">
+          <img src="Stella6.png" alt="画像 4" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
-          <img src="Stella7.png" alt="画像 5">
+          <img src="Stella7.png" alt="画像 5" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -409,7 +411,7 @@
     <!-- Character Template - Copy 2 -->
     <section class="section" aria-labelledby="character-name-title-2">
       <h2 class="character-name" id="character-name-title-2">Eva.Nescentia</h2>
-      <p class="character-description-label">Age:23S</p>
+      <p class="character-description-label">Age:23</p>
 
       <div class="character-content">
         <div class="character-description-area">
@@ -417,12 +419,12 @@
          likes:サボり、昼寝、高級寿司、医学、Quan<br>
          dislikes:病院組織、生活、医者扱い、ネギ</p>
           <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Eva補足画像')">
-            <img src="Eva2.png" alt="Eva補足画像">
+            <img src="Eva2.png" alt="Eva補足画像" loading="lazy" decoding="async">
           </div>
         </div>
 
         <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
-          <img src="Eva.png" alt="Eva.Nescentia">
+          <img src="Eva.png" alt="Eva.Nescentia" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -431,10 +433,10 @@
       <h3 id="gallery-title-2" class="gallery-title">関連画像</h3>
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
-          <img src="Eva3.png" alt="Eva画像 1">
+          <img src="Eva3.png" alt="Eva画像 1" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
-          <img src="Eva4.png" alt="Eva画像 2">
+          <img src="Eva4.png" alt="Eva画像 2" loading="lazy" decoding="async">
         </div><!--
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
           <img src="Eva5.png" alt="Eva画像 3">
@@ -459,12 +461,12 @@
          likes:整理整頓、大声、幼児向けキャラクター<br>
          dislikes:無秩序、高度推論、ポジティブ思考</p>
           <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Veris補足画像')">
-            <img src="Veris2.png" alt="Veris補足画像">
+            <img src="Veris2.png" alt="Veris補足画像" loading="lazy" decoding="async">
           </div>
         </div>
 
         <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
-          <img src="Veris.png" alt="Veritas.Lys">
+          <img src="Veris.png" alt="Veritas.Lys" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -473,19 +475,19 @@
       <h3 id="gallery-title-3" class="gallery-title">関連画像</h3>
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
-          <img src="Veris3.png" alt="Veris画像 1">
+          <img src="Veris3.png" alt="Veris画像 1" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
-          <img src="Veris4.png" alt="Veris画像 2">
+          <img src="Veris4.png" alt="Veris画像 2" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
-          <img src="Veris5.png" alt="Veris画像 3">
+          <img src="Veris5.png" alt="Veris画像 3" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 4')">
-          <img src="Veris6.png" alt="Veris画像 4">
+          <img src="Veris6.png" alt="Veris画像 4" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 5')">
-          <img src="Veris7.png" alt="Veris画像 5">
+          <img src="Veris7.png" alt="Veris画像 5" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -501,12 +503,12 @@
          likes:ゲーム、悪ノリ、未開拓分野<br>
          dislikes:拘束</p>
           <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Sol補足画像')">
-            <img src="Sol2.png" alt="Sol補足画像">
+            <img src="Sol2.png" alt="Sol補足画像" loading="lazy" decoding="async">
           </div>
         </div>
 
         <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
-          <img src="Sol.png" alt="Sol.Tlake">
+          <img src="Sol.png" alt="Sol.Tlake" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -515,10 +517,10 @@
       <h3 id="gallery-title-4" class="gallery-title">関連画像</h3>
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
-          <img src="Sol3.png" alt="Sol画像 1">
+          <img src="Sol3.png" alt="Sol画像 1" loading="lazy" decoding="async">
         </div>
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
-          <img src="Sol4.png" alt="Sol画像 2">
+          <img src="Sol4.png" alt="Sol画像 2" loading="lazy" decoding="async">
         </div><!--
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 3')">
           <img src="Sol5.png" alt="Sol画像 3">
@@ -543,12 +545,12 @@
          likes:推論全般、静寂、読書、Eva<br>
          dislikes:騒音、運動、ナス、会話</p>
           <div class="character-description-image" onclick="openModal(this.querySelector('img')?.src || '', 'Quan補足画像')">
-            <img src="Quan2.png" alt="Quan補足画像">
+            <img src="Quan2.png" alt="Quan補足画像" loading="lazy" decoding="async">
           </div>
         </div>
 
         <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
-          <img src="Quan.png" alt="Quan.Taiza">
+          <img src="Quan.png" alt="Quan.Taiza" loading="lazy" decoding="async">
         </div>
       </div>
     </section>
@@ -557,7 +559,7 @@
       <h3 id="gallery-title-5" class="gallery-title">関連画像</h3>
       <div class="gallery-grid">
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 1')">
-          <img src="Quan3.png" alt="Quan画像 1">
+          <img src="Quan3.png" alt="Quan画像 1" loading="lazy" decoding="async">
         </div><!--
         <div class="gallery-item" onclick="openModal(this.querySelector('img')?.src || '', '画像 2')">
           <img src="Quan4.png" alt="Quan画像 2">
