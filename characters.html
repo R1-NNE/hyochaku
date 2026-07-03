@@ -55,7 +55,7 @@
         linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
         url("418alt3.png");
       background-position: center top, center top;
-      background-size: 100vw auto, 100vw auto;
+      background-size: 100% 100%, 100% 100%;
       background-repeat: no-repeat, no-repeat;
       background-attachment: fixed;
     }
@@ -163,7 +163,6 @@
       border-radius: 6px;
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 150ms ease;
       margin-top: clamp(16px, 3vw, 24px);
       min-height: clamp(120px, 25vw, 240px);
       display: flex;
@@ -192,7 +191,6 @@
       border-radius: 6px;
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 150ms ease;
     }
 
     .character-image-area:hover {
@@ -237,7 +235,6 @@
       justify-content: center;
       overflow: hidden;
       cursor: pointer;
-      transition: border-color 150ms ease;
     }
 
     .gallery-item:hover {
@@ -275,7 +272,6 @@
       font-family: var(--font-main);
       font-size: clamp(0.95rem, 2.2vw, 1.1rem);
       text-decoration: none;
-      transition: background-color 150ms ease, transform 150ms ease;
       cursor: pointer;
     }
 
@@ -296,41 +292,19 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      animation: fadeIn 200ms ease;
     }
 
     .modal.active {
       display: flex;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .modal-content {
+.modal-content {
       position: relative;
       max-width: 90vw;
       max-height: 90vh;
       background: #fff;
       border-radius: 8px;
       overflow: auto;
-      animation: slideIn 200ms ease;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: scale(0.9);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
     }
 
     .modal-image {
@@ -387,7 +361,7 @@
 <body>
   <main class="page">
     <section class="section character-header" aria-labelledby="character-title">
-      <h1 id="character-title" class="ribbon small">character</h1>
+      <h1 id="character-title" class="ribbon small">characters</h1>
     </section>
 <p>作業量過多のため参考画像には一部AIが含まれます。時間できたら手書きに差し替える予定</p>
     <section class="section" aria-labelledby="character-name-title">
