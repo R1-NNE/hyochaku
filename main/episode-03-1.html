@@ -1,0 +1,695 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep3-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep3:"盲目の少女" sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+        
+昼下がりの研究室。乾いた嫌な音が響いた。
+
+ｺﾞｯ
+
+Stella「……あ」
+
+Stellaが凄い顔をしている。同時に机の向こうで資料を読んでいたVerisが顔を上げる。
+
+Veris「ちょっとStellaさん、今の音何ですか」
+
+ソファにだらしなく沈んでいたEvaも、なんとなくイヤな事が起きた感じの顔になり始める。
+
+Eva「あー…今度は何したの」
+
+Stella「えっと……その……」
+
+Veris「Stellaさん」
+
+Stella「ご、ごめん、ちょっとだけ、ほんとにちょっとだけ手が滑って」
+
+言い訳虚しくVerisが立ち上がって近づく。
+床には細かな金属片と、中央からぱっくり割れた円盤状の装置。周囲に散った透明な薄板と、ねじれた細いフレーム。見るからに高そうで、しかも替えが利かなさそうなやつである。
+
+Veris「……ちょっとどころではありませんね」
+
+Stella「うう～……」
+
+Eva「何なのそれ」
+
+Stella「この前やっと手に入れた、偏光位相調整器の試作機……」
+
+Eva「全然分からんが高いと言う事だけは分かる」
+
+Stella「高いやつだよ……！！！」
+
+Veris「あの、どうしてこんなものを床に落としたんですか」
+
+Stella「落としたというか、棚の上に避けようとしたら、横のケースがずれて、その、連鎖的に」
+
+Eva「笑えるくらい美しいな」
+
+Veris「笑い事じゃないですって！」
+
+Stella「うぅ……ごめんなさい……」
+
+Verisはしゃがみ込み、破損した装置を慎重に持ち上げる。暫く観察した後、
+
+Veris「…素人修理は無理ですね」
+
+Stella「だよねぇ……」
+
+Veris「泣き言を言っている場合ではありません。修理先を探しましょう」
+
+Stella「修理ってできるかなあ……」
+
+Veris「やる前から諦めないでください」
+
+Eva「別に諦めてもいいけど、その場合たぶんStellaが三日くらい床這う羽目になる」
+
+Stella「這うよ。しばらく這う」
+
+Veris「這わないでください。見苦しいです」
+
+Stella「今ヴェリちゃんが見苦しいって言った！」
+
+Eva「事実」
+
+Stella「Evaまで！ひどい！」
+
+Verisはため息をつきながら、机の上の布を取って装置を包み始めた。
+
+Veris「ともかく、精密機器を扱える店に持ち込みます。今から出れば、何軒か回れるでしょう」
+
+Eva「行ってらっしゃいー」
+
+Veris「Evaさんも来るんですよ」
+
+Eva「なんで！」
+
+Veris「こういう時だけ急に役立つからです」
+
+Eva「お前、言うようになったな…」
+
+----------------------------------
+
+最初の店では、年配の修理師が装置を見た瞬間に首を振った。
+
+店主「無理だね」
+
+Stella「早いよ！」
+
+店主「早いって言われてもね。これ、部品の規格が特殊すぎる。うちの手持ちじゃ合わせられないよ」
+
+Veris「取り寄せでも難しいですか？」
+
+店主「図面がないと無理。しかも中の軸が逝ってる。下手に触ると完全に死ぬ」
+
+Stella「もう半分死んでるみたいな言い方しないでよぉ……」
+
+Eva「だいたい合ってるな」
+
+店主「悪いこと言わないから、元の製作元に回した方がいい」
+
+Stella「それが一番難しいんです……」
+
+店主「じゃあなおさら厄介だ」
+
+店を出ると、Stellaが歩道の端でうなだれた。
+
+Stella「厄介って言われた……」
+
+Veris「まだ一軒目です」
+
+Eva「先は長いね」
+
+Stella「今の言い方いや」
+
+Eva「事実」
+
+Veris「Evaさん、いちいち刺さないでください」
+
+Eva「刺さる方が悪い」
+
+Stella「Evaたまには優しくしてよぉ……」
+
+----------------------------------
+
+二軒目はもう少し大きい工房だった。
+若い職人が数人で装置を囲み、あれこれ角度を変えて眺めた末、結論はやはり渋かった。
+
+職人A「外装だけなら何とかなるかもしれませんけど」
+
+職人B「中身がなあ……」
+
+職人A「透明板も欠けてますね」
+
+Stella「欠けてる……？」
+
+Veris「見れば分かりますよ」
+
+Stella「見たくない！」
+
+Eva「さっきから現実逃避してんな」
+
+職人B「うちじゃ精度を戻せないですね。形だけ直しても意味ないでしょう？」
+
+Stella「意味ないです……」
+
+職人A「似た部材を作れるところなら、もしかしたら」
+
+Veris「当てはありますか」
+
+職人A「いや、そこまで特殊なのは……研究設備寄りでしょう、これ」
+
+Eva「まあそうか」
+
+職人A「なら専門筋当たるしかないっすね」
+
+外に出る頃には、Stellaの歩幅が露骨にしょんぼりしていた。
+
+Stella「だめだぁ……」
+
+Veris「まだ二軒です」
+
+Eva「二軒でこれなら三軒目で泣き出すんじゃない」
+
+Stella「泣かないよ」
+
+Eva「もう半泣き」
+
+Stella「泣いてないもん」
+
+Veris「子どもみたいな言い争いやめてください」
+
+Eva「だって実際子どもみたいな顔じゃない？コイツ」
+
+Stella「うぅぅ～～！！」
+
+Verisは布包みを持ち直し、少し周囲を見回した。
+
+Veris「あと一軒、精密修理を看板にしているところがあります。そこへ行きましょう」
+
+----------------------------------
+
+三軒目の店は、表通りから少し外れた細い道の先にあった。
+看板は立派だったが、店内は妙に整いすぎていて、並んだ完成品は綺麗でも、机の上に生々しい修理の気配がなかった。
+
+店主は愛想よく装置を受け取り、薄い笑みのまま数分眺めたあと、丁寧な声で言った。
+
+店主「正直に申し上げますと、これは当店の範囲を超えています」
+
+Stella「やっぱり……」
+
+店主「高価なものですね」
+
+Veris「高価というか、値が付けられないというか…」
+
+店主「ですので、余計なことは申しません。触らない方がまだ望みがあります」
+
+Eva「触ったら終わるってことか」
+
+店主「そうですね。中途半端な修理をするくらいなら、最初から専門外だとお伝えするべきです」
+
+Veris「……分かりました。ありがとうございます」
+
+店主「お力になれず」
+
+店を出たところで、Stellaがとうとう足を止めた。
+
+Stella「だめじゃん……」
+
+Veris「……」
+
+Eva「おしめえだな」
+
+Stella「そこはちょっと言い方があるでしょ！」
+
+Eva「“御対応致しかねます”で満足か？」
+
+Stella「もっとやだ！！」
+
+Veris「あなた達…」
+
+三人の間に、短い沈黙が落ちた。
+表通りの喧騒だけが遠く聞こえる。
+
+Stella「もう製作元に泣きつくしかないかなあ……でもあそこ、今つながり薄いし、そもそも試作機だし……」
+
+Veris「他に当てがないか考えます。大学の技術部門、あるいは古い工房筋を辿るか……」
+
+Eva「大学の技術部門は時間かかるし、途中で余計な書類山ほど出るよ」
+
+Stella「それはやだ……」
+
+Veris「ですが、このまま途方に暮れていても仕方ありません」
+
+Evaは壁にもたれたまま、少しだけ空を見た。
+いつも通りやる気のない顔だったが、思考が動いている時の間だった。しばらくたった後、ぽつりと呟く。
+
+Eva「あ」
+
+Stella「Eva？もしかして何か思いついた！？」
+
+Eva「あー…何というかその…」
+
+Veris「あるなら最初から言ってくださいよ！！」
+
+Eva「いや、あるってほどじゃなくて…　昔噂で聞いたのを思い出したんだよ」
+
+Veris「噂？」
+
+Eva「なーんか昔の担当患者からさ、表の店じゃ手に負えないような変な品とか、出所の怪しい精密品とか、そういうのを見られるやつが路地の奥にいるみたいな話を聞かされたことがあったなと」
+
+Stella「……路地の奥？」
+
+Veris「また胡散臭い話ですね…」
+
+Eva「仰る通りだな。でも“鑑定”と“修理”の腕だけは本物だって話は聞いたことある」
+
+Stellaが顔を上げる。
+
+Stella「ほんとに！？」
+
+Eva「まああくまで噂だからな。話聞いたボケた爺さんだったし本当かどうかも分からん」
+
+Veris「その情報、もっと早く出してくださいよ！今日一日振り回されただけじゃないですか」
+
+Eva「分かった分かった今思い出したんだって。私悪くないって」
+
+Stella「…それでその店の場所は？」
+
+Evaは少しだけ肩をすくめた。
+
+Eva「ここの通りから外れた、もっと奥。所謂スラム街的な、まともな人はわざわざ行かない辺りって。どうせもう徒労してるし、その情報にかけてみてもいいけど」
+
+Stella「行く！！！！」
+
+Veris「ちょ、暴れたら更に大変な事になるでしょうが！！」
+
+はしゃぐStellaを尻目にEvaがのそのそと歩き始めた。
+
+----------------------------------
+
+数十分後。
+
+Eva「たしか、こっちだった気がする」
+
+Veris「“気がする”で進んでいるんですか？さっきから」
+
+Eva「今さらそこ気にするか？」
+
+Stella「私は色々気にしてるよ……」
+
+三人は表通りを離れ、細い脇道をいくつも折れていた。
+最初はまだ店の気配もあったが、進むにつれて石畳は荒れ、壁は黒ずみ、道幅は人ひとり分ほどに狭まっていく。
+
+頭上では洗濯紐が何本も交差し、乾ききらない布が風に揺れていた。
+どこかで水の垂れる音。どこかで低い笑い声。足元には割れた瓶の破片と、何に使うのか分からない金具。
+
+Stella「ねえ、ほんとにこっち…？　修理屋を見つけるより絶対この道修理した方がいいよぉ」
+
+Eva「いい事言うじゃねえか」
+
+Stella「よくないよ！」
+
+Veris「Evaさん、少なくとも安全そうな道を選んでくれませんか…　私達も年頃の女の子ですよ」
+
+Eva「安全そうな道に凄腕の裏修理師がいると思う？」
+
+Veris「思いませんけど、だからといってこの道を肯定したくもありません！」
+
+Stella「わ、ちょっと待って、そこ水たまりじゃない？」
+
+Eva「踏んでも死なんだろ」
+
+Stella「そういう問題じゃないよ！」
+
+路地はさらに悪くなっていく。
+壁の塗装は剥がれ、木の扉はどれも傾き、窓らしきものには布や板が雑に打ち付けられている。
+おまけに、よく見ると道の端に古い焼け跡や血痕まである。
+にも拘らずEvaはひょいひょいと歩みを緩めない。
+
+Stella「ここ人住んでるの……？」
+
+Eva「知ったこっちゃない」
+
+Veris「気にしましょうよちょっとは！！」
+
+Stella「なんかこう、街の“見ないことにしてる部分”って感じ……」
+
+Eva「まあそういうのは大都市にはつきものだな」
+
+Veris「Stellaさん、さっきからフラフラしてると装置が…　こんな場所で落としたら本当に終わります」
+
+Stella「分かってる……！　今の私、世界でいちばん慎重な自信あるもん！」
+
+Eva「慎重なら今頃こんなところ通ってねえだろ」
+
+Stella「いまそれ言う！？」
+
+Veris「Evaさん！！！」
+
+Eva「あーあーごめんごめん」
+
+Veris「反省してるんですか！！」
+
+Eva「それどっちに言ってるの？」
+
+Veris「今は貴方に決まってるでしょうが！！！」
+
+Stella「二人とも元気だね……」
+
+さらに数分。
+もはや“道”と呼ぶのも怪しい隙間を抜けたあたりで、Evaが急に足を止めた。
+
+Stella「わっ！！！」
+
+Veris「あっちょっ装置！！！　止まるなら言ってくださいよ」
+
+Eva「……ここか？」
+
+Stella「え？」
+
+Veris「ここ？」
+
+Evaの視線の先には、ほとんど小屋と呼ぶしかない建物があった。
+
+掘っ立て小屋。まさにその一言だった。
+
+屋根は片側が沈み、壁板は継ぎ接ぎで、入口の扉は斜めにずれている。
+窓枠らしき場所には曇ったガラスがはまっていたが、その半分には紙が貼られ、その上からさらに何やら黒い線で模様が描かれていた。
+
+そして何よりひどいのが、外壁一面だった。
+
+色あせた請求書。督促状。訳の分からない走り書き。
+見たことのない記号列。円と三角と線が何重にも重なった、怪しげな術式めいた図。
+赤いインクで訂正された金額。端の焦げた紙片。なぜか釘で打ち付けられた古いスプーン。
+
+Stella「…………」
+
+Veris「…………」
+
+Eva「思い出した…請求書がメチャクチャ貼られてるとも言ってたわ、ここしかないだろう」
+
+Veris「いや、いろいろ駄目でしょうコレは！」
+
+Stella「わ、私も行きたくないかな～って…」
+
+Verisは装置を抱え直しながら、小屋を見上げた。
+表札も看板もない。あるのは、扉の脇に申し訳程度にぶら下がった金属板だけで、そこに掠れた字で
+
+「鑑定・修理」
+
+とだけ書いてあった。Verisが喜びより先に表情を落とす。
+
+Veris「ここであって欲しくなかった…」
+
+Eva「どっちなんだよ」
+
+Veris「そういう問題ではなくて！」
+
+Stella「そもそもここ本当に営業してるの…？」
+
+Eva「してなかったら帰るだけ」
+
+Veris「入って大人しく帰るだけで済む空気ではありませんが……」
+
+小屋の軒先で、風に煽られた紙がばさりと鳴った。
+そのたびに貼られた術式じみた線が揺れて見えて、余計に不穏だった。
+
+その様子を見て改めてVerisは深く、かなり深くため息をついた。
+
+Veris「……正直、入りたくありません」
+
+Stella「私も」
+
+Eva「私は別にいいけど」
+
+Veris「別に、で済ませないでください。
+請求書まみれの壁に意味不明な術式が貼ってある時点で、まともな店ではないです」
+
+Stella「しかもボロボロ……。雨の日とか大丈夫なのかな、ここ……」
+
+Eva「大丈夫ではねえだろどう見ても」
+
+Stella「やだぁ……」
+
+しかし、他に当てがないのも事実だった。
+Verisは腕の中の布包みを見下ろす。そこに包まれたままの壊れた装置は、時間が経つほど希望が減っていく気がした。
+
+Stella「……」
+
+Eva「どうすんの」
+
+Veris「……入りましょう」
+
+Stella「うそぉ！？」
+
+Eva「決断が早くて助かる」
+
+Veris「早くありません。十分迷った上で、致し方ないと判断した上でです」
+
+Stella「私まだ迷ってるんだけど……！？」
+
+Veris「ですが、ここまで来て何もせず戻る方が後悔しますから」
+
+Eva「真面目だなあ」
+
+Veris「静かにしてください」
+
+Stella「でも、もし変な人出てきたらどうするの」
+
+Eva「変な人が出てこないわけないだろ。店の外観見た？」
+
+Stella「そうじゃなくて！」
+
+Verisは意を決したように扉の前へ進んだ。
+木の表面はざらつき、取っ手は妙に冷たかった。
+
+Veris「……失礼します」
+
+Stella「ほんとに入るんだ……」
+
+Eva「うん」
+
+Verisは一瞬だけ目を閉じ、それからぎし、と軋む扉に手をかけた。
+
+扉が、ゆっくりと内側へ開き始める。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-02-6.html" class="nav-button prev">← ep2-6へ戻る</a>
+      <a href="episode-03-2.html" class="nav-button next">ep3-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

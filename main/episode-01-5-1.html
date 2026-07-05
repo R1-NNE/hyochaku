@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep1.5-2</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep1.5:"清算と再出発" sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+12月に入り、年の瀬が差し迫る中。
+
+研究室にはすっかり二人分の生活音が馴染んでいた。
+
+ソファには相変わらずEvaが寝転がり、本を片手にぼんやりと天井を眺めている。
+
+対照的に、Stellaは机いっぱいに資料や試薬を広げながらずいぶん長い時間唸っていた。
+
+Stella「うーん……なんか違う気がするんだよねぇ」
+
+Eva「その『なんか』で研究してるのが毎回恐ろしいんだけど」
+
+Stella「でも最後は何とかなってるし」
+
+Eva「科学が泣くぞ」
+
+そう言いながらもEvaは本から目を離し、机の上をちらりと見ては呟く。
+
+Eva「その配合、逆じゃないのか？」
+
+Stella「えっ」
+
+Eva「そこを先に混ぜると反応が散る。こっちを最後にするべき」
+
+Stella「……あっ」
+
+数分後、試験管の中では先ほどまで濁っていた液体が、綺麗に透き通っていた。
+
+Stella「で、できた！あんなに苦労してたのに…」
+
+Eva「言わないと日が暮れるまでやってそうだったから」
+
+Stella「Eva先生ありがとう！」
+
+Eva「先生じゃないっつーの」
+
+Stella「じゃあ家庭教師！」
+
+Eva「もっと違うだろ」
+
+Stellaは楽しそうに笑う。
+
+大学時代から変わらないやり取りだった。
+
+Evaも呆れたように息を吐くが、口元は少しだけ緩んでいる。
+
+もっとも、その直後には再びソファへ倒れ込み、本を顔に乗せて動かなくなっていた。
+
+Stella「もう終わり！？」
+
+Eva「今日は閉店」
+
+Stella「三十秒くらいしか動いてないけど！？」
+
+Eva「いいか、研究は量じゃなくて質だ」
+
+Stella「だとしても足りてないよ！！」
+
+研究室には、そんな他愛もないやり取りが毎日のように流れていた。
+
+二週間前まで一人きりだった空間は、今では誰かが呆れ、誰かが笑うようになっている。
+
+それだけで、この研究室は少しだけ温かくなっていた。
+
+そんな時だった。
+
+珍しく研究室のインターホンが鳴る。
+
+Stella「はーい」
+
+Stellaがとてとてとドアに向かう。開けると、三十代半ばほどの女性が立っていた。
+
+厚手のコートを着ているが、顔色は悪く、ひどく疲れ切って見える。
+
+女性「突然すみません。この研究室に……Eva先生がいると聞いて」
+
+その一言で。
+
+ソファに寝転んでいたEvaの動きが止まった。
+
+ゆっくりと本を下ろし、相手を見る。
+
+女性もEvaを見つけるなり表情を変えた。
+
+女性「やっぱり……Eva先生」
+
+Eva「……誰？」
+
+女性「以前、XX病院でお世話になりました。小児科病棟で事務をしていた者です」
+
+病院、という単語を聞いた瞬間、Evaの表情から、さっきまでの気怠さが消える。
+
+Eva「……病院の人間か」
+
+女性「先生をずっと探してたんです。まさかこんな所にいるとは……」
+
+女の慇懃な態度とは対照的に、Evaの顔はどんどん暗くなっていく。そして話も終わってないのに遮り始める。
+
+Eva「病院に戻れって話なら、今すぐ帰って」
+
+女性「ち、違います！」
+
+Stellaは状況が分からずきょとんとしているだけである。やがて女性は深く頭を下げた。
+
+女性「お願いします……先生しかいないんです」
+
+Evaは黙ったまま見つめる。女性の肩は震えていた。
+
+女性「娘が……重い心臓の病気なんです」
+
+Evaの眉が僅かに動く。
+
+女性「色んな所を当たりましたが…手術できる医師がいないと言われて八方塞がりの状態です」
+
+女性「だが先生なら助けられるかもしれないって話を聞いて…ここまでやってきました」
+
+女性「お願いします、どうか娘を」
+
+女性は床に額が付きそうなほど頭を下げる。
+
+Stellaも不安そうな顔でEvaへ視線を向ける。
+
+しかし。
+
+Evaはまるで氷のような表情で立ち上がり、眉一つ動かさずにぽつりと告げた。
+
+Eva「帰って」
+
+女性「先生……！」
+
+Eva「私はもう医者じゃない。メスを握る資格がない」
+
+女性「でも！」
+
+Eva「免許はあっても病院はない。設備もない。チームもない。私一人で何ができる」
+
+女性は食い下がる。
+
+女性「それでも先生なら……！」
+
+その言葉が引き金だったのか、Evaの表情が一気に曇る。
+
+あの白い手術室。鳴り続けるモニター。
+
+患者ではなく数字しか見ていない上層部。
+
+それでも心を殺して働き続けた毎日。それを裏切るかのように突き付けられた、免職。
+
+まだ記憶に新しい嫌な記憶がすべてが脳裏に蘇ってくる。
+
+研究室に重苦しい沈黙が流れる中、Evaは明らかに面倒そうな顔になっている。
+
+ただ、いつものソファに横たわってるのとは違う拒絶の意志がひしひしと伝わってくる顔だ。
+
+女性は頭を下げたまま、震える声で続ける。
+
+女性「お願いします……娘はまだ八歳なんです」
+
+女性「先生しか助けられないって、本当にそう聞いて……」
+
+Evaは目を閉じ、小さく息を吐く。
+
+そして、冷え切った声で答えた。
+
+Eva「何度言わせる気。私はもう医者じゃないから」
+
+女性「でも免許は……」
+
+Eva「免許があれば人を切っていいわけじゃないことくらい、分かるでしょ」
+
+女性「先生なら」
+
+Eva「先生って呼ぶな！！」
+
+女性は言葉を失う。Stellaも口を挟めないまま、心配そうな顔でやり取りを見ている。
+
+やがてEvaが続ける。
+
+Eva「私は免職になった人間」
+
+Eva「組織から医者として不要だと切り捨てられた人間」
+
+Eva「そんな人間に命を預けようなんて正気じゃない」
+
+女性「先生は悪くなかったことは私も知ってて……」
+
+Evaの目付きが変わり、怒りが滲む。
+
+Eva「今さら何」
+
+Eva「都合が悪くなったら『先生は悪くない』？」
+
+Eva「散々見て見ぬふりしてたくせに、よくそんなことが言えるよな」
+
+女性は返す言葉を失う。Evaはさらに吐き捨てる。
+
+Eva「病院ってのは便利だよね」
+
+Eva「結果だけ欲しがって、責任は全部現場」
+
+Eva「患者を救っても評価されるのは上」
+
+Eva「少しでも気に食わなければ、医者なんて簡単に切り捨てる」
+
+拳が僅かに震えている。
+
+Eva「そんな場所に人生全部使って」
+
+Eva「最後にもらったのが免職だ」
+
+Eva「……もう十分」
+
+女性「……」
+
+Eva「だから帰って」
+
+Eva「私にはもう資格がない」
+
+女性は長い間俯いたままだった。
+
+やがて震える手で小さな紙を取り出す。
+
+女性「……もし気が変わったらここに連絡してください」
+
+机の上へ連絡先を書いた紙を置き、深く一礼するとそのまま素直に研究室を後にしていった。
+
+ドアが閉まった後、部屋はしんと静まり返った。
+
+Stellaは机の上の紙を見つめ、それからEvaを見る。
+
+Evaは腕を組み、不満そうに窓の外を眺めていた。
+
+Stella「……今のは、ちょっと酷くない」
+
+Eva「言うと思った」
+
+Stella「困ってた」
+
+Eva「そんな奴を大量に助けてきた。だが報われなかったからここにいるだけ」
+
+Stella「でも！！」
+
+Eva「もう終わりにさせてくれ。疲れたんだ」
+
+Stellaは少しだけEvaに同情しつつも、反論を続ける。
+
+Stella「それでも、あんな言い方はひどい」
+
+Evaはゆっくり振り返るが、表情は変わらない。
+
+Eva「……じゃあ何のために私は免職になったんだ？」
+
+Stella「それは……」
+
+Eva「あの瞬間で医者としての私は終わりだ。今は今」
+
+Stellaは黙りこく。Evaもそれ以上は何も言わず、そのままソファへ戻って本を再び手に取る。
+
+だが、ページは一向に進まず、神妙な顔つきのまま固まるだけだった。
+
+数分後。
+
+重苦しい沈黙だけが流れる。
+
+やがてEvaは本を閉じ、誰にも聞かせるつもりもないほど小さな声で吐き捨てた。
+
+Eva「……クソが」
+
+その悪態は女性へ向けたものではない。
+
+Stellaにも、自分自身に対してでもない。
+
+もっと別の、二年前から胸の奥で燻り続けている何かへ向けたものだった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-01-3.html" class="nav-button prev">← ep1-3へ戻る</a>
+      <a href="episode-01-5-2.html" class="nav-button next">ep1.5-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

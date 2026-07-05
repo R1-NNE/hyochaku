@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep2-6</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep2:"寒空の少女" sec-6</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+一週間後。冬の朝日が優しく研究室を照らしている。
+
+倒木事故で負った傷もようやく落ち着き、Verisは研究室の中でならゆっくり歩けるまでに回復していた。
+
+まだ傷口は痛むものの、日常生活を送るには十分だった。
+
+窓から差し込む光の中、Stellaは机を軽く叩く。
+
+Stella「今日は大事なお知らせがあります！」
+
+Eva「……眠い」
+
+Stella「眠くても聞いて！！」
+
+Stellaは苦笑しながらVerisの前へ立つ。
+
+Stella「改めて、Verisちゃんを研究室に迎えることを正式決定しまーす！」
+
+Verisはやや照れながらも、姿勢正しくStellaの傍らに佇んでいる。
+
+Stella「最初は助けた流れで何となく一緒に住んでたけど…まあもう暮らさない理由がないよねってことで」
+
+薄々分かってはいたものの、Verisはしばらく言葉が出なかった。
+
+孤児として育ち、居場所らしい居場所を持ったことはない。その事実は素直に受け取るにはあまりに大きすぎる。
+
+Eva「嫌だったら断ってもいいけど」
+
+Stella「なんてこと言うの！！！」
+
+Eva「すいません」
+
+いつもの調子の二人を尻目に、Verisはゆっくりと頭を下げる。
+
+Veris「……よろしくお願いします。」
+
+Stella「やったー！！」
+
+Stellaが満面の笑みになる。その笑顔を見て、Verisも少しだけ笑みを浮かべた。
+
+そして、新たな生活が幕を開けようとしていた。
+
+……はずだった。
+
+Veris「…ところで」
+
+視線がゆっくりソファへ向くと、毛布に包まれたまま、完全に横になっているEva。
+
+研究室にとって大きな節目でもあるにも関わらず、開いているのか分からないくらいの目付きでうとうとしている。
+
+Veris「Evaさん」
+
+Eva「ん」
+
+Veris「朝ですよ」
+
+Eva「知ってる」
+
+Veris「起きてください」
+
+Eva「起きてる」
+
+Veris「その状態は起きているとは言いません」
+
+Eva「私基準では起きてるから」
+
+Verisが苦笑する。
+
+以前なら確実に、『何が起きてるんですか！！さっさと起き上がってください』くらいは言っていたものの、今日は言葉が続かない。
+
+Veris「……その…そろそろ少しは動いた方が……」
+
+どうしても勢いがない。Evaが片目だけ開ける。
+
+Eva「優しいな」
+
+Veris「そ、そういうわけでは」
+
+Eva「前ならソファひっくり返してでも起こそうとしてたのにな」
+
+Veris「……」
+
+図星だった。
+
+勿論、Evaとの約束を忘れていないわけではないが、どうしても遠慮してしまう。
+
+その空気を見ていたStellaが、ふっと笑う。
+
+Stella「あー…なるほどね」
+
+Veris「……」
+
+Stella「それじゃ駄目だよねぇ」
+
+そう呟きながら、Stellaはソファの後ろへ回り込む。
+
+Eva「……何」
+
+Stella「こうやるんだよ～」
+
+がしっ。
+
+ソファの背を掴む。
+
+Eva「ちょっ」
+
+Stella「せーのっ！」
+
+勢いよく持ち上げる。
+
+Eva「ちょ、お前っ！！」
+
+抵抗する間もなくソファが豪快にひっくり返り、毛布ごとEvaが思いっきり床に叩きつけられた。
+
+Eva「痛っ！！！」
+
+何が起きたのか理解する前に、間髪入れずStellaが駆け寄る。
+
+Stella「えいっ！」
+
+げしっ。
+
+Eva「ぎゃっ！」
+
+Stella「えいえい！」
+
+げしっ。
+
+げしっ。
+
+Eva「ちょ、お前何してんだ！」
+
+Stella「朝だよ～」
+
+げしっ。
+
+Eva「ふざけんな！！あ痛っ！」
+
+Stella「こんな大事な日くらいゴロゴロしないでよ！」
+
+Eva「だからってこんな…痛ぇ！！」
+
+Stellaは満面の笑みのまま床に転げ落ちた生物を蹴り続けていた。
+
+その奇妙な光景をVerisは呆気に取られて見つめている。
+
+Veris「……」
+
+意味がわからない。
+
+意味はわからないのだが。
+
+数秒眺めているうちに何かがおかしくなってきたのか、Verisはとうとう耐えられずに吹き出した。
+
+Veris「ふっ……」
+
+Eva「おまっ……」
+
+Verisは口元を押さえながら肩を震わせる。
+
+Veris「あっ…すいま」
+
+Stella「いいよいいよ悪いのEvaだもん。Verisも何か言ってやって」
+
+Verisは床で転がるEvaを見る。
+
+Stellaは中々力が強いので、Evaは割と本気で辛そうな顔をしているが数奇なことに彼女の目にはあまり可哀想だとは映らなくなっていた。
+
+Veris「……」
+
+小さく咳払いを一つした後、やっと口を開く。
+
+Veris「…因果応報じゃないですか」
+
+以前と同じ、少し辛辣で容赦のない言葉をEvaに浴びせる。
+
+Veris「普段からサボってるからそういう目に遭うんですよ」
+
+Eva「ひど！」
+
+Veris「当然の報いでしょう」
+
+Stella「そうだそうだ！」
+
+Eva「お前は蹴るのやめろ！」
+
+Veris「今まで散々注意しても聞かなかったじゃないですか。暴力を肯定したくはないですが、Stellaさんは流石分かってますね」
+
+Stella「そゆこと」
+
+げしっ。
+
+Eva「……」
+
+Verisは腕を組みながら哀れな姿の生物を見ている。その口調は完全に元へ戻っていた。
+
+Veris「毎日ソファから動かない人間にはちょうどいい運動でしょう。気の済むまでやってやってください」
+
+Stella「やった！暴力賛成！」
+
+Eva「なわけあるか！」
+
+げしっ。
+
+Eva「ひぃぃっ！」
+
+研究室に悲鳴と笑い声が響く。
+
+Stellaは相変わらず満面の笑みで執拗にEvaを蹴り続けている。
+
+Verisはもはや蔑むような目つきで命の恩人を見下していた。
+
+Eva「Veris…今日だけなかったことにできないか」
+
+Veris「知りません」
+
+Stella「知らないよね～」
+
+Eva「……」
+
+雲一つない朝の日差しですら彼女を嘲笑うかのようにしばらく床で足蹴にされ続けた後、研究室の新たな時間が始まろうとしていた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-02-5.html" class="nav-button prev">← ep2-5へ戻る</a>
+      <a href="episode-03-1.html" class="nav-button next">ep3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

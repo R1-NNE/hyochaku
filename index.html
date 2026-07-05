@@ -181,6 +181,13 @@
       list-style: none;
     }
 
+    .story-list > li {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
     .story-list a {
       display: inline-flex;
       align-items: center;
@@ -206,6 +213,39 @@
       border-color: var(--accent);
       background: var(--paper);
       transform: translateX(5px);
+      outline: none;
+    }
+
+    .story-split-links {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 6px;
+      margin-left: 8px;
+    }
+
+    .story-split-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      min-height: 26px;
+      padding: 2px 6px;
+      border: 1px solid rgba(91, 108, 113, 0.32);
+      border-radius: 999px;
+      color: rgba(48, 61, 65, 0.92);
+      background: rgba(255, 255, 255, 0.55);
+      font-family: var(--font-main);
+      font-size: 0.9rem;
+      line-height: 1;
+      text-decoration: none;
+      transition: border-color 150ms ease, background-color 150ms ease, transform 150ms ease;
+    }
+
+    .story-split-link:hover,
+    .story-split-link:focus-visible {
+      border-color: var(--accent);
+      background: var(--paper);
+      transform: translateY(-1px);
       outline: none;
     }
 
@@ -264,11 +304,44 @@
         <h2 id="main-title" class="story-title">main</h2>
         <p class="story-note">物語本編です。基本的に時系列でシリアスめな話が展開されます。</p>
         <ul class="story-list">
-          <li><a href="main/episode-01.html">ep1:"再会"</a></li>
-          <li><a href="main/episode-01-5.html">ep1.5:"清算と再出発"</a></li>
-          <li><a href="main/episode-02.html">ep2:"寒空の少女"</a></li>
-          
-          <li><a href="main/episode-03.html">ep3:"盲目の少女"</a></li>
+          <li>
+            <a href="main/episode-01-1.html">ep1:"再会"</a>
+            <div class="story-split-links" aria-label="ep1 split links">
+              <a class="story-split-link" href="main/episode-01-1.html">1</a>
+              <a class="story-split-link" href="main/episode-01-2.html">2</a>
+              <a class="story-split-link" href="main/episode-01-3.html">3</a>
+              <a class="story-split-link" href="main/episode-01-4.html">4</a>
+            </div>
+          </li>          
+          <li>
+            <a href="main/episode-01-5-1.html">ep1-5:"清算と再出発"</a>
+            <div class="story-split-links" aria-label="ep2 split links">
+              <a class="story-split-link" href="main/episode-01-5-1.html">1</a>
+              <a class="story-split-link" href="main/episode-01-5-2.html">2</a>
+              <a class="story-split-link" href="main/episode-01-5-3.html">3</a>
+            </div>
+          </li>
+          <li>
+            <a href="main/episode-02-1.html">ep2:"寒空の少女"</a>
+            <div class="story-split-links" aria-label="ep2 split links">
+              <a class="story-split-link" href="main/episode-02-1.html">1</a>
+              <a class="story-split-link" href="main/episode-02-2.html">2</a>
+              <a class="story-split-link" href="main/episode-02-3.html">3</a>
+              <a class="story-split-link" href="main/episode-02-4.html">4</a>
+              <a class="story-split-link" href="main/episode-02-5.html">5</a>
+              <a class="story-split-link" href="main/episode-02-6.html">6</a>
+            </div>
+          </li>
+          <li>
+            <a href="main/episode-03.html">ep3:"盲目の少女"</a>
+            <div class="story-split-links" aria-label="ep3 split links">
+              <a class="story-split-link" href="main/episode-03.html">1</a>
+              <a class="story-split-link" href="main/episode-03.html">2</a>
+              <a class="story-split-link" href="main/episode-03.html">3</a>
+              <a class="story-split-link" href="main/episode-03.html">4</a>
+              <a class="story-split-link" href="main/episode-03.html">5</a>
+            </div>
+          </li>
           <!--<li><a href="main/episode-04.html">ep4:"空白の少女"</a></li>
           <li><a href="main/episode-04-5.html">ep4.5:"リハビリ"</a></li>
           <li><a href="main/episode-05.html">ep5:"七曜魔法研究始動"</a></li>

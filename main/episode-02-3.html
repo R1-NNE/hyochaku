@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep2-3</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep2:"寒空の少女" sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+暗い。
+
+最初に浮かんだ感覚は、それだけだった。
+
+意識が水の底からゆっくり浮かび上がるように戻ってくる。
+
+重い。
+
+身体が、鉛でも詰め込まれたように重かった。
+
+------------------------------------
+
+少女はゆっくりと瞼を開く。
+
+「……」
+
+ぼやけた天井を小さな照明だけが部屋を淡く照らしている。
+
+声を出そうとしても、喉が張り付いたように掠れるだけだった。
+
+何が起きたのか思い出そうとする。
+
+凍てつく寒さの日だった。全てを失った状態で、全てがどうでもよくなって、雪に身を任せるように倒れ込み、それからは……
+
+「……っ」
+
+全身に鋭い痛みが走り、思考が中断される。
+
+……恐る恐る身体を起こそうとするが、少し動いただけで傷口が疼き、すぐに諦める。
+
+……布団が掛けられている。包帯も巻かれている。
+
+……誰かが手当てをしたのか？
+
+少女はゆっくりと部屋を見回す。
+
+棚には本や見慣れない器具が並び、机の上には紙束や工具が散乱している。病院にしては散らかりすぎている。
+
+……研究室？なぜ？
+
+でも、それ以上に浮かんでくるのは。
+
+どうして自分が。
+
+ここに。
+
+------------------------------------
+
+その時だった。
+
+廊下の向こうから、小さな足音が聞こえた。
+
+とたとた、と軽い音と共に、部屋の扉が少しだけ開く。
+
+中を覗き込んだ人物と、少女の目が合った。
+
+Stella「…………」
+
+少女「…………」
+
+きょとんとしたまま、目覚めた少女を一目見るや否や、Stellaの目がみるみる大きくなる。
+
+Stella「お……起きたぁぁぁぁ！！！！！」
+
+部屋中へ響き渡る声に、少女はびくっと肩を震わせる。
+
+Stella「よかったぁぁぁ！！！！」
+
+今にも泣きそうな笑顔で駆け寄ってくる。
+
+Stella「ほんとに……ほんとによかったぁ……！」
+
+勢いよくベッドの横まで来ると、安心したように少女の手を優しく握る。
+
+Stella「わ…わたし……ずっと起きなかったから心配したんだよ！！！ほんとに！！！」
+
+うるさい部屋主を尻目に、少女は状況についていけない。
+
+目の前の女性は誰なのか。ここはどこなのか。
+
+そして、どうして自分は生きているのか。
+
+呆然とするしかない少女を見て察したのか、Stellaは慌てて少し距離を取る。
+
+Stella「あ、ご、ごめんねぇ…急に大声出しちゃって」
+
+少女は何も言えないまま、ただ目の前の人物を見つめる。
+
+敵意はなく、むしろ、心底安心したような顔をしている。
+
+その表情を見てようやく少女は自分が助けられたというのを理解した。
+
+「……」
+
+Stella「……？」
+
+少女は押し黙っている。
+
+この人が。助けた。
+
+私なんかを。
+
+少女はやがて口を開く。
+
+その言葉は、あまりに弱弱しい。
+
+少女「……ごめんなさい」
+
+Stella「……え？」
+
+少女「……ごめんなさい……」
+
+その一言だけだった。
+
+感謝でも、事情を聞くのでもなく、真っ先に出てきた言葉は謝罪だった。
+
+Stellaはきょとんとしているまま。
+
+Stella「……えっと……？」
+
+少女は視線を伏せ、手をぎゅっと握る。
+
+少女「……私のせいで……あなたに…迷惑……かけて……」
+
+一言話すだけで苦しそうだった。それでも少女は止まらない。
+
+少女「……すみません……」
+
+Stellaは慌てて両手をわざとらしいほど大振りにする。
+
+Stella「いやいやいや！謝らなくていいよ！？むしろ謝るのは違うというかぁ……」
+
+少女「……すいません」
+
+Stella「うぅ……」
+
+何と言えばいいのか分からない。
+
+「助けてくれてありがとう」という言葉を想定していたので、ただ謝り続ける少女へのプロトコルが思いつかない。
+
+Stellaは困惑しながらも、少女の表情を見つめる。
+
+明らかに怯えている。
+
+身体は申し訳なさそうに縮こまり、表情はこちらの顔色ばかり窺っている。
+
+助かったことを喜ぶ様子は全くない。
+
+怒られないか、追い出されないか、そんなことばかり考えているようだった。
+
+Stella「……」
+
+胸の奥が少し痛む。
+
+この子は、どういう環境で生きてきたのだろう。
+
+助けられた直後ですら、「ありがとう」より先に「ごめんなさい」が出てしまうほどに。
+
+Stellaは困ったように頭を掻き、またわざとらしく小さく笑う。
+
+Stella「うーん……どう返せばいいんだろう…」
+
+少女は反射的にびくりと肩を震わせ、また頭を下げる。
+
+少女「……ごめんなさい」
+
+Stella「だから謝らなくていいよぉ……」
+
+そんなやり取りが何度も繰り返され、研究室には、ぎこちない沈黙だけが静かに流れていた。
+
+明るいはずのStellaもちょっと困っているのか、言葉に詰まりかけている。
+
+Stella「えっと……まずは自己紹介とかした方がいいかな」
+
+少女は流されるがまま、小さく頷く。
+
+Stella「私はStella。ここの研究室で…えっと……まあ、研究してる感じ？」
+
+少女は静かに耳を傾ける。
+
+Stella「それで昨日の夜、雪の中で倒れてるところを見つけてさ、」
+
+そこまで言いかけたところで、Evaから刺された言葉を思い出してStellaは一瞬言葉に詰まる。
+
+（誰が助けたかは黙っといて）
+
+Stella「あー……その……」
+
+Stella「とりあえず、ちょっと手当して、ここまで運んできたってわけ…」
+
+完全に誤魔化したが、少女は特に追求せず、ただ頭を下げるのみ。
+
+少女「……そうだったのですね……本当に申し訳ありません」
+
+Stella「また謝ってる！」
+
+少女「ご迷惑をお掛けしました」
+
+Stella「迷惑じゃないって！」
+
+少女「ですが、私のような者のために……」
+
+Stella「そんなこと言わないの！」
+
+埒が明かないので、少し空気を変えようと話題を変える。
+
+Stella「そういえば、お名前聞いてなかったね」
+
+少女「……Verisです」
+
+Stella「Verisちゃんか、よろしくねぇ」
+
+Veris「…よろしくお願いいたします」
+
+そして間髪入れずに。
+
+Veris「……申し訳ありません」
+
+Stella「またぁ！？」
+
+思わず声が裏返る。
+
+Veris「本来であれば、お礼を申し上げるべきなのでしょうが……先に謝らなければいけないと思いまして」
+
+Stella「えぇ？」
+
+Veris「私なんかを助けるために…　お時間も、お金も、お手間も使わせてしまいました」
+
+Veris「ご迷惑をお掛けして、本当に申し訳ありません…」
+
+冗談を言っている態度ではない。本気で、自分が助けられたこと自体を申し訳なく思っている。
+
+Stellaも、自分が責められているわけではないのに何故か少しだけ罪悪感に駆られていく。
+
+Stella「そんなことないよ、本当に」
+
+Veris「ですが、私は何も返せません」
+
+Stella「返さなくていいの」
+
+Veris「そういうわけには……」
+
+Stella「いいのいいの」
+
+Veris「いいえ」
+
+Stella「いいんだって」
+
+Veris「ですが」
+
+Stella「だからね」
+
+Veris「っ…申し訳ありません…」
+
+Stella「うぅ……」
+
+会話の堂々巡りは続く。
+
+何を言っても、Verisは感謝より先に謝罪を返してくる。否定しても否定しても、自分を責める言葉しか出てこない。
+
+Stellaは困ったように頭をかいた。
+
+Stella「なんというか……謝るの、癖になっちゃってる？」
+
+Veris「……そうかもしれません」
+
+その返事はあまりにも自然で。
+
+まるで「空は青いです」と答えるくらい当たり前のことのようだった。
+
+次第にStellaは、Evaがふと「孤児かもしれない」と言っていたことを思い出したのか、何も言えなくなっていき、時間だけが無情に過ぎていった。
+
+------------------------------------
+
+翌日の昼過ぎ。
+
+昨夜の吹雪は少し収まっており、雪がちらつきながらも、窓の外には柔らかな冬の日差しが僅かに差し込んでいた。
+
+研究室の中は、久しぶりに暖房の音とどこかで湯の沸く音が響くだけの静かな空間となっていた。
+
+Verisはベッドの上へ身体を起こし、窓の外をぼんやり眺めていた。
+
+昨夜より痛みは和らいでいたものの、全身に巻かれた包帯が動くたび存在を主張する。
+
+やがて部屋の扉が静かに開く。
+
+Stella「おはよう……じゃないか」
+
+Stellaを見るや否や、Verisはすぐに姿勢を正した。
+
+Veris「おはようございます」
+
+Stella「そんなかしこまらなくても…体調はどう？」
+
+Veris「昨日よりは…」
+
+Stella「それならよかった！」
+
+Stellaは椅子へ腰掛け、持ってきた温かいスープをテーブルへ置く。
+
+Verisはそれを見て、一瞬だけ戸惑う。
+
+Stella「とりあえず飲んで…大丈夫、私意外と料理出来るんだよ」
+
+Veris「すいません…」
+
+器を受け取る手が少し震えながらも、ゆっくり口へ運ぶ。
+
+長年味わってこなかったまともな食事、いやそれ以上に人の温かさが胃へ落ちていく。
+
+それだけで、不思議と目頭が熱くなっていく。泣いてしまってはまた謝らないと。
+
+Stellaはそんな様子を見ながら、優しく微笑む。
+
+Stella「…焦らなくてもいいからね」
+
+Verisは小さく頷く。
+
+しばらく無言でスープを飲み終えると、器を丁寧に置いた。
+
+Veris「……改めまして、昨日は十分なお礼も申し上げられませんでした」
+
+Stella「うん」
+
+Veris「本当に…ありがとうございました。あと…すいませんでした」
+
+Stella「また謝った！」
+
+Verisは視線を床に落とすだけ、やがて部屋が静かになる。
+
+Verisは何か続きを言おうとしては、口を開きかけて、また閉じる。
+
+Veris「……」
+
+きっとStellaはどこから来たのか、家族はいるのかとかそういう事を思ってるに違いない。
+
+だが、彼女には、本当に名前以外に何もなかった。
+
+Veris「……私は」
+
+また止まる。
+
+言葉にしようとするたび、胸の奥が重くなる。
+
+捨て子で家族はいない。
+
+ずっと路上で生きてきた。
+
+そんな経歴を口にしたところで、相手を困らせるだけではないか。
+
+そう考えると声が出ず、Verisはそれ以上口を開かなかったというより、出来なかった。
+
+------------------------------------
+
+沈黙が続く中、Stellaは察し始める。
+
+（この子…本当に孤児なんだ）
+
+それだけ理解すればあとは十分だった。
+
+Stella「うん…大丈夫だよ」
+
+それだけ言って笑う。
+
+Verisは少し戸惑ったような顔をする。
+
+Stella「じゃあ、Verisちゃんって呼んでもいいかな？　いや…ヴェリちゃんとかでもいいかなぁ」
+
+Veris「……はい」
+
+Stella「ありがと！」
+
+思いがけないStellaの言動に、Verisは思わず聞き返す。
+
+Veris「……それだけでいいんですか」
+
+Stella「うん」
+
+Veris「過去などは……」
+
+Stella「話したくなったら聞くけど、話したくないなら聞かないよ。今はそれでいいから」
+
+あまりに直球すぎる答えにまた戸惑う。
+
+Stella「それよりさ！」
+
+Stellaは笑顔で続ける。
+
+Stella「傷が治るまで、ずっとここにいていいからね」
+
+Verisは固まった。やがてゆっくりと首を横に振る。
+
+Veris「……それは流石に……ご迷惑になりますから」
+
+Stella「ならないよ！」
+
+Veris「いえ」
+
+Verisは流れるように続ける。
+
+Veris「私は何もできません」
+
+Veris「お金もありません」
+
+Veris「働くことも、今の身体では……」
+
+Veris「そのような者を住まわせるなど……」
+
+Stella「気にしなくていいってそんなの！」
+
+Veris「ですが…」
+
+Stella「ほんとに！」
+
+Veris「…私は返せるものがありません」
+
+Stella「返さなくてもいいの！」
+
+Veris「そういうわけには…」
+
+また昨日と同じだった。
+
+Stellaが否定するたび、Verisはさらに申し訳なさそうな顔になる。
+
+自分だけが一方的に助けられる状況に耐えられないのに、何一つ返すこともできない不甲斐なさに苦しんでいた。
+
+Stellaはまた困ったように笑う。
+
+Stella「うーん……」
+
+何と言えば安心してもらえるのか。
+
+そう考えていた、その時。
+
+ガチャッ！！！！
+
+玄関のドアが乱暴に開き、驚いたように二人が同時に振り向く。
+
+外から冷たい風が流れ込み、一人の女性がふらふらと入ってきた。
+
+髪は乱れ、コートには雪が付き、目の下には濃い隈。
+
+まるで何日も寝ていないような顔だった。
+
+Eva「………………」
+
+Stella「あっ、おかえり」
+
+Evaは返事もせず荷物を床へ置き、一瞬だけ二人を見た後、そのまま一直線にソファへ向かう。
+
+崩れ落ちるように勢いよく身体を沈めてまもなく、何も言わなくなった。
+
+Eva「」
+
+Veris「……？」
+
+Stella「……」
+
+Verisは何が起きたのか理解できず、呆然とソファに崩れ落ちた生物を見ている。そして恐る恐る口を開く。
+
+Veris「あの方は……？」
+
+StellaはEvaを一瞥する。
+
+帰って来て1分も経ってないのに、完全に眠り込んでいる。
+
+昨夜の疲れが限界だったのだろう。何があろうと絶対に起きるもんかという意思をひしひしと感じさせられる。
+
+Stellaは少し考えた後、にこっと笑いながらVerisに言う。
+
+Stella「居候だよ」
+
+Veris「……居候、ですか？」
+
+Stella「う、うん」
+
+Veris「そ、そうなんですね…」
+
+Verisは簡単に信じ込む。細かい事情など知る由もないから。
+
+StellaもEvaから「面倒だから黙っといて」と言われていたのを思い出し、そのまま話を流した。
+
+そして研究室には再び静かな空気が戻る。
+
+ソファでは居候が力尽きており、ベッドではVerisがその寝顔を不思議そうに眺めている。
+
+昨夜自分を救った人物が、そのすぐ近くで情けない姿で死んでいることなど、Verisはまだ知る由もなかった。
+
+------------------------------------
+
+夜。
+
+研究室には静かな空気が流れていた。
+
+昼間から一度も目を覚まさなかったEvaがやがて、ソファの上でゆっくりと瞼を開く。
+
+Eva「……うぇ」
+
+Stella「あ、やっと起きた」
+
+Eva「…今何時だ？」
+
+Stella「七時くらいだよ」
+
+Eva「…寝すぎたか」
+
+Stella「二十時間近く寝てたよ～」
+
+Eva「流石に嘘って分かるぞそれは」
+
+そのやり取りを、ソファ近くでVerisが静物のように固まりながら見ている。
+
+Eva「……あ、そうか」
+
+Evaがずんぐりと顔だけ上げようとする。
+
+それを見てVerisは反射的に慌てて立ち上がろうとするが、まだ傷が痛み、少しふらついた。
+
+Veris「っ……」
+
+Eva「あー…座ってろって」
+
+Veris「……申し訳ありません」
+
+また謝ってしまう。Evaは一瞬だけ眉をひそめたが、何も言わない。
+
+Stella「この子がVerisちゃんだよ」
+
+Veris「初めまして…Verisと申します」
+
+丁寧に頭を下げる。
+
+Eva「Eva」
+
+Evaは軽く手を挙げ、それだけでまた姿勢が元に戻る。愛想も自己紹介も最低限だった。
+
+Verisは恐る恐る口を開く。
+
+Veris「…Stellaさんから伺いました」
+
+Eva「何」
+
+Veris「こちらで暮らしていらっしゃる居候の方だと」
+
+Evaは一瞬だけStellaの方を向く。確かに釘を差したのは自分だが。
+
+（ごめんって～）
+
+あまりに分かりやすい顔をしているので、Evaはすぐ事情を理解した。
+
+Eva「…まっそゆこと」
+
+それだけ答えた後、Verisは素直に頷く。
+
+Veris「…ご迷惑をお掛けしております」
+
+Eva「……」
+
+また謝る。Stellaはもう慣れたように小さく苦笑する。
+
+Evaは頭をかきながらのっそりと立ち上がり、半分開いてない目のままソファに腰掛ける。
+
+Eva「…別に迷惑なんかじゃないけど」
+
+Veris「…ですが」
+
+Eva「…謝るのが趣味か？」
+
+Verisは少し困っている。
+
+Veris「そのようなつもりでは……」
+
+Eva「そのようだな」
+
+Veris「……申し訳ありません」
+
+Eva「ほら」
+
+Stellaが堪えきれずに吹き出す。Verisだけが本気で困惑したままである。
+
+その夜は、それ以上深い話はしなかった。
+
+Evaも過去を聞かない。Verisも聞かない。
+
+互いに必要以上踏み込まないまま、奇妙な夕食の時間だけが過ぎていった。
+
+------------------------------------
+
+数日後。
+
+Verisの傷は驚くほど早く回復していた。
+
+まだ包帯は残っているものの、歩くことにはほとんど支障がない。
+
+StellaとEvaは陰ながら安心していたが、当の本人はそういう訳にもいかなかった。
+
+ある日の昼。Stellaが昼ご飯を持って共同部屋にぽやぽやとやってくると、Verisが小さな袋を持って立っていた。
+
+Stella「……Verisちゃん？どっか用事？」
+
+Verisはかしこまった顔で告げる。
+
+Veris「あの…今まで本当にお世話になりました」
+
+Stellaの表情が変わる。
+
+Stella「えっ！？どういうこと？」
+
+Veris「もう十分回復いたしましたので、これ以上ご迷惑をお掛けするわけにはいかないと思い」
+
+Stella「え」
+
+Veris「短い間でしたが、本当にありがとうございました」
+
+そう言って頭を深々と下げた後、ドアへと向かう。
+
+その瞬間、後ろから気だるそうな声が飛んでくる。
+
+Eva「おい、ちょっと待たんか」
+
+ソファで寝転がっていたEvaが、いつの間にかこちらを見ていた。
+
+Verisは少し驚く。
+
+Veris「……」
+
+Eva「傷が治りきってないだろ」
+
+Veris「ですが」
+
+Eva「まだ包帯巻いてる奴が何言ってんだ」
+
+Verisは返せない。Stellaも慌ててドア付近まで歩いてくる。
+
+Stella「そうだって！」
+
+Veris「でも……」
+
+Stella「出ていく必要なんてないよ！」
+
+Verisは続ける。
+
+Veris「…あるんです」
+
+Veris「私は元々孤児です。ずっと路上で暮らしてたんです」
+
+Veris「そこへ戻るだけです。」
+
+その一言に、部屋が静かになる。
+
+StellaとEvaは何も言えなかった。
+
+概ね予想は出来たいたものの、本人の口から断言されるのでは重みが違う。
+
+Eva「戻ってどうするつもりだ」
+
+Veris「……」
+
+答えられない。
+
+仕事も家も行く当てもない。
+
+それでも「ここにはいられない」という気持ちだけが先立つばかりである。
+
+Evaはそれを見逃さない。
+
+Eva「死ぬぞ」
+
+短く重い一言にVerisは目を伏せる。
+
+Veris「それでも…」
+
+Eva「吹雪の中で一回死にかけた奴が、数日で同じこと繰り返す気か。これ以上面倒な事にさせないでくれ」
+
+Veris「…」
+
+Eva「せっかく助かった奴が数日後にまた倒れてました、なんて後味の悪い話は誰が望んでんだ」
+
+Stella「そうだって！ここから出すわけにはいかないよ」
+
+Veris「ですが！」
+
+Stella「だめ！！」
+
+Veris「迷惑が…」
+
+Stella「迷惑じゃない！」
+
+Veris「何も返せません！」
+
+Stella「返さなくていい！！」
+
+Veris「それでも！」
+
+二人とも一歩も引く様子が無い。
+
+やがてVerisの方が先に折れたのか、少し押し黙ったあと、覚悟を決めたように口を開く。
+
+Veris「……でしたら」
+
+Stella「？」
+
+Veris「せめて」
+
+Verisは深々と頭を下げる。
+
+Veris「こちらのお手伝いをさせてください」
+
+Stellaは瞬きをする。
+
+Veris「掃除でも洗濯でも料理でも、私にできることでしたら、何でもいたします」
+
+Veris「何もせず住まわせていただくことだけは、どうしてもできません」
+
+Stellaは少し困ったようにEvaを見る。
+
+Eva「好きにすればいいんじゃない？」
+
+Stella「それじゃ…」
+
+Stellaは嬉しそうに笑い、手をぽんっ、と叩く。
+
+Stella「お手伝いさん兼同居人ってことだね！また仲間が増えちゃったよ」
+
+Eva「お前そういう才能でもあるのか？」
+
+全員の合致が取れた事に少し安心したVerisは、また深々と頭を下げる。
+
+Veris「未熟者ではございますが、よろしくお願いいたします」
+
+そうしてVerisは、恩を返すための"一時的な手伝い"という形で研究室へ残ることになった。
+
+本人は傷が治れば出ていくつもりだった。
+
+Stellaはそんなつもりはまるでなく。
+
+Evaも「どうせStellaが居着かせるだろ」としか思っていない。
+
+こうして、それぞれ少しずつ思惑の違う三人の共同生活が、また新たな形で始まっていくのだった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-02-2.html" class="nav-button prev">← ep2-2へ戻る</a>
+      <a href="episode-02-4.html" class="nav-button next">ep2-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

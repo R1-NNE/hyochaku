@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep2-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep2:"寒空の少女"</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+大晦日。
+
+外は昨日から降り続いている雪が止む気配を見せず、世界全体が白く霞んでいる。
+
+それとは対照的に、暖房の効いた研究室ではテーブルの中央で鍋がぐつぐつと音を立て、湯気がゆっくりと天井へ昇っていた。
+
+Stella「いただきまーす！」
+
+Eva「騒がしいな」
+
+Stella「年末くらいテンション上げてもいいじゃん！」
+
+Eva「いつもはしゃいでるだろ…」
+
+Stellaは笑いながら鍋の白菜を取り分ける。
+
+Evaは珍しくソファではなくテーブルに座り、面倒そうな顔で箸を動かしている。
+
+共同生活を始めて一か月以上。
+
+最初の頃のようなぎこちなさは薄れ、お互い好き勝手に振る舞う空気が自然と出来上がっていた。
+
+Stella「そういえばさ、一緒に年越しするのって久しぶりだね」
+
+Eva「…確かに。大学の頃以来か」
+
+Stella「卒業してから二年間は、連絡すら来なかったもんね」
+
+Eva「……悪かったって」
+
+Stella「別に責めてないよ！私は元気に生きてるってことだけでも分かれば嬉しかったし」
+
+Eva「そんな真面目な事言えるようになったんだな」
+
+Stella「言い方！」
+
+Eva「…まあどうせ病院漬けで死んでるだろうくらいに思ってたんでしょ」
+
+Stella「それは…否定できないかも」
+
+Eva「正直だな」
+
+鍋から肉を取りながら小さくため息をつく。
+
+Eva「病院勤めなんて年末も正月も無かったからな」
+
+Stella「そんな忙しかったの？」
+
+Eva「当たり前だ。世間が休んでも病気は休んでくれん。むしろ酒飲んで車をぶつけるわ、階段から落ちるわ、餅を喉に詰まらせるわでもっと忙しい」
+
+Stella「最後はお正月にしか起きなくない？」
+
+Eva「…毎年あるから」
+
+Evaは呆れたように肩をすくめながら、外の景色を眺める。
+
+Eva「救急は年末年始ほど地獄だったな。特にこんな天気じゃもう絶望的だ」
+
+Stella「じゃあ今は天国だねぇ」
+
+Eva「…天国すぎて逆に落ち着かん」
+
+Stella「いつもサボってばっかりなのに！」
+
+Eva「サボるのは私の権利だから」
+
+Stella「そんな権利認めてないよ！」
+
+二人で少し笑う。
+
+しばらくは鍋の音だけが部屋を満たした。そして年越し前、Stellaが思い出したようにつぶやく。
+
+Stella「あ」
+
+Eva「ん？」
+
+Stella「年越しそば買ってない！」
+
+Eva「……」
+
+Stella「忘れてた！！！」
+
+Eva「お前、昼に買いに行くからとか言ってなかったか？」
+
+Stella「研究してたら忘れちゃった～」
+
+Eva「はぁ…まあ容易に予想できるな」
+
+Stella「まだ間に合うかな…」
+
+Eva「店が閉まる前なら何とかなるかもしれんが…外出たくねぇ…」
+
+Stella「年越せないって！行こう行こう！」
+
+Eva「あ～ダルっ……」
+
+そう言いながらも断りはせず、コートへ手を伸ばす。
+
+------------------------------------
+
+玄関を開けた瞬間。猛烈な風と冷気が二人を押し返す。
+
+Stella「うわっ」
+
+Eva「寒っ！！！」
+
+一瞬で頬が痛くなる。街灯の光すら雪でぼやけ、十数メートル先もまともに見えない。
+
+Stella「すごい吹雪…」
+
+Eva「こんな日に外へ出る奴はとんだ馬鹿野郎だな」
+
+Stella「今ここに二人いるよ」
+
+Eva「巻き込むな」
+
+Stella「ごめんって」
+
+文句を言う気すらも吹雪にかき消される。だが今更戻る訳にもいかない。
+
+二人は肩をすぼめながら雪道を歩く。靴が雪へ沈むたびにぎゅっぎゅっと鈍い音が鳴る。
+
+Stella「何も見えなーい」
+
+Eva「ちゃんと見ろ」
+
+Stella「すっごい綺麗だね」
+
+Eva「感性どうなってんだよ…」
+
+十分ほど歩き、何とか近所の小さなスーパーへ辿り着く。
+
+店内は年末らしく人影もまばら。閉店準備を始める店員を横目に、Stellaは慌てて半額のそばを確保する。
+
+ついでに天ぷらや飲み物、お菓子まで籠へどんどん放り込んでいく。
+
+Eva「…増えてるぞ」
+
+Stella「せっかくだし」
+
+Eva「…その『せっかくだし』で予算が毎回危ういんだよ」
+
+Stella「今はEva先生が稼いでくれてるから！」
+
+Eva「…その呼び方やめて」
+
+外を出る頃には時計は二十三時を少し回っていた。
+
+さっきより風はさらに強くなっている。
+
+Stella「寒いぃ…　帰ったらすぐおそば作ろうね」
+
+Eva「もう作る気力は吹き飛ばされたよ…」
+
+Stella「年越しそばは縁起物なんだから！」
+
+Eva「縁起でなんとかなってたら苦労しねえ」
+
+Stella「夢がないなぁ！」
+
+二人は並んで雪道を歩く。人の姿はどこにもなく、風だけが唸り続けている。
+
+その時。
+
+Stella「…あれ？」
+
+少し前方を指差す。
+
+道路脇、街灯の下に、ひときわ大きな雪の塊があった。
+
+Eva「流石に積もるか」
+
+Stella「いや、でもあれ…」
+
+Stellaは目を細める。
+
+Stella「…なんか変じゃない？」
+
+Evaも足を止める。
+
+確かに妙だ。単純に雪が積ったようには見えない。
+
+形が妙に細長く、不自然なくらい均一。吹雪の中でも、そこだけ違和感がある。
+
+Eva「……」
+
+Stella「誰かが作ったのかなぁ」
+
+Eva「どんなバカでもこの天気で雪遊びなんかせん」
+
+Stella「じゃあ何だろ？」
+
+風が一段と強く吹き付ける。
+
+積もった雪が舞い上がり、一瞬だけ視界が白く閉ざされた。
+
+その白が晴れた瞬間。
+
+Evaは雪山の端から、何か雪ではないようなものがわずかに覗いていることに気付く。
+
+布のようにも見える。
+
+いや。
+
+服だ。
+
+Stella「え……」
+
+Eva「……Stella、その買い物袋持ってろ」
+
+------------------------------------
+
+吹雪が勢いを増す中、Evaは雪山の前へしゃがみ込む。
+
+Eva「……」
+
+思わず、嫌な既視感が頭をよぎる。
+
+（またか）
+
+ほんの一か月ほど前。
+
+酒気にまみれて雪山になっていたのは、自分だった。
+
+あの時はたまたまStellaに引っ張り出されたが、今度は、自分が雪の中から誰かを引っ張り出そうとしている。
+
+Eva「因果なもんだな……」
+
+だが余計なことを考えている暇はない。
+
+Evaは両手で雪を払い始めた。Stellaも買い物袋を下ろし、慌てて隣へしゃがみ込む。
+
+Stella「私もやる」
+
+Eva「頼む。悪い予感しかせん」
+
+二人で夢中になって雪を掻き分ける。
+
+積もった雪は思った以上に重く、風で押し固められている。
+
+数十秒。
+
+一分。
+
+ようやく人の形が見え始めた。
+
+Stella「……っ」
+
+言葉が止まる。
+
+そこに横たわっていたのは、一人の少女だった。
+
+白銀色の長い髪には血が固まり、あちこちで凍り付いている。
+
+服は裂け、雪と血で色が分からなくなっていた。
+
+露出した腕や脚には無数の擦り傷や切り傷。
+
+吹雪の中で何時間放置されていたのかも分からないように鈍く赤黒い。
+
+Eva「……は」
+
+少女は既にこの世にはいないようにも見える。
+
+Stella「うそ……」
+
+Evaの表情から、さっきまでの気怠さが一瞬で消え、目だけが鋭く細まる。今年も病院の顔付きにさせられていた。
+
+Evaは取り乱さず、少女の首元へ指を当てるが、冷たい。嫌になるほど冷たい。
+
+Eva「おい、聞こえるか。聞こえてるなら返事しろ！」
+
+反応はない。
+
+続けて頬を軽く叩く。
+
+Eva「目を開けろ！！」
+
+答えは無く、ただ吹雪だけが舞っている。
+
+Stella「……」
+
+Evaは動じず、今度は手首へ触れる。
+
+数秒。
+
+何も感じない。
+
+さらに数秒。
+
+…手遅れだったか。
+
+いや。
+
+ほんのわずか。
+
+極めて弱い拍動。
+
+Eva「…脈がある！」
+
+Stella「ほんと！？」
+
+Stellaの表情が少しだけ明るくなる。だがEvaは笑わないまま。
+
+Eva「掘り出さなくては…」
+
+Stella「う、うん！」
+
+もはや寒さも忘れた二人は必死に少女を雪から掘り出す。
+
+少女の身体は完全に冷え切っている。
+
+Eva「…低体温が酷いな」
+
+Stella「助かるの……？」
+
+Eva「何とも言えない。…だが、ここで考えてても死ぬだけだ」
+
+やっと雪山からその細い身体が掘り出される。間髪入れずにEvaが身体を抱える。
+
+Eva「運ぶぞ」
+
+Stella「私に任せて！」
+
+Stellaが少女を慎重に抱え上げる。
+
+あまりにも軽い。
+
+服は雪を吸っているはずなのに、それでも軽すぎた。
+
+Stella「……行くよ！」
+
+Eva「落とすなよ」
+
+吹雪の中を歩き始める。行きより何倍も、果てしない距離のように感じられる。
+
+少女の体温は腕越しにも失われ続けているのが分かった。
+
+Stellaの背中から、Evaは何度も少女の呼吸を確認する。
+
+浅い。
+
+止まりそうなくらい浅い。
+
+Stella「あと少しだよ…！」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="../index.html" class="nav-button prev">← 目次へ戻る</a>
+      <a href="episode-02-2.html" class="nav-button next">ep2-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

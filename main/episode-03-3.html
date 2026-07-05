@@ -1,0 +1,956 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep3-3</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep3:"盲目の少女" sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+一週間後。
+
+例の店は、相変わらず異様な雰囲気を放っていた。そこに3人が対峙する。
+
+Stella「うわぁ……一週間経ってもやっぱり嫌な景色だねぇ……」
+
+Veris「請求書が増えていませんか？」
+
+Eva「そこ？」
+
+Stella「でも今日こそ、ちゃんと直ってるといいなあ……」
+
+Eva「まああれだけの手前直してもらわんと困るな」
+
+Veris「私はまだ疑っていますけど…」
+
+Stella「…Veris、今日は絶対変なこと言わないでね」
+
+Veris「分かっています、分かっていますよ」
+
+Eva「前もそう言ってた気がする」
+
+Veris「今日は本当に分かっています」
+
+Eva「その“本当に”が不安なんだよ……」
+
+ぎい、と軋む扉を開ける。
+
+中は前とほとんど変わっていなかった。
+いや、前よりも机の上の部品が増えている気がする。天井近くに吊るされた金属片が微妙に入れ替わっている気もするし、壁の怪しげな紙も数枚ほど焦げ跡がついていた。
+
+そして奥の作業台の前に、Solがいた。
+
+目隠しは相変わらず。
+片手で何か細い部品を弄っていたが、三人が入ってきた瞬間、面倒くさそうに手を止めた。
+
+Sol「……遅い」
+
+Eva「え、約束の時間ぴったりだけど」
+
+Sol「私待つの嫌いなんだよね」
+
+Veris「相変わらず感じが悪いですね…」
+
+Stella「Veris！」
+
+Stellaが頭を抱えるが、幸運なことに店主の機嫌は悪くなかった。
+
+Sol「…今日は出てけとは言わないから安心して」
+
+Veris「安心できる要素がさっきからひとつもないんですが…」
+
+Sol「これを見てから言ってもらおうか」
+
+Solが顎で示した先、カウンターの上に布をかけられたものが置いてある。
+
+Stellaが息を飲むように布を取る。
+
+そこにあったのは、あの偏光位相調整器の試作機だった。
+
+割れていた外装は綺麗に収まり、歪んでいたフレームも元の形に戻っている。
+透明板の欠けていた部分は違和感なく補われ、中央の軸も微細な狂いすら見えない。
+というより、ぱっと見では壊れた痕跡そのものが見当たらなかった。
+
+Stella「……え」
+
+Veris「……」
+
+Eva「……は」
+
+Stellaがそろそろと持ち上げる。
+手の中で重心がぶれていない。指先で軽く回してみても、嫌な引っかかりがまるでない。
+
+Stella「え、え、ちょっと待って、これ……」
+
+Sol「仕事終わり」
+
+Stella「いやそうだけど！」
+
+Stellaは慌てて側面の留め具を確かめ、透明板の継ぎ目を探し、中央軸の回転を試した。
+数秒後、思わず声が弾ける。
+
+Stella「直ってる！！」
+
+店の中に、ぱっと明るい声が響いた。
+
+Stella「え、うそ、すご、なんで！？ えっ、ちゃんと回る、待って、これ精度も戻ってる、うそでしょ！？ えっ、すごい！！」
+
+Veris「……」
+
+Eva「……マジでやってしまうとは」
+
+Stella「すごいすごいすごい！ 見てVeris、ここ！ 欠けてた板、どこ継いだのか分かんない！ 軸も全然ぶれてないし、留め具も元より噛み合わせ良くなってる気がする！」
+
+はしゃぎまくるStella。些か店が揺れる中、Verisは呆然とした顔のまま、Stellaの手元を覗き込む。
+
+Veris「……ありえません。表の工房では手に負えないと言われたんですよ」
+
+Sol「表の工房が下手なだけだね」
+
+Veris「言い方…」
+
+Eva「だがこの仕上がりだけで全てを黙らせているな」
+
+Sol「まあ私なら出来るから」
+
+Stella「ありがとう！ ほんとにありがとう！！」
+
+Sol「うるさいって」
+
+Stella「ごめん、でもうれしいの！やったー！！」
+
+Sol「…金」
+
+Eva「あ、はいはい」
+
+Evaが懐から袋を取り出す。
+
+Sol「置いて」
+
+Eva「確認しなくていいのか？」
+
+Sol「重さで分かるから。確かに」
+
+Veris「……本当に何者んですか、あなた」
+
+Sol「修理・鑑定店」
+
+Veris「その一言で済む範囲を超えていますよ！」
+
+Sol「直ったんだからいいでしょ。仕事終わり。帰った帰った」
+
+Stellaはまだ名残惜しそうに装置を撫でている。
+VerisとEvaはというと、唖然としたままSolの方を見ていた。
+
+Veris「……」
+
+Eva「……」
+
+Stella「ねえほんとにすごいよこれ……」
+
+理解が及ばないVeris。彼女の視線は、装置からSolへ移る。
+布で覆われた目元のまま、興味無さそうにまた別の装置を弄っている。
+あの時も思った違和感が、今度はもっとはっきりと喉につかえた。
+
+Veris「……ひとつ、聞いてもいいですか」
+
+Eva「おい」
+
+Stella「Veris？」
+
+Sol「何」
+
+Veris「その……」
+
+Eva「おい！」
+
+Stella「Verisダメだって！」
+
+けれどVerisは、我慢できなかった。
+
+Veris「貴方、その目隠しでなんでこんなことが出来るんですか。ありえません」
+
+一瞬で、空気が凍った。
+
+Sol「…」
+
+店の奥で、Solはぴたりと動きを止めていた。
+
+Eva「最悪……」
+
+Stella「Veris！！！！！」
+
+Veris「……あ」
+
+自分でも遅れて気づいた顔になったが、もう遅かった。
+
+Stella「ご、ごめん！ 今のは、その、変な意味じゃなくて、ほんとに純粋にすごすぎて……！」
+
+Eva「純粋でもそれだけは触れちゃダメだろ、なあ……」
+
+Veris「…………失礼でした、謝らせてください。」
+
+Sol「……」
+
+Stella「怒ってる……？」
+
+Eva「怒らないわけがないだろコイツが」
+
+Veris「本当にすみません。ですが、あまりにも」
+
+Solは返事をしないまま。その代わり、徐々にゆっくりと口元だけが歪んでいく。
+
+笑った。
+
+けれど愛想のいい笑いではない。どこか挑発するような、妙に不敵な笑みだった。
+
+Stella「……え」
+
+Eva「……何だそのパターンは」
+
+そして、ようやく重い口を開く。
+
+Sol「その質問、したこと後悔するなよ……」
+
+Veris「……は？」
+
+Stella「ちょ、ちょっと待って、Sol？」
+
+Eva「…」
+
+Solはカウンターから一歩離れ、三人の方へ向き直る。
+
+そのまま、何のためらいもなく手を上げる。
+布の端に指がかかった。
+
+Eva「えっちょっ、何してんの」
+
+Stella「え、え、いいの！？」
+
+----------------------------------
+
+Verisは思わず息を呑んだ。
+
+Solの指先が、目隠しの結び目を解きにかかる。
+
+Veris「ちょちょちょ待ってください誰も取って欲しいなんて！！！！」
+
+止めた頃には手遅れで、彼女の目元から布が落ちる。
+
+その下にあったのは、目ではなかった。
+
+眼窩は二つとも深く空洞になっていて、赤黒く乾いた穴がぽっかりと開いているだけだった。
+まぶたの名残と、古い傷の縁だけが、そこにかつて目があったことを逆に生々しく示している。
+
+完全に空間が凍り付いていた。
+
+Veris「っ、ぁ……」
+
+Stella「え……」
+
+Eva「……は」
+
+Verisの喉から、引き攣ったような悲鳴が静寂を切り裂いた。
+
+Veris「きゃああああああああっ！！！！！！！！？？？？？？？？？？」
+
+がたん、と大きな音を立てて後ずさり、そのまま脚がもつれ、床へ尻もちをつく。
+
+Veris「な、な、なっ……えっ、え、目、目が……！！！！！！！！」
+
+Stella「Veris！？」
+
+Eva「…盲目だとは思っていたが、まさか無いとは…」
+
+Veris「何ですかこれ、何なんですかこれぇ！？やだやだやだ、うわああああああああ！！！！！！！」
+
+子供のように怯え動転するVeris。
+Solは次の瞬間、腹を抱えて笑い出した。
+
+Sol「っ、ははっ……あははははっ！！」
+
+Stella「えっ！？　わ、笑ってる！！」
+
+Sol「あっはは、何その反応、腰抜けてるじゃん！！バカじゃないの！！！ｗｗｗ」
+
+Veris「抜けますよ普通！！ というか笑わないでください！！」
+
+Sol「だって今の反応っ……ふ、あはははっ、最高……！！！ｗｗｗ」
+
+Veris「ふざけないでください！！あっちょこっち見ないで嫌あああああ！！！！！！」
+
+Evaもさすがに目を見開いたまま、珍しく数秒固まってる。
+しかし、目隠しを外したまま大笑いしているSolを見て、呆れたようにため息をつく。
+
+Eva「……いや、たしかにこれは驚かないわけがないが」
+
+Veris「当たり前でしょ！！！！」
+
+Stella「Sol、急に外しちゃだめだよぉ！！」
+
+Sol「聞いたのはそっちじゃん」
+
+Veris「だからって見せますか普通！？」
+
+Sol「面白いから見せたくなった」
+
+Veris「いい加減にしてください！！！！　ヒッ怖い……」
+
+Sol「あー、今の悲鳴でだいぶ元取れたな！」
+
+Veris「何の元なんですか！！ううぅ…」
+
+Verisが耐えられずに泣き崩れる。Stellaが慌ててVerisのそばに駆け寄る中、
+
+Solはまだ笑いの余韻を引きずりながら、布をひらひらと指先で振っている。
+
+そしてEvaがここぞとばかりに切り込む。
+
+Eva「…で」
+
+Sol「何」
+
+Eva「何でそんな状態で、あそこまで精密な修理ができるのかって話」
+
+Sol「しゃあねえな特別に教えてやるよ」
+
+Eva「…」
+
+Sol「私は天才だから全部直感で分かっちゃうんだよ、はいおしまい」
+
+Eva「…は？」
+
+Sol「ｗｗｗ」
+
+Eva「いや…もっと論理的に説明してくれないか…　いくらなんでも全盲が直感で全てが済むわけがないだろ」
+
+Sol「そんなの知らないって。分かるから分かる。触れば形も重さもズレも分かるし、動かした時の音と空気で噛み合わせも読めるし」
+
+Eva「……」
+
+Sol「あと人の立ち位置とか呼吸とかもだいたい分かる」
+
+Veris「それを“だいたい”で言うんですか……？」
+
+Sol「当たってるからいいだろ」
+
+Evaは珍しく小難しい事をこねくり回しているが、理論を全て超越するSolには敵わず唸り続けている。
+
+Solはようやく飽きたのか、布を元に戻す。
+慣れた手つきで結び直し、再びいつもの無愛想な店主の姿に戻る。
+
+Sol「はい、サービスタイム終了」
+
+Veris「何がサービスですか！」
+
+Eva「…ほんと気分で生きてるな」
+
+Sol「悪い？」
+
+StellaはVerisの背中をさすりながら、少し困った顔で、それでもSolの方を見る。
+
+Stella「でも……ほんとに、すごかったよ」
+
+Sol「え」
+
+Stella「いや全部。装置の修理もそうだけど、それだけじゃなくて……そんな状態で普通に店やってるのも、もっと普通じゃないし」
+
+Sol「褒めてるの？それ」
+
+Stella「褒めてるよ！すっごく！」
+
+Sol「…」
+
+Stella「あと、さっきはVerisがごめんね。私もずーっと気になってたけど、あの聞き方はちょっと急すぎたよね」
+
+Veris「Stellaさん……！」
+
+Stella「でも、それとは別で、今回ほんとに助かった。この装置、たぶんもう無理だと思ってたから」
+
+Sol「……」
+
+Stella「ありがとう、Sol。ほんとに、すごく助かった」
+
+Stellaはそう言って、修理された装置を両手で大事そうに抱えたまま、ぺこりと頭を下げた。
+
+店の中が少し静かになる。Solは返事をしなかったが、さっきみたいな刺々しい空気は少しだけ引いていた。
+
+Sol「…まあ、アンタは最初から話が分かりそうかなとはちょっと思ってたし」
+
+Stella「えっ、ほんと！？嬉しい！」
+
+Sol「泣きそうだったし」
+
+Stella「そこは忘れて！？」
+
+Eva「意外と情で動くタイプか」
+
+Sol「違うし。うるさいのが二人いたから比較でマシに見えただけ」
+
+Veris「またあなたは…！」
+
+Stella「あはは……」
+
+もはや初来店時の張り詰めた空気はどこかに消えていた。
+
+Stella「じゃあまた何か壊した時、お願いしていいかな？」
+
+Sol「来るな。というか壊すな」
+
+Stella「即答！」
+
+そういいつつも、Solは少しニヤけている。
+
+やがてVerisはまだ立ち直りきれていない顔で、なんとか立ち上がる。
+
+Veris「……私は、しばらくこの光景を忘れられない気がします……」
+
+Sol「勝手に命令されて勝手にバケモン扱いされて、本当私って被害者だね」
+
+Veris「あなた本当に性格最悪です！！」
+
+Sol「へいへい」
+
+Eva「……次に来る時は、Verisの心臓を止めないようにしてくれ」
+
+Sol「それは保証しない」
+
+Veris「してください……」
+
+Stella「じゃ、行こうか。これ以上いるとVerisがまた気絶しちゃうよぉ」
+
+Veris「しません！」
+
+Eva「さっき魂抜けてたけど」
+
+Veris「腰を抜かしただけです！」
+
+Sol「似たようなもんでしょ」
+
+Veris「似てません！」
+
+三人が扉の方へ向かう。
+その背中へ、Solが最後に面倒くさそうな声を投げた。
+
+Sol「Stella」
+
+Stella「ん？」
+
+Sol「今度から壊す前に気をつけろよ」
+
+Stella「……うん。気をつける」
+
+Sol「ならいい」
+
+Stellaは少しだけ嬉しそうに笑った。
+
+Stella「うん、ありがと」
+
+Sol「はいはい。帰れ帰れ」
+
+口調は相変わらず不愛想だったが、さっきまでよりは少しだけ棘が丸かった。
+Stellaはそれに気づいたのか、最後にもう一度だけ小さく手を振ってから、二人と一緒に店を後にした。
+
+----------------------------------
+
+それからというもの、三人がSolの店を訪れる機会は妙に増えた。
+
+・出所不明の部品の鑑定
+・研究室で拾った変な金具の用途確認
+・Stellaが「たぶん動く」と言い張る謎の小箱の開封
+
+みたいな、表の店へ持っていくほどではないが放っておくには気持ち悪い案件が、なぜか次々とSolのところへ流れるようになった。
+
+そして行くたびに、空気はだいたい同じだった。
+
+Stella「Solー、これ見てー。なんか中でカラカラ言うのに開かない箱ひろった」
+
+Sol「拾うなよそんなもん！」
+
+Veris「同意です。というか、何をどうしたらそんなものを持ち帰るんですか」
+
+Stella「だって面白そうだったし！」
+
+Veris「面白そうで危険物を拾わないでください！！」
+
+Sol「その真面目顔、今日も声だけはでけぇな」
+
+Veris「あなたにだけは言われたくありませんけど！」
+
+Sol「私は店主だからいいの！」
+
+Eva「まあまあ。で、開きそうなの」
+
+Sol「出来そう」
+
+Stella「やった！」
+
+Solは面倒くさそうに工具を差し込む。その姿を見てEvaがボヤく。
+
+Eva「…随分甘くなったもんだね」
+
+Veris「それは言えてます」
+
+Sol「甘くないけど。なんなの？」
+
+Stella「いやいや、すごく優しくなってくれて私は嬉しいよ！」
+
+Sol「うるさい！」
+
+----------------------------------
+
+さらに別の日。
+
+Eva「これ鑑定できる？」
+
+Sol「何」
+
+Eva「拾いもん。よくわからんが」
+
+Veris「またですか…」
+
+Eva「今回は私の案件だから」
+
+Stella「研究室、アレコレ拾う文化できちゃってない？」
+
+Veris「ないですよ！」
+
+Solが小さな金属片を指で転がす。
+
+Sol「……フェイクだね」
+
+Eva「ダメか」
+
+Veris「何なんですそれ」
+
+Eva「研究室の棚の奥から出てきたやつ。Stellaが“たぶん高い”って言うから…」
+
+Sol「偽物でも価値すらつかない方のゴミだな」
+
+Stella「ひど！！」
+
+Eva「なら捨てていいかぁ」
+
+Veris「…まず“拾いもん”とか“棚の奥から出てきた”とか、研究室の物を雑に扱うのをですね…」
+
+Sol「その真面目なの、今日はいちだんとだるいな」
+
+Veris「あなたに評価されたくありません！！」
+
+Eva「相変わらず相性最悪だな」
+
+Stella「でも前よりは仲良しになってるよね～」
+
+Veris「そんなわけありません！」
+
+Sol「なわけねえだろ！」
+
+Eva「息ぴったり…ふふっ」
+
+そんな調子で、小さな用事のたび、三人は路地裏の店に顔を出した。
+
+Verisとは会うたびに噛み合わない。
+
+Veris「…壁の請求書、まだ剥がさないんですか」
+
+Sol「なんか愛着湧いてきちゃった」
+
+Veris「そういう問題ではありません！」
+
+Sol「じゃああんたが剥がせば」
+
+Veris「嫌です！」
+
+Sol「相変わらず真面目なのは注文だけ多いなぁ」
+
+Veris「そちらこそ態度が悪すぎます！」
+
+Evaとは、わりと淡々としていた。
+
+Eva「これ、どう見ても壊れてる？」
+
+Sol「壊れてる」
+
+Eva「直せるか？」
+
+Sol「物による」
+
+Eva「じゃ、これは」
+
+Sol「無理」
+
+Eva「正直で助かる」
+
+Sol「お世辞言ってどうすんのさ」
+
+Stellaには、明らかに棘が少ない。
+
+Stella「Sol、これってさ」
+
+Sol「それは左から二番目の工具で回すんだよ。Stellaでもできるっしょ」
+
+Stella「えっ、すぐに分かるんだねぇ、すごーい！」
+
+Sol「見てないけど分かるよそんくらい。前も同じとこ弄ってたし」
+
+Stella「覚えててくれたんだ～」
+
+Sol「…うるさい」
+
+悪態をつきながらもSolもあまり強く返さない。
+Verisが毎回それを見て、微妙に納得いかなそうな顔をするところまでが、だいたい一連の流れだった。
+
+----------------------------------
+
+ある日の夕方。
+
+外は雨上がりで、店の空気が一段と湿っていた。
+
+Stella「うわっ！なんか今日、床いつもより滑らない？」
+
+Sol「濡れてるから当たり前でしょ」
+
+Veris「分かっているなら拭いてください！」
+
+Sol「だるい」
+
+Eva「……でも実際、よくこんなとこで生活できてるよね」
+
+その一言で、空気が少し止まる。
+
+Veris「……確かに、それは前から思っていました。ずっとここに住んでるんですよね？」
+
+Sol「そうだけど何？」
+
+Evaは店の奥に視線を向ける。
+衝立の向こうに簡素な寝台らしき影、棚の上の食器、吊るされた布、壁際の箱。どう見ても“仮住まい”ではなく、生活の痕跡そのものだった。
+
+そしてEvaが切り込む。
+
+Eva「……なんでこんなところに住んでんの？」
+
+Sol「……あんたらには関係ないでしょ」
+
+Eva「隠すほどもう他人でもないでしょ、私ら」
+
+Sol「……………」
+
+Stella「……まずいんじゃない？Eva」
+
+Eva「……そうかもしれん。愚問だった」
+
+Sol「いや、別にいいよ……　だけど、私はこの店を守り続けないといけないから」
+
+空気が一段と冷え、静寂に包まれる。Solが察したのか、珍しく自分から切り出す。
+
+Sol「……まあ、住むにはちょっとボロすぎるというのは認める。慣れたけど」
+
+Veris「慣れで済むもんなんですか…」
+
+Eva「食事とかは？」
+
+Sol「適当」
+
+Veris「…生計は？」
+
+Sol「生きてればいいだろ」
+
+Stella「あはは……」
+
+適当な調子だが、妙に説得力がある。だが、Stellaも同じくらい適当であった。
+
+Stella「ねぇ、たまにはうちらの研究室にも遊びに来ない？」
+
+Veris「Stellaさん！？」
+
+Sol「…あぁ？」
+
+Stella「だってぇ、こんな人気のないところで一人って寂しいでしょ。みんなと過ごしたら楽しいよ」
+
+Eva「始まったよ…」
+
+Solは黙りこくっているが、やがてあまり明るくない顔で返す。
+
+Sol「…私は一人の方が好きだから」
+
+Stella「そんなぁ」
+
+Eva「…でも、こういう場所の方が落ち着くってのは分からなくもないな」
+
+Sol「そういう事」
+
+Veris「私は分かりたくありませんが…」
+
+Sol「別に分からなくていいよ。あんたには温室がお似合いでしょ」
+
+Veris「またそんな言い方して！！」
+
+Eva「お前らケンカしてないと済まないのか？」
+
+Stellaは少しだけ店の奥を見て、それからSolの方へ向き直る。
+
+Stella「でもさ」
+
+Sol「何」
+
+Stella「こんなとこ住んでるって聞くと、やっぱりたまにはもう少し明るいとこ来ない？ って思っちゃう」
+
+Sol「やだ」
+
+Stella「即答！」
+
+Sol「明るいの疲れるんだって」
+
+Eva「まあこんな野郎は日陰がお似合いだな」
+
+Sol「お前も中々言うようになったなァ！」
+
+Stella「あはは…　でも今日はちょっと色々聞けたね」
+
+Veris「答え方は最悪ですけどね」
+
+Sol「最悪じゃない日あったっけ？」
+
+Stella「たまにあるよ！」
+
+Eva「…それはStella限定じゃないのか？」
+
+Veris「露骨すぎます！」
+
+Sol「静かだし、口答えしないし、ちゃんと礼言うからね」
+
+Stella「えへへ」
+
+Veris「…………」
+
+Eva「……まあでも、ここの事を大事にしているというのは分かった。それは私達もだしな」
+
+Sol「そゆこと」
+
+Veris「……私だけですかこの家の構造に納得行ってないの」
+
+Sol「うるさいなあほんとに！」
+
+Stella「あはは…」
+
+雨上がりの湿った空気の中、路地裏の店にはまたいつものように、噛み合うようで噛み合わない会話がしばらく続いた。
+少なくともSolは、もう三人を“すぐ追い出す客”では見なくなっていた。
+Verisだけはたぶん、まだぎりぎりだったけれど。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-03-2.html" class="nav-button prev">← ep3-2へ戻る</a>
+      <a href="episode-03-4.html" class="nav-button next">ep3-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

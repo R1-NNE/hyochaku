@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep3-5</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep3:"盲目の少女" sec-5</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+2週間後。Solの傷はすっかり癒えている。
+それでも「さよなら」なんて選択肢は当然のように無くなっていた。
+…というより、驚異的な速さで研究室に組み込まれていた。
+
+机の上では、Stellaが何かよく分からない金属片を並べている。
+ソファではEvaが半分寝ている。
+窓際ではVerisが洗濯物を畳みながら、すでに二回ほどため息をついている。
+そして床に近い低い机の前では、Solが部品箱をひっくり返したまま、頬杖をついていた。
+
+Stella「ねえSol、この細いバネどこから来たやつだっけ」
+
+Sol「知らなーい」
+
+Veris「ちゃんと把握しててください…　というか、床に部品を広げないでください！」
+
+Sol「今日はオフの日だし、たまには見逃してくれない？いいんちょ」
+
+Veris「休日でも片付けは必要です！というか誰が委員長ですか！」
+
+ソファの上でEvaが寝返りを打つ。
+
+Eva「朝から元気だねぇ」
+
+Veris「もう昼前ですよ」
+
+Eva「休日の昼前って朝だから」
+
+Sol「分かる」
+
+Veris「あんた達…」
+
+Stellaがその様子を眺めて、ふっと笑う。
+
+Stella「なんか、もうずっとここにいたみたいだねぇ」
+
+Sol「気のせい」
+
+Eva「いや、かなり馴染んでるでしょ」
+
+Veris「馴染んでいるのは事実ですが、だからといって工具を共用テーブルに常設するのはやめてくれませんか」
+
+Sol「じゃあ床に置くけど」
+
+Veris「片付けろって言ってるんです！」
+
+Stella「ヴェリちゃんー、今日はお休みなんだからちょっと力抜こうよ」
+
+Veris「休みだからこそ、最低限の秩序が必要なんです」
+
+Eva「その台詞、死ぬほどVerisって感じだな」
+
+Sol「お母さん？」
+
+Veris「その変な例えをやめてくださいと何度言わせるんですか！！！」
+
+Stella「あはは」
+
+笑いがひとしきり落ちたあと、Stellaが突然立ち上がった。
+
+Stella「よし、お昼つくろ！」
+
+Sol「お、待ってました！」
+
+Eva「もう飼いならされてるじゃねえか」
+
+Sol「だって美味しいんだもん」
+
+Stella「きゅ、急に褒められると私でも照れちゃうよぉ…」
+
+Solが小さく笑う。
+最初の頃は研究室で笑うこと自体が少なかったのに、今はこういうどうでもいい会話に混じってくる。
+
+Evaがそれに気づいたのか、薄く目を開けたまま言う。
+
+Eva「随分機嫌良くなったよね、Sol」
+
+Sol「そう？」
+
+Eva「初めて出会った時なんか、常時“全員敵”みたいな顔してたじゃん」
+
+Sol「そうだっけ？」
+
+Veris「貴方の態度で何回頭を抱えさせられたと思ってんですか…」
+
+Stella「でも前より優しいのは事実だね」
+
+Sol「Stellaにだけはな」
+
+Stella「えへへ～」
+
+Veris「そこで素直に喜ばないでくださいよ…」
+
+Eva「Verisには相変わらず当たりが強いな」
+
+Veris「不本意です」
+
+Sol「まっ因果応報でしょ」
+
+Veris「ほんとアンタは！！！！！」
+
+Stella「はいはい、喧嘩は後にしてねー」
+
+台所の方から、バターの溶ける音と共にStellaがやってくる。
+
+焼いたパン、卵、炒めた野菜、適当に見えて妙に整った盛り付け。
+休日のご飯としては十分すぎる。Evaが釣られてのそのそと立ち上がる。
+
+Eva「素晴らしい」
+
+Veris「見てないで運ぶのを手伝ってください」
+
+Eva「はいはい」
+
+四人で机を囲む。
+
+一瞬だけ、前からこうだったみたいな静けさが落ちた。
+たぶん全員、何となくそれに気づいている。
+
+Stella「いただきま～す！」
+
+Eva「ん」
+
+Veris「いただきます」
+
+Sol「……いただきます」
+
+Verisがほんの少し目を上げた。
+
+Veris「今、初めてちゃんと言いましたね」
+
+Sol「あ？」
+
+Veris「いただきますって」
+
+Sol「言ったらなんか困るの」
+
+Stella「えらい」
+
+Sol「…そこまで言われること？」
+
+Veris「昔のあなたから比べたら大きな進歩です」
+
+Sol「感じ悪っ」
+
+Stella「でも、なんかいいよねぇ」
+
+Eva「何が」
+
+Stella「こういうの！」
+
+Sol「雑すぎ」
+
+Stella「雑じゃないよ。前はもっと、誰かが食べてて誰かが寝てて誰かが怒ってて、って感じだったけど」
+
+Veris「今も大体変わってないですよ」
+
+Eva「間違いない」
+
+Stella「いやいや！そうなんだけどさ、前より“同じ空間にいる”感じあるじゃん」
+
+その言葉に、少しだけ間が空いた。
+
+Solはパンをちぎる手を止めて、肩をすくめる。
+
+Sol「……まあ、結局追い出されなかったからな」
+
+Eva「まだね」
+
+Veris「Evaさん！！！」
+
+Stella「追い出さないよ～」
+
+Sol「軽すぎるな」
+
+Stella「軽くじゃないって」
+
+その返しだけは、Stellaが珍しく少し真面目だった。
+
+Solは何も言い返さず、代わりにパンを口に運ぶ。
+
+Evaがぼんやりした声で続ける。
+
+Eva「でも実際、前より静かに落ち着いてるかもね」
+
+Veris「誰がですか」
+
+Eva「Sol」
+
+Sol「は？」
+
+Eva「前はずっと、居るだけでいつでも逃げられるようにしてる感じじゃなかった？」
+
+Stella「あー……ちょっと分かるかも」
+
+Sol「勝手に分析しないで」
+
+Eva「じゃあ今はしてないの？」
+
+Sol「……知らない」
+
+Veris「少なくとも、工具箱を共用部に置きっぱなしにするくらいには慣れたようですね」
+
+Sol「そこ蒸し返す？」
+
+Veris「片付けるまで言い続けますから」
+
+Eva「Veris、ほんとそういうとこだね」
+
+Veris「私何か間違ってますか！」
+
+四人の会話はそこでまたいつもの調子に戻る。
+
+休日の研究室は、相変わらず騒がしい。
+Verisは小言を言い、Evaはだらけ、Stellaは笑い、Solは文句を言いながらも拒むという選択肢はとっくに消えている。
+
+数週間前には想像もつかなかった光景なのに、今はもう、これがいつもの様子みたいな昼時であった。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-03-4.html" class="nav-button prev">← ep3-4へ戻る</a>
+      <a href="episode-04-1.html" class="nav-button next">ep4-1へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

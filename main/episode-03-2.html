@@ -1,0 +1,901 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep3-2</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep3:"盲目の少女" sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+扉がぎい、と嫌な音を立てて開いた。
+
+中は外から見た以上にひどかった。
+
+天井近くまで積み上がった木箱。
+机の上には工具、紙束、ガラス片、金属の輪、乾いた薬草、用途不明の部品。
+棚には雑貨らしきものが並んでいるが、整頓されているのか散らかっているのか判断に困る。
+空気には油と金属と古紙、それから微かに焦げたような匂いが混ざっていた。
+
+Stella「うわ……」
+
+Veris「……想像以上ですね」
+
+Eva「入ったことをちょっと後悔してるかもしれん」
+
+Stella「ねえほんとにここで合ってるの？　鑑定・修理っていうか、呪物の廃屋じゃない？」
+
+Veris「請求書を壁に貼る感性の時点でだいぶ疑わしかったですが、中も大概ですね…」
+
+その時、奥の方で何か金具の触れ合う音が止んだ。
+
+三人の会話が切れる。
+
+数秒遅れて、店の奥、積まれた木箱の向こうから人影が現れた。
+
+若い女がぬるりと現れた。
+白い布で目元を覆っている。髪は少し乱れ、服は実用一点張りで飾り気がない。
+手には細い工具を持ったまま。立ち方だけで、明らかに機嫌が悪いと分かる。
+
+若い女「……廃屋で悪かったな」
+
+Stella「ひいっ！！」
+
+Veris「……失礼しました。ですが、この体たらくでは言われても仕方ないのでは」
+
+若い女「…は？」
+
+Veris「外観も内装も、正直かなり問題があります。営業している店に見えませんよ流石に」
+
+Eva「Veris」
+
+Stella「ちょ、ちょっともう少し言い方あるでしょ……！」
+
+若い女はぴたりと足を止めた。
+目元は布で覆っており、見えていないはずなのに、まっすぐVerisの方へ顔を向ける。
+
+若い女「入って最初の言葉がそれ？」
+
+Veris「言われたくなければ、せめてもう少し片付けるべきでしょう」
+
+Stella「Veris！」
+
+若い女「出てけ」
+
+あまりに即答だった。
+
+Veris「……は？」
+
+若い女「同じ事言わせんな。今すぐ出てけ」
+
+Veris「いきなりすぎませんか？」
+
+若い女「いきなり店入ってきて悪態をついたのは？」
+
+Veris「…私は悪態ではなく、店としてあるべき姿をですね」
+
+若い女「それを悪態って言うんだけど。これだから温室育ちは」
+
+Veris「失礼な！！」
+
+若い女「失礼なのはどっち？」
+
+Stella「わ、わかった、わかったから二人ともちょっと落ち着いて……！」
+
+Veris「Stellaさん、私は別に」
+
+若い女「別にじゃない。客でもないのに文句だけ言うなら今すぐ帰れ」
+
+Veris「客です」
+
+若い女「もうアンタ客じゃないから。うるせーバカが入ってきただけ」
+
+Verisのこめかみがぴくりと引きつった。
+
+Veris「あなた、商売をする態度ではありません！」
+
+若い女「こっちもそう思ってるから。だから帰れよ早く」
+
+Evaが間に割って入る。
+
+Eva「申し訳ない、この堅物は意地っ張りでな…　悪気は……ないと思う」
+
+Veris「Evaさん！」
+
+Eva「あるじゃねえかよ」
+
+Veris「今はそういう話をしていません！」
+
+若い女「仲良しごっこなら外でやれば？」
+
+Eva「はいはい悪かった悪かった。こっちは喧嘩しに来たんじゃなくて、修理を頼みに来たんだ」
+
+若い女「……」
+
+EvaがVerisの抱えた布包みを顎で示す。
+
+Eva「ちょっと厄介な精密機器でさ…表の店じゃどこも手に負えなかった。
+あんたがそういうのを見られると聞いてやってきた」
+
+若い女「誰から」
+
+Eva「噂」
+
+若い女「キショ」
+
+Eva「まあそう言うなって。ちゃんと金は払う」
+
+若い女「……」
+
+Eva「かなり高いやつだし、金はいくらでも出す」
+
+何気ない一言だったが、店主の反応は一段と冷え切っていた。
+
+若い女「出てけ」
+
+今度はEvaに向けてだった。
+
+Eva「……は？」
+
+若い女「今の、すごい感じ悪いね」
+
+Eva「え、金の話がか？」
+
+若い女「“いくらでも出す”ってやつ。私そういうの嫌い」
+
+Eva「別に値切る気ないって意味なんだけど」
+
+若い女「知るか。嫌なもんは嫌だっつってんの」
+
+Eva「いや待って、こっちはほんとに困ってて」
+
+若い女「困ってるやつが最初に言うことじゃないでしょ、それ」
+
+Eva「じゃあ何、“助けてください”って泣きつけば良かったのか？」
+
+若い女「少なくとも金積めばなんとかなるでしょみたいな顔はしねえんだよ」
+
+Eva「顔見えてないくせに」
+
+若い女「見えてなくても分かる」
+
+Evaがやや面食らったように押し黙る。ありえない話ではあるが、あまり嘘を言ってるようには見えない。
+
+Stella「ね、ねえ、とりあえず品物だけでも見てもらえないかな……？　お願い」
+
+若い女「同じ事何回言わせる気？さっきから私感じ悪くさせられてばっかなんだけど」
+
+Veris「感じ悪いのはそちらです！」
+
+若い女「まだいたの？」
+
+Veris「いましたが」
+
+若い女「…ほんとに出てってほしいなぁ　ねぇ？」
+
+Stella「ひいぃ…」
+
+若い女は工具を机に放り、壁に寄りかかった。
+
+若い女「…第一印象はゴミ。
+入ってきて店の有様に文句つけるやつと、金で黙らせようとするやつ。
+その二人連れてる時点で、その泣きそうなのもロクでもないでしょって以外に感想ない」
+
+Stella「泣きそうなのバレちゃってるよぉ！」
+
+若い女「だから分かるって言ってるでしょ。これ以上イラつかせる前に出てって」
+
+Eva「何がそんなに気に障ったの」
+
+若い女「全部」
+
+Eva「雑！」
+
+若い女「そっちが雑な入り方したんだろ」
+
+Stella「……ねえ、VerisとEvaだけ外で待ってる、とかじゃだめ？」
+
+Veris「Stellaさん」
+
+Eva「それはそれで屈辱的だな」
+
+若い女が少し考える。帰ってきた返答は少し意外だった。
+
+若い女「いいよ」
+
+Stella「えぇ！？」
+
+若い女「まずその二人、さっさと外。泣きそうなのだけなら、まだ話くらいは聞く」
+
+Veris「イヤです」
+
+若い女「じゃあ全員帰って」
+
+Eva「ちょっと待ってって！」
+
+若い女「待たない」
+
+Eva「いや、ほんと頼むって。
+こっちも必死なんだよ。壊したの高いし、表の店全部無理で、やっとここまで来たのに」
+
+若い女「そっちの事情なんて知らないから。私の機嫌より優先されると思わないで」
+
+Veris「なんですかその基準は！」
+
+若い女は今にも爆発寸前だった。
+
+若い女「ほんと無理。今すぐ出てけよ」
+
+Evaがこめかみを押さえ、小さく息を吐く。
+
+Eva「……分かった。本当に悪かった。さっきまでの言い方は訂正する。
+でも、修理代はちゃんと払う。値段の問題じゃないなら、相場でいい。とにかく見てほしい」
+
+若い女「同じ事を何回言わせる気？」
+
+Eva「あっもうムリかこれは」
+
+若い女「そこの二人、外。今すぐ。それが無理なら全員帰れ」
+
+Veris「……っ」
+
+Eva「……はぁ」
+
+Verisは明らかに不満そうな顔、Evaも苛立ったように頭を掻く。
+
+Stella「えっと……その……」
+
+若い女「十秒」
+
+Veris「数え始めないでください！」
+
+若い女「九」
+
+Eva「ほんとに数えるんだ」
+
+若い女「八」
+
+Eva「分かった分かった、出る。出るからその最悪なカウントやめて」
+
+若い女「六」
+
+Veris「1個飛ばしてますよちょっと！」
+
+VerisとEvaは顔を見合わせ、どう見ても納得していない顔のまま、ぎしぎし鳴る床を踏んで入口へ向かった。
+Stellaだけがその場に取り残され、布包みを抱えたまま、おろおろと若い女と扉の間を見比べていた。
+
+----------------------------------
+
+鈍い音を立てて扉が閉まる。
+
+店内に残ったのは、Stellaと若い女だけだった。
+
+ぎし、と床板が鳴る。
+妙に広く感じる沈黙の中で、Stellaは壊れた装置を抱えたまま、しばらく口を開けなかった。
+
+若い女「……で」
+
+Stella「っ、は、はい」
+
+若い女「何。まだいるなら話して」
+
+Stella「え、えっと……」
+
+若い女「早く」
+
+Stella「ご、ごめんね。えっと、まず、その……二人が失礼なこと言って」
+
+若い女「うん」
+
+Stella「ほんとにごめんなさい」
+
+若い女「うん」
+
+Stella「あと、お店のことも、その、たしかにちょっと……びっくりしたのは事実なんだけど……」
+
+若い女「正直だな」
+
+Stella「でも、あの、見た目で決めつけるつもりはなくて……！というか、今もう私、そこ気にしてる場合じゃなくて……！」
+
+若い女「それも正直」
+
+Stella「ごめんなさい……」
+
+若い女は返事をしない。
+やる気無さそうに店の奥の机に寄りかかったまま、Stellaの方を向いている。目元には布、見えていないはずなのに、妙に見透かされている感じがする。
+
+Stellaは喉を鳴らして、一歩だけ前に出た。
+
+Stella「えっと、ほんとに困ってるんだ。
+これ、私が壊しちゃって。すごく大事なもので、でも替えも利かなくて、表の店でも全部だめで……」
+
+若い女「そのへんは聞いたから」
+
+Stella「う、うん。だから、できるかどうかだけでも見てほしいなって」
+
+若い女「……」
+
+Stella「できないならできないでいい。怒らないし、文句も言わない。
+でも、ちゃんと見て“無理”って言われたら諦められるから」
+
+若い女「さっきの二人には散々文句言われたんだけど」
+
+Stella「その時は私が止めるから！」
+
+若い女「止められるの？」
+
+Stella「……がんばります」
+
+若い女「頼りな…」
+
+Stella「ごもっともです……」
+
+若い女は小さく鼻で笑った。
+笑ったというより呆れに近い短い息だったが、Stellaはその気配を逃さず、そっと布包みを持ち上げる。
+
+Stella「これ、見てもらっていい？」
+
+若い女「もっと近くに」
+
+Stella「は、はい」
+
+Stellaがカウンターの前まで来ると、Solは手を出した。
+
+若い女「見せて」
+
+Stella「うん」
+
+布越しにそっと置かれた装置へ、若い女の指が触れる。
+その動きは早くもなく遅くもなく、けれど迷いがなかった。割れた輪郭、ねじれたフレーム、欠けた薄板、軸の歪み。指先が通るたびに、Stellaは自分の失敗が再確認されるようで妙に居心地が悪くなっている。
+
+Stella「……どう？」
+
+若い女「黙って」
+
+Stella「ご、ごめんなさい！」
+
+また沈黙が落ちる。Stellaは息を詰めたまま、待ち続けるしかなかった。
+
+やがて若い女が、ひどく嫌そうな声で言う。
+
+若い女「……めんどくさ」
+
+Stella「だ、だめ…？」
+
+若い女「まだそう言ってないけど」
+
+Stella「じゃあ……！」
+
+若い女「私より先に結論言わないでくれる？」
+
+Stella「ごめんなさいぃ…」
+
+若い女「はぁ…これ、中の軸が死にかけ。外側も歪んでる。透明板も一枚欠けてるし、固定具も一個飛んでる。
+普通なら断る」
+
+Stella「ふ、普通じゃないなら……？」
+
+若い女「普通じゃなくて悪かったな」
+
+Stella「ごめんなさいぃぃ……！」
+
+若い女は装置から手を離し、軽く肩を回した。
+
+若い女「条件伝える。まず、さっきの真面目なのと、だるそうなの、次来る時も連れてきていいけど口出しさせないで」
+
+Stella「VerisとEvaだね」
+
+若い女「ムカつくから覚えさせないで」
+
+Stella「ひぃっ！」
+
+若い女「二つ目。修理中に“どうなってますか”って聞きに来ないで」
+
+Stella「わかった」
+
+若い女「三つ目。直る保証はしない。
+見た感じたぶん何とかなるけど、元と同じ精度まで戻るかは分からない」
+
+Stella「うん」
+
+若い女「四つ目。高いよ」
+
+Stella「うん」
+
+若い女l「……そこ即答なんだ」
+
+Stella「さっきの見てたから…」
+
+若い女「…」
+
+Stella「あ…」
+
+やってしまったとオロオロするStellaの顔を尻目に、若い女は装置を布ごとひょいと持ち上げた。
+
+Stella「あっ」
+
+若い女「預かる」
+
+Stella「え、今？」
+
+若い女「今じゃなきゃいつやるの」
+
+Stella「い、いや、あの、ほんとに？　あ……ありがとぉ………」
+
+若い女「泣くほどかよ」
+
+Stella「泣いてないもん……！」
+
+若い女「大袈裟」
+
+Stella「…大袈裟じゃないよ。ほんとに困ってたの…」
+
+若い女「……」
+
+Stella「改めて、ほんとにありがとう」
+
+若い女は一瞬だけ黙った。
+その短い沈黙のあと、明らかに面倒そうな声で言う。
+
+若い女「一週間後」
+
+Stella「え？」
+
+若い女「一週間後に来い。それまで絶対に来ないで。扉叩かれても無視するから」
+
+Stella「う、うん、分かった」
+
+若い女「代金はその時」
+
+Stella「うん」
+
+若い女「こんなものブッ壊したの、もう少し反省しといて」
+
+Stella「してるよぉ……！」
+
+若い女「ならいいけど…」
+
+Stella「えっと、ほんとにありがとう。あと二人のこともごめんね。特にVerisは悪気は……ある時もあるけど、そんなに悪い人じゃなくて」
+
+若い女「フォロー雑だな」
+
+Stella「難しいんだって！」
+
+若い女「知るか」
+
+そう言い捨てて、若い女は装置を抱えたままくるりと背を向けた。
+
+Stella「あ、あの！」
+
+若い女「何」
+
+Stella「名前、聞いてもいい？」
+
+ほんの一瞬だけ間があったあと、若い女が告げる。
+
+若い女「Sol」
+
+Stella「……Sol」
+
+Sol「それだけ」
+
+Stella「うん。私はStella」
+
+Sol「さっき聞いたけどそれは」
+
+Stella「えへへ…」
+
+Sol「…じゃ、一週間後」
+
+それだけ言うと、Solは本当にそのまま奥へ消えた。
+積み上がった木箱の向こうに姿が消え、やがて金具と工具の音だけが微かに戻る。
+
+Stellaはしばらくその場で立ち尽くしていたが、ようやく小さく息を吐いた。
+
+Stella「……たすかったぁ……」
+
+それから慌てて扉の方へ向かい、外へ出た。
+
+----------------------------------
+
+店の外。
+掘っ立て小屋の前の壁際で、Verisは腕を組んだまま険しい顔をしていた。Evaはその横の樽みたいな箱に腰掛けて、いかにも暇そうにしている。
+
+Veris「遅いですね…」
+
+Eva「まだ10分も経ってない」
+
+Veris「十分長いですよ…」
+
+Eva「Veris、ああいうタイプに一番相性悪いよね」
+
+Veris「どういう意味ですか」
+
+Eva「口悪い、態度悪い、気分屋、コレだけで十分すぎるほど張り合えるな」
+
+Veris「最悪です」
+
+Eva「ふふっ…」
+
+Veris「笑うとこじゃないです。そもそも、初対面の客に“出ていけ”とは何なんですか」
+
+Eva「言われるだけのこともしたんじゃないの」
+
+Veris「私そんなにしましたか？」
+
+Eva「したよ」
+
+Veris「…私は率直な感想を述べただけです」
+
+Eva「それを言うタイミングというものがあるんだよ」
+
+Veris「はぁ…」
+
+Evaはややばつが悪そうに続ける。
+
+Eva「でもまあ、あの店主が感じ悪いのは事実」
+
+Veris「感じ悪いどころではありませんよ！失礼、横暴、不親切、短気。
+しかもあの有様でこちらに文句を言う資格があると思っている、何様なんですか！？」
+
+Eva「めちゃくちゃ怒ってるじゃん」
+
+Veris「当然でしょう！！」
+
+Eva「…でもStellaだけ残したのは意外だったな。本当に読めない奴だ」
+
+Veris「私たちが邪魔だっただけでは？」
+
+Eva「それは絶対にそうだな」
+
+Verisは深くため息をつく。
+
+Veris「とはいえ、Stellaさんひとりをあそこへ残し続けてるのは不安で仕方ないです」
+
+Eva「まあ刺されたりはしないでしょ」
+
+Veris「極端すぎませんか！」
+
+Eva「実際そうじゃん。あの店主、態度は最悪だけどほんとに危ないやつなら最初から扉開けた時点で追い返してると思う」
+
+Veris「その結果私達は外に放り出されてるんですが」
+
+Eva「そこはほら、私たちが悪かったから…」
+
+Veris「……あなた、ああいうタイプに慣れていますよね」
+
+Eva「まあ医者やってた時にそういうのはいくらでもいたしなぁ。私みたいに腕はあるけど性格終わってるやつ」
+
+Veris「すっごい嫌な物言いですね」
+
+Eva「でも、腕があるからなんとかなるでしょ、とか思ってたら今や研究室のソファだし」
+
+Veris「自覚してるならちょっとくらい作業してくれませんか…」
+
+Eva「やだ」
+
+Verisは呆れつつ、小屋の扉をちらりと見た。
+
+Veris「…本当に修理できるんでしょうか」
+
+Eva「さあ」
+
+Veris「そこは嘘でも出来るって言ってくださいよ」
+
+Eva「じゃあ、半分くらいはいけるかも」
+
+Veris「この皮肉屋が…」
+
+Eva「…もともと安心材料なんてないでしょ」
+
+Veris「……それもそうですが」
+
+Eva「…ただ、あの反応見る限り、少なくとも中身は分かってるっぽかったな」
+
+Veris「本当ですか？」
+
+Eva「ああ。目は見えんがあの仕草は“だるいの持ってきたな”って雰囲気が見えた」
+
+Veris「雑な分析ですね…」
+
+Eva「でも当たってる気はする」
+
+その時、ぎい、と扉が開いた。
+
+Stellaが出てくる。
+入る時より明らかに顔色が戻っていた。
+
+Stella「……はぁーっ」
+
+Veris「Stellaさん！」
+
+Eva「生きてたか」
+
+Stella「その感想やめてよ！」
+
+Veris「どうでした！？　何かされませんでしたか！？　失礼なことを言われたりとか！ひどいことされてませんか！？」
+
+Stella「過保護すぎるよぉ！失礼なことはまあ、ちょっとあったけど」
+
+Eva「刺されてなくて良かったな」
+
+Stella「それはそれとして、見てもらえたよ！」
+
+Veris「え！」
+
+Eva「ほお」
+
+Stella「預かってもらえたよ。一週間後に来いだって」
+
+Veris「本当ですか！」
+
+Stella「うん！」
+
+Eva「泣きそうなの、中々やるじゃん」
+
+Stella「泣きそうなのって言うな！」
+
+Verisはほっとしたように肩の力を抜いたが、すぐにまた眉を寄せる。
+
+Veris「……ですが、一週間後、また来ないといけないんですか。ここに」
+
+Eva「しかも今度はたぶん、もう少し機嫌を損ねないようにしないといけない」
+
+Veris「……」
+
+Stella「Veris」
+
+Veris「分かっています」
+
+Eva「こんなにも心に響かない分かっていますがあるか」
+
+Veris「分かっていますってば！」
+
+Stella「ええっと…　次入る時は二人とも、店の有様やら態度に物申すの禁止ね」
+
+Veris「……努力します」
+
+Eva「努力ねぇ」
+
+Stellaが午前中ぶりにけらけらと笑う。
+
+Stella「今の言い方、Solみたいだったねぇ」
+
+Eva「えっ誰？」
+
+Stella「あっ、店主の名前だよ」
+
+Veris「名前教えてもらったんですか」
+
+Stella「うん。Solだって」
+
+Eva「へえ」
+
+Verisはそのぼろ小屋を改めて見上げた。
+
+Veris「……Sol、ですか」
+
+Stella「うん。すっごい感じ悪かったけど、ちゃんと見てくれた」
+
+Eva「それならまあ、当たりか」
+
+Veris「性格は大外れですけどね」
+
+Eva「お前マジで黙っててくれよ…」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-03-1.html" class="nav-button prev">← ep3-1へ戻る</a>
+      <a href="episode-03-3.html" class="nav-button next">ep3-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
