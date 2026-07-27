@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4-7</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4:"空白の少女" sec-7</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室。
+
+静かな空気が流れていた。誰も口を開かない。
+
+Evaの長い話が終わり、部屋には時計の針だけが響いている。
+窓から差し込む夕日が、研究室を淡く染めていた。
+
+しばらく沈黙が続いた後、Evaが小さく肩をすくめる。
+
+Eva「……まっ」
+
+三人が顔を上げる。
+
+Eva「その後、そいつが目覚めるまで何年もかかっちゃったんだけどね」
+
+あまりにも軽い口調で〆ようとする。まるで「電車が少し遅れた」くらいの話をするようなノリである。
+
+場の空気が変に硬直する。耐えきれず真っ先に口を開いたのはVerisだった。
+
+Veris「……いやいやいや」
+
+Eva「何」
+
+Veris「そこが一番重い話でしょう！！」
+
+Eva「えっ、そう？」
+
+Veris「そうですって！」
+
+Evaはソファへ深くもたれ掛かり、長話を終えた達成感からか完全に顔は緩んでいる。
+
+Eva「なーんか、振り返って話してみてクソ長かったなぁとは思ったわ」
+
+Veris「思う、で済ませる話じゃありませんって！」
+
+Eva「まあ終わったことだしさ。めでたしめでたし」
+
+Veris「終わったから良いという問題でもありませんよ！」
+
+Verisがガミガミしてる中、Solは腕を組みながら、じっとEvaを見つめていた。
+やがて勢いよく立ち上がった。
+
+Sol「ねぇねぇ、一番おいしいところ聞いてないんだけど！」
+
+Eva「え」
+
+Veris「おいしいって……漫画じゃないんですよ」
+
+Sol「いやいやいや、だってさ！医者になるって決意してから頑張り続けて、晴れて医者になりました、んでその人が起きましたって
+ところをさ、一言で端折ってないか！？」
+
+Eva「そうだな」
+
+Sol「そーこーをなんで飛ばしちゃうの！！一番面白いところじゃん！！」
+
+Eva「いや……シンプルに長くなるし」
+
+Sol「いやそこ気になるって！！聞く側の気持ち考えろ！」
+
+Eva「う～ん……また今度な」
+
+Sol「えぇぇぇ！？」
+
+頭を抱えて大げさに崩れ落ちる。
+
+Sol「連載漫画で一番いい場面を次巻送りにされた気分なんだけど！」
+
+Eva「連載漫画もそんなもんでしょ」
+
+Sol「鬼！」
+
+Veris「確かに少し気になりますけど……」
+
+Eva「話し始めるとさらに長いぞ」
+
+Sol「聞く聞く！はやく！」
+
+Eva「もうやだ。疲れた」
+
+Sol「んもーーー！！！！！」
+
+不満そうに頬を膨らませながらソファへ倒れ込む。
+その様子を見ていたStellaが、くすくす笑っている。
+
+Stella「懐かしいねぇ、大学の時はずっとそんなこと言ってたもんね」
+
+Veris「え、何がですか」
+
+Stella「大学時代のEvaってさ、すっごく怖かったんだよ」
+
+Sol「えぇ！？！？」
+
+Veris「……」
+
+Eva「おい、やめろ」
+
+Stella「図書館の隅でいつも難しい医学書読んでてさ、誰とも喋らないしいつも難しい顔してた。私が最初話しかけても『邪魔』とか『余計なノイズを吹き込んでくるな』とか、ほんとに冷たかったよねぇ」
+
+Solが吹き出す。
+
+Sol「わははは！！！ありえないでしょ、このぐーたら生物が！？」
+
+Verisも苦笑する。
+
+Veris「今のEvaさんからは……その……全く想像できませんね」
+
+Eva「お前ら揃いも揃って失礼だな」
+
+Veris「だって今のあなた、一日の大半ソファに寝転がってるじゃないですか」
+
+Eva「そうだね」
+
+Veris「……真面目に出来るんならちょっとくらい日常でもやる気を出して頂けると」
+
+Eva「余計なノイズを吹き込んでくるな」
+
+Veris「ちょっとコラ！！！！！！！」
+
+Stella「あはは……私達友達になれたのも奇跡かもしれないねぇ」
+
+Evaがほんのちょっとだけ真面目な顔になる。
+
+Eva「……まぁ確かに、Stellaと出会ってなければこの研究室も無かったわけだからな」
+
+Sol「ちょっとまた気になる事言うじゃん！生殺し！」
+
+Stella「んーじゃあちょっとだけ……当時の私達はどっちも張り詰めてたから……なんかお互いが心の支えになってたとゆーかね」
+
+Veris「StellaさんのEvaさんへの信頼はそこから来てるんですね。だからと言ってこれは甘やかしすぎな気もしますが」
+
+Eva「うるせぇな……」
+
+Evaがまたいつもの顔に戻る。Solはニヤニヤ笑いながらそれを見ている。
+
+Sol「つまりさ、Evaって燃え尽き症候群ってやつ？」
+
+Eva「ご名答」
+
+Sol「ずーっと全力疾走してさ、目標達成したらﾌﾟｽﾝ……って、気抜けちゃってるね」
+
+Stella「Evaがうちに転がり込んできた時とかもっと酷かったけどねぇ」
+
+Eva「否定はせん」
+
+Verisは腕を組んで小さく息を吐く。
+
+Veris「何というか……少し安心しました」
+
+Eva「何が」
+
+Veris「今の貴方しか知らなかったので、昔からずっとやる気がない方なのかと」
+
+Eva「私はやれば出来る娘だから。今でも追い込まれればやるよ」
+
+Veris「普段からやってくれませんかそれ」
+
+Eva「ムリ」
+
+Veris「…………」
+
+いつもの調子だった。
+
+Verisが頭を抱え、Solが笑い、Stellaものんびり笑っている。
+
+Evaはソファへ寝転がり直し、天井を見上げる。
+昔を思い出したせいか、ほんの少しだけ遠くを見るような目をしていた。
+Stellaがその横顔を見つめる。
+
+Stella「でもさ、Quanちゃん、本当に起きてよかったね」
+
+Evaは数秒だけ黙り、それから小さく笑った。
+
+Eva「……ああ」
+
+その一言だけは、今までの軽い調子とは違っていた。
+
+-----------------------------------------　
+
+一週間後の朝。
+
+Evaは珍しくソファで寝ていなかった。
+白衣ではなく、動きやすい私服に薄手の上着だけを羽織り、鞄を肩へ掛ける。
+
+Veris「もう出られるんですか」
+
+Eva「ああ。昼過ぎくらいには戻る」
+
+Sol「喧嘩すんなよな」
+
+Eva「無理な注文だな」
+
+Veris「そこは肯定してくださいよ……今日だけまたお医者様なんですから」
+
+Eva「どういう理屈だよ」
+
+Stellaは笑いながら手を振る。
+
+Stella「いってらっしゃーい」
+
+Eva「ん」
+
+軽く手を上げるだけで研究室を出る。
+静かに扉が閉まった。
+
+-----------------------------------------　
+
+通い慣れた道を歩く。何度歩いたか分からない。
+数年前は、この道を走るように病院へ向かっていたが、今では足取りも穏やかになった。
+
+幾度となく見た因縁の病院へ入り、受付で軽く挨拶を済ませる。
+看護師たちもすっかり顔馴染みだった。
+
+「おはようございます、Eva先生」
+「今日もよろしくお願いします」
+Eva「先生はやめてよ」
+
+苦笑しながら廊下を進む。
+免職されて久しいが、この病院だけは特別だった。
+Quanのリハビリだけは、なんやかんやで今も任されていた故である。
+
+病室の前で立ち止まり、一度だけノックする。
+返事はないがいつものことだった。
+
+そのまま扉を開けると、病室は朝日で明るく照らされていた。
+
+窓際のベッド。そこへ腰掛ける一人の少女。
+
+肩口で切り揃えられた白髪。
+雪のように色素の薄い髪が、朝日を受けて淡く光る。
+
+細い身体。
+病衣の袖から伸びる腕は、どこか儚さすら感じさせるほど華奢だった。
+
+そして、その瞳。
+六年の眠りから目覚めても変わらない。
+
+冷たく鋭い灰色の瞳が、扉を開けたEvaを一瞥する。
+病衣の裾からは義足が覗いていた。
+
+事故で失った右脚。
+最新の義足を装着しているものの、まだ自由には歩けない。
+立つことはできても、長く歩けばすぐ疲れる。
+
+今もベッドへ腰掛けたまま、本を読んでいた。
+
+Quan「……遅い」
+
+開口一番、それだった。
+Evaが思わず苦笑する。
+
+Eva「挨拶くらいちゃんと言え」
+
+Quan「必要性が無い」
+
+Eva「はぁ……」
+
+Quanは本を閉じる。
+
+Quan「相変わらず暇そうで何よりだな」
+
+Eva「リハビリ担当者に言う台詞がそれか」
+
+Quan「免職された無職がアサインされている私の気持ちも考えたらどうか」
+
+Eva「お前が『人の気持ちを考えろ』なんていう日が来るとはな」
+
+Quan「論点をすり替えようとしてくるな」
+
+Eva「めっちゃ効いてるじゃん」
+
+Quanは露骨に眉をひそめる。
+
+Quan「……腹立たしい」
+
+Eva「久しぶりに聞いたな、それ」
+
+Quan「そんなに恋しかったのか」
+
+Eva「……否定しきれない」
+
+Quan「本当に気色悪いなお前は」
+
+六年前と何も変わらない、刺々しいやり取りである。
+
+否、変わったことはある。
+
+Quanは事故の後眠っていた六年間を失っており、
+Evaはその六年間を全力で駆け抜けた。
+
+それなのに、二人だけは何事もなかったかのように、昔の続きと言わんばかりに刺し合っている。
+Evaにだけは、いつ来てもそれがどこか嬉しかった。
+
+Quanがふと窓の外を見る。
+
+Quan「研究室……とか言ってたな、前に。まだ潰れてないのかあそこは」
+
+Eva「失礼だな。いらん心配をしなくていい」
+
+Quan「お前がいる時点で安定性が担保できてないのは明白だ」
+
+Eva「もっと不安定材料もいるんだけどな」
+
+Quan「お前には敵うまい」
+
+Eva「どうかな」
+
+Evaは笑いながら立ち上がり、病室の隅へ置かれた歩行器と義足の調整具を確認する。
+表情が少しだけ変わり、徐々に医療従事者の顔になっていく。
+
+Eva「さて」
+
+Quanも本を閉じる。表情は相変わらず不機嫌そうなままだった。
+
+Eva「今日も歩こうな」
+
+Quan「面倒だ」
+
+Eva「流石に聞き飽きたぞ」
+
+Quan「毎回面倒なことに変わりはない」
+
+Eva「じゃあ今日は二倍歩こうな」
+
+Quan「どういう理屈だ。本当に性格が悪い」
+
+Eva「お互い様だって」
+
+Quanは小さくため息をつきながら、ゆっくりベッドから立ち上がる。
+義足へ慎重に体重を乗せるが、その動きはまだぎこちないままだ。
+
+一歩。また一歩。
+それでも前へ進む。
+
+Evaは隣へ立ち、転倒しない距離だけ保ちながら静かに見守った。
+
+眠り続けていた少女は今、自分の足で未来へ進もうとしている。
+
+その歩みはまだ遅いが、確実に、一歩一歩前に進み続けていた。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-6.html" class="nav-button prev">← ep4-6へ戻る</a>
+      <a href="episode-04-5-1.html" class="nav-button next">ep4.5-1へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

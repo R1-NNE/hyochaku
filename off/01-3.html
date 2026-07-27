@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep1-3:料理当番制導入</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep1:料理当番制導入 sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+翌日、夕方。
+前日のSolの「見た目は終わってるのに味は普通にうまい」という妙に評価しづらい一皿の余韻が、まだ研究室に残っていた。
+
+そんな中、当番二日目。
+キッチンに立つはずのEvaは、開始十分でやる気のなさを隠すことすらやめていた。
+
+冷凍庫の扉が何度も開き、閉まり、電子レンジが無機質な音を繰り返している。
+
+Veris「……なんか、嫌な予感がしてきたんですけど」
+
+Sol「火使ってなくね？」
+
+Quan「少なくとも、現時点で調理工程らしいものは観測されていない」
+
+Stella「でもほら、Evaって頭いいから！なんかすごいことしてるんだよ！」
+
+Veris「料理はそういう問題でもないと思いますが……」
+
+数分後。
+食卓に並んだのは、見事なまでに既製品の群れだった。
+
+冷凍チャーハン。
+冷凍からあげ。
+冷凍餃子。
+冷凍パスタ。
+冷凍グラタン。
+冷凍のたこ焼きまである。
+
+しかも量が多い。やたら多い。
+居酒屋の雑な宴会卓みたいになっていた。
+
+一同、沈黙。
+
+Sol「…………」
+
+Veris「…………」
+
+Quan「…………」
+
+Stella「うわあ」
+
+Eva「召し上がれ。豪華だろ」
+
+Veris「あの、これ全部冷凍食品ですよね？」
+
+Eva「うん」
+
+Sol「うん、じゃないんだろ！」
+
+Stella「すごい！ 冷凍庫の中身がほぼ全部出てきてるね！」
+
+Veris「当番制の意味がないでしょう！？」
+
+Eva「あるよ。私が開封して温めた」
+
+Sol「そんなんで料理なわけねえだろ！」
+
+Quan「こいつの図太さには平伏する」
+
+Evaは椅子に座ると、やり切った顔で箸を持つ。
+
+Eva「いやでもさ、ちゃんと栄養あるし、味も安定してるし、時間も節約できる。合理的じゃん」
+
+Veris「あのですね、そういう問題ではなくて！」
+
+Quan「事実として、失敗率は極めて低いし合理的だ」
+
+Veris「でも“作った”とは言えないでしょう！」
+
+Eva「加熱という工程を経てるから」
+
+Sol「その理屈なら私でも炊飯器に米入れたら料理人名乗れるからな」
+
+Stellaがチャーハンを一口食べる。
+
+Stella「おいしいね！」
+
+Sol「当たり前だろ」
+
+Quan「標準的な味だな」
+
+Eva「つまり問題ないってことで」
+
+Veris「大ありですよ！」
+
+Eva「昨日も似たようなこと言ってなかった？」
+
+Sol「昨日は私の苦闘の末の問題作だったろ。今日はただの手抜き定食なんだよ」
+
+Eva「問題なく食べられるならそれでいいじゃん」
+
+Veris「よくないです。よくないに決まってるでしょう。共同生活の夕飯当番って、そういうことじゃないんですよ」
+
+Eva「じゃあどういうこと？」
+
+Veris「……その、人が作る責任とか、誠意とか、段取りとか、そういう」
+
+Eva「重いなあ」
+
+Veris「重くないです！」
+
+Stella「でもVerisの言う通りだよ。せっかく当番制にしたんだから、“その人のごはん”が見たいよね」
+
+Eva「私のごはんだよ。私が選び、私が温めた、真心込めたごはんだよ」
+
+Sol「最悪の詭弁」
+
+Quan「ゴミ」
+
+Evaは面倒そうにからあげをつまんだ。
+
+Eva「いやさ……別にStellaも毎日手料理なわけじゃないし」
+
+Sol「今その話してない」
+
+Veris「私達は、“最低限ちゃんと料理してください”と言ってるだけです」
+
+Quan「要求水準は高くない」
+
+Eva「……」
+
+Evaが言い訳したそうな顔で冷凍餃子をつまむ。それを見てStellaが言い放つ。
+
+Stella「……もしかしてEva、料理できない？」
+
+Eva「……は？」
+
+Sol「草」
+
+Veris「……普通料理って言われたら簡単なものでもなんか作りますよ。冷食出すのは嫌がらせか本当に出来ないとしか思えません」
+
+Eva「お、おま……」
+
+Evaが露骨に焦り始める。するとQuanが珍しく口角を僅かに上げて喋り始めた。
+
+Quan「面白い話を思い出した。高校の調理実習、こいつのいた班で爆発沙汰があった」
+
+Eva「」
+
+Stella「えぇっ！？！？」
+
+Sol「マジ？ｗｗ」
+
+Quan「茹で卵を作れって言われてたが、人数分の生卵を電子レンジに入れて御釈迦にしていた。学年2位のこいつがだ」
+
+Veris「う……嘘でしょ……ふふ……」
+
+Eva「お、お前本当に…………」
+
+Quan「なら茹で卵くらい作って出せばまだマシだっただろ。それともここの電子レンジも破壊する気か？」
+
+Solがゲラゲラ笑い、Verisも顔を抑えている。Stellaもけらけら笑っているが、やがてぽん、と手を叩く。
+
+Stella「決めた！Eva、明日も当番ね！」
+
+Eva「は？」
+
+Sol「妥当」
+
+Veris「妥当ですね」
+
+Quan「追試」
+
+Eva「ちょ、なんで全員そんな自然に乗るんだよ！！」
+
+Stella「だって今日のは“夕飯当番をこなした”だけでしょ？私は料理が見たいの！」
+
+Eva「ちょ待て！認めないぞ私は！」
+
+Quan「料理できるならそんなに焦らなくてもいいだろう。それとも本当に出来ないのか」
+
+Eva「……」
+
+Stella「というわけで、Evaはノーカウント！ 明日もう一回！」
+
+Eva「ふざけるな……」
+
+Veris「ふざけてるのは今日の夕飯でしょう」
+
+Sol「私の昨日のあれより“料理した感”なかったぞ」
+
+Stella「明日はちゃんと作ってね！」
+
+Eva「い、嫌だ……」
+
+Stella「ダメ」
+
+Eva「……」
+
+Evaの追試が確定してSolとVerisとStellaが茶化す中、Quanだけは神妙な顔つきをしていた。
+
+Quan「……本当にこいつが料理できなかったら、責任取るのは」
+
+-----------------------------
+
+翌日夕方。
+
+Evaがこの世の終わりのような表情でキッチンに向かっていった。
+
+Stella「楽しみだね～」
+
+Veris「すいません、昨日ああ言いましたが猛烈に嫌な予感がしてきました」
+
+Sol「私みたいに勘で何とかする可能性もある」
+
+Quan「勘で破壊する可能性もあるぞ」
+
+Stella「やだ！！！！」
+
+そんなことをボヤきながら数分後、唐突にキッチンから強烈な音が鳴る。
+
+ｺﾞｫﾝ!!!!
+
+Veris「」
+
+Sol「言わんこっちゃない！！！」
+
+4人がキッチンに駆け付ける。
+
+そこには床に小麦粉が散乱し、シンクには使い終わったボウルやフライパンが山積み。
+
+コンロの周囲は何かが吹きこぼれた跡でべったりと汚れ、壁には茶色い飛沫が点々と飛んでいる。
+
+まな板は謎の色に染まり、調理器具はほぼ全滅。
+
+電子レンジの中からは焦げ臭い匂いが漂っていた。
+
+そして中央。
+
+Evaがぼんやり立っている。
+
+服の袖にはソースらしきものが付着し、髪にも小麦粉が積もっていた。
+
+Eva「……」
+
+Sol「戦場？」
+
+Quan「キッチンの損壊率、およそ四割と見受けられる」
+
+Veris「ななな、何があったんですか！？」
+
+Eva「……掃除は後でいいかな」
+
+Stella「わわわ、私が掃除しておくから！」
+
+慌てて後始末し始めるStellaを尻目にEvaは無言で鍋を持ち上げ、共用部へもっていく。
+
+どろり。
+
+灰色とも茶色ともつかない物体が皿へ流れ落ちた。
+
+ところどころ緑色の塊。赤い何か。黒い焦げ。白い塊。液体なのか固体なのかすら判別できない。
+
+Sol「……これ何？」
+
+Eva「料理」
+
+Quan「その定義の枠組みとは言えない」
+
+Veris「昨日のSolさんの方が百万倍マシです……」
+
+Eva「た、食べれば意外とおいしいかもしれないだろ」
+
+Sol「これと比較されるのすっごくムカつくんだけど」
+
+昨日のSolの料理は見た目だけだったが、今日は流石に誰も期待できなかった。
+
+Veris「……いただきます」
+
+恐る恐るスプーンを口へ運ぶ。
+
+数秒後、Verisの動きが止まる。
+
+Sol「Veris？」
+
+Veris「…………」
+
+口元が震えた。
+
+Veris「……ぅ」
+
+Sol「え？」
+
+Veris「……まず……」
+
+ぽろっ。
+
+涙が落ちた。
+
+Veris「まずいですぅ……！」
+
+ぼろぼろと涙を流し始める。
+
+Veris「なんでこんな味になるんですかぁ……！」
+
+Sol「えぇっ！？」
+
+Eva「そ、そこまで？」
+
+Veris「苦いし！酸っぱいし！甘いし！しょっぱいし！全部喧嘩してます！」
+
+Verisは慌てて水を飲む。しかし口の中に残る味が消えない。
+
+Veris「おぇぇ……酷い……酷すぎます……」
+
+Eva「そんなに……？」
+
+Sol「どれどれ」
+
+ぱく。
+
+……
+
+Sol「ぐえっ！！！」
+
+Solはものすごく顔をしかめた後、なぜかそのまま笑い始めた。
+
+Sol「うぇ……わははは！！！マッズ！！！！！何これ！？ありえないくらいマズイｗｗｗｗｗ」
+
+椅子から転げ落ちそうになりながら笑い続ける。
+
+Eva「……失礼すぎないか」
+
+Sol「いやコレは笑うしかねぇって！！そらいいんちょも泣くわ！！」
+
+Veris「私は笑い事じゃありません……！」
+
+涙目のまま抗議する。
+
+その様子を無言で見ていたQuanが、何故かすでに不愉快そうな顔のまま口に入れる。
+
+その後、数秒考えた後、Evaを見て言い放つ。
+
+Quan「興味深いな」
+
+Eva「えっ」
+
+Quan「これだけ多数の調味料を使って、全ての長所だけを打ち消し合うのは才能」
+
+Eva「……」
+
+Quan「普通は何か一つくらい成功するはずだが、これは苦味、酸味、甘味、塩味、すべてが仲良く最低点を取っている」
+
+Sol「わはは！！！」
+
+Quan「ある意味、極めて公平な料理と言えるな」
+
+Eva「……」
+
+黙りこくEva。そして、全員に数度しか見せたことのないような笑顔をわざわざEvaに向け、告げる。
+
+Quan「……お前、本当に料理出来なかったんだな。本当に心から申し訳ないことをした」
+
+Sol「ひーーーーっ！！！！Quan！！Quan笑ってる！！！！！そんなに！！！ｗｗｗ」
+
+Veris「……今回ばかりはQuanさんの意地の悪さも認めます」
+
+Eva「……マジでふざけるなよこの野郎……」
+
+そんな中、後始末を終えたStellaがぱたぱたとキッチンから戻ってくる。
+
+Stella「おまたせー、わっQuanちゃん笑ってる！意外と美味しいパターンだったりする？」
+
+Sol「あっStellaちょっと」
+
+Stella「……まあ見た目より味だよね。いただきまーす」
+
+話を聞かずに笑顔のまま口に入れる。その後一瞬だけものすごく暗い顔をした後、数秒後、にこっと笑ってEvaを見た。
+
+Stella「……Eva」
+
+Eva「……はい」
+
+Stella「……やり直させてごめんね」
+
+Sol「ぎゃははははは！」
+
+Veris「Stellaさん、まあまあ酷いですね……」
+
+Quan「人を謝罪に追い込む魅力があるな。私はいいと思うぞ」
+
+Eva「……」
+
+Stella「……あと、キッチン二度と入らないでね」
+
+Eva「……はい」
+
+Evaはもう完全に子犬のように大人しくなっていた。
+
+Sol「ダメなら最初からダメって言えばいいのに！まっ私は面白かったからいいよ」
+
+Veris「後で出前頼みましょう……それで、明日はどうするんですか」
+
+Stella「んーQuanちゃんも料理しないんだっけ。なら2日連続地獄になるのはまずいよねぇ」
+
+Quan「私は料理できないとは言ってない」
+
+Eva「……地獄……」
+
+Stella「という訳で明日は経験あるヴェリちゃんお願い！」
+
+Veris「承知しました。まあStellaさんほどではないですが、少なくとも人を傷つける料理は作りません」
+
+Sol「傷つけるって！！！！ひーーーっ！！！！」
+
+Quan「お前今日一人も味方いないぞ」
+
+Eva「……」
+
+Evaは机に突っ伏したまま暫く動かなかった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="01-3.html" class="nav-button prev">← offep1-3へ戻る</a>
+    <a href="01-5.html" class="nav-button next">offep1-5へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

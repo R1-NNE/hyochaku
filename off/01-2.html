@@ -1,0 +1,427 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep1-2:料理当番制導入</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep1:料理当番制導入 sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+翌日夕方。
+研究室の共用スペースには、妙な匂いが漂っていた。
+焦げたような、甘いような、スパイスのような、でも最後に何かが全部台無しにしているような、説明不能の匂いだった。
+
+キッチンの前でSolがやたら満足げに振り返る。
+
+Sol「できたぞー。記念すべき当番制初日の夕飯だぜ」
+
+Stella「わーい！ なにこれ！」
+
+Eva「第一声で“何これ”が出る時点で終わってるだろ……」
+
+Veris「……ちょっと待ってください、本当にこれ、夕飯なんですか？」
+
+Quan「少なくとも物体の形は維持している」
+
+テーブルの中央に置かれた皿は、料理というより事故現場に近かった。
+どろりとした濃い色のソースに、妙に原形を留めた野菜や、何かを巻いて何かを刺したらしい塊がいくつも沈んでいる。
+上から粉が散っていたが、それが香辛料なのかチーズなのか、あるいはまったく別の何かなのか、誰にも判断できなかった。
+
+Stella「すごいね！ 茶色と緑と紫が戦争してるみたい！」
+
+Sol「それ誉め言葉？」
+
+Eva「一切褒めてないだろ」
+
+Veris「紫って何ですか！？ 夕飯に自然発生する色じゃないでしょう！」
+
+Sol「いや、ちょっと赤キャベツをこう……炒めて、煮て、あとなんか入れたらこうなった」
+
+Quan「“なんか”の時点で再現性が死んでいるな」
+
+Sol「料理はライブ感だからな」
+
+Eva「客が途中で帰るタイプのだろ」
+
+Stellaは興味津々で皿を覗き込む。
+
+Stella「これなんて料理？」
+
+Sol「えー、……創作料理？」
+
+Veris「分からないのものを人に食わせようとしないでください！」
+
+Sol「いやでもちゃんと考えたんだって。肉も野菜も入ってるし、ボリュームもあるし、彩りも意識したし」
+
+Eva「ゲームのやりすぎで彩りの感覚が麻痺してんじゃねえのか」
+
+Veris「……本当に食べられるんですよね？」
+
+Sol「なんでそんな疑うんだよ。毒は入ってないって」
+
+Quan「間接的に私達を暗殺しようとしているのか」
+
+Stella「まあまあ、見た目はちょっと、うん、ちょっとすごいけど。食べてみないとわかんないし！」
+
+Eva「“ちょっと”で処理するには厳しいビジュアルなんだが……」
+
+Sol「食えばわかる、ほら食え！」
+
+Solが自信満々に取り分け始める。
+皿に盛られたそれは、近くで見るとさらに迫力が増した。ソースの照りが妙に生々しく、ところどころから想定外の色がのぞく。
+
+Veris「……実は私、今日たまたま食欲が無くて」
+
+Eva「おい委員長逃げるなよ、お前が負担軽減とか言いだしたからこうなったんだろ」
+
+Veris「こ、こうなると思わないじゃないですか！」
+
+Quan「至極真っ当な反論だな」
+
+Stella「じゃ、いただきまーす！」
+
+誰より先にStellaがスプーンを入れ、一口食べる。
+
+口に入れた後、三秒ほど硬直する。
+
+Veris「……」
+
+Eva「嫌な間だな」
+
+Sol「どう！？」
+
+Stella「……あれ？ え、なにこれ。見た目から想像してたより全然ちゃんとしてる」
+
+Veris「えぇ！？」
+
+Sol「ほらな！？」
+
+Quanが無言で一口食べる。
+
+Quan「……」
+
+Veris「ちょ、ちょっと、何か言ってくださいよ」
+
+Quan「普通に食える」
+
+一同が揃ってQuanを見る。
+
+Eva「お前がその評価するの珍しいな」
+
+Quan「事実を述べただけだ。味のバランスは悪くない。塩分も過剰ではない。火入れも問題ない」
+
+Sol「ほら見ろ！理屈屋もこう言ってんぞ！」
+
+Veris「ほ、本当ですか……？」
+
+おそるおそるVerisが口に運ぶ。
+
+Veris「…………え」
+
+Eva「……どうなん」
+
+Veris「いや……見た目があまりにもあれだったので警戒してましたけど、普通に……というか、思ったよりかなり……おいしいです」
+
+Sol「“かなり”いただきましたー！わはは！！」
+
+Evaも神妙な顔つきでスプーンを持ち、一口だけ食べるつもりで口に入れる。
+
+Eva「……は？」
+
+Stella「でしょ？」
+
+Eva「なんでちゃんとしてるんだよ……」
+
+Sol「なんでってひどくない！？」
+
+Eva「いや、だって見た目が終わってるから……。味まで終わってる覚悟してたのに、普通にコクあるし、変な甘さも嫌な感じじゃないし」
+
+Quan「調味の着地点だけ妙に正確」
+
+Veris「じゃあ本当に、見た目だけなんですね……」
+
+Stella「中身はいい子なんだね、この料理」
+
+Eva「言い方な」
+
+Solは胸を張る。
+
+Sol「いやあいやあ、わかる人にはわかるんだよなぁ～お前らが浅いだけだよ」
+
+Quan「見た目の改善努力を放棄しているだけだろ」
+
+Veris「というか本当に、どうしてこんなことになったんですか？ 味がまともなら、なおさら見た目だけここまで壊れる理由がわからないんですけど」
+
+Sol「最初は普通の煮込みっぽかったんだよ。でも途中でちょっと刺激が足りないなと思って、赤キャベツ入れて、あと彩りにハーブと、なんかソースも混ぜて、ついでに余ってたチーズを乗せて焼いて、でも水分飛びすぎたからまた足して」
+
+Eva「工程が迷走しすぎだろ」
+
+Stella「でも最終的においしいからセーフ！ってことだね」
+
+Sol「そゆこと！」
+
+Eva「待て待て待て。最初の私たちの葬式みたいなムードを忘れたのか」
+
+Veris「本当にそうです。食卓に出てきた瞬間の精神的ダメージが大きすぎます」
+
+Sol「そんなに！？」
+
+Veris「そんなにですよ！」
+
+Quan「評価項目を分けるべきだな」
+
+Stella「お、採点タイム？」
+
+Quan「味は75点。見た目は0点」
+
+Sol「なんで！！でも味はお前にしては高いな……」
+
+Veris「そこが逆に悔しいんですよね……。もっとこう、わかりやすく失敗してくれてた方が批判しやすかったというか……」
+
+Eva「わかる。妙にうまいせいで文句が全部見た目に集中してしまう」
+
+Sol「お前ら絶対最初からバカにする気だっただろ！」
+
+Stella「つまり、次回は見た目を整えれば最強ってことだね！」
+
+Quan「Solには不可能だな」
+
+Sol「ムキーーー！！！！」
+
+Stellaは楽しそうに皿をつつきながら笑う。
+
+Stella「いやあ、でもいいスタートじゃない？ 大事故ではないし、ちゃんと食べられるし」
+
+Quan「ハードルが低い」
+
+Eva「まあ、初手で全員腹壊すよりはマシか……」
+
+Stella「よし、じゃあ当番制続行決定だね！」
+
+Sol「次誰？」
+
+Stella「ふふふ。明日はね」
+
+四人が見る。
+
+Stellaはにっこり笑って、指を一本立てた。
+
+Stella「Evaです！」
+
+Eva「最悪だ……」
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="01-1.html" class="nav-button prev">← offep1-1へ戻る</a>
+      <a href="01-3.html" class="nav-button next">offep1-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

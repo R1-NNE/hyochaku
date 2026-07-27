@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4-4</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4:"空白の少女" sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+数日後。
+
+昼休みの終わり際、Evaはだるそうな顔をしながら進路指導室から帰ってきた。
+
+進路相談、という名目の面談である。
+
+成績が良い生徒には、教師は妙に期待した声を出す。
+期待しているというより、勝手に意味を持たせたがると言った方が近いかもしれない。
+
+「Evaはこれだけ成績がいいんだから、もっと具体的に考えないともったいない」
+「具体的と言われても、出てこないものは出てこなくて…」
+
+言っていることはたぶん正しい。
+でも、その正しさがそのまま自分の中に入ってくる感じがしない。
+
+「理系なら選択肢も広いし、将来何をしたいのか、そろそろ見えてきてもいい時期だろう」
+「あー…そっすね…」
+
+教師の視線がだんだん真面目になる。励ましと圧力が半々の、あの面倒な感じだ。
+だんだん、将来よりこの場を切り抜ける方法を探し始める。
+
+「……じゃあ、医者とか」
+
+口から出た瞬間、自分で少しだけ笑いそうになった。
+思いつきにも程があるだろう。
+だが、幸運なことに教師の方はそれを前向きな兆候と受け取ったらしく、急に声のトーンが上がる。
+
+「医者か！いいじゃないか。医学部は大変だけど、お前の成績なら現実的だぞ」
+「あー…はい」
+
+そこから先はほとんど聞き流して切り抜けた。
+
+本気で考えたことなんて一度もない。人の命がどうとか、使命感がどうとか、そういうものも別にない。
+ただ、成績が良い理系に教師が喜びそうな返答を、反射で置いただけだった。
+
+------------------------------------------
+
+その放課後、Evaは借りていた本を返しに図書室に向かう。
+適当に司書とやり取りをしている中、部屋の端っこ、やたら目立たないところに妙に存在感のある女子生徒に目が映る。
+Quanである。傍らに大量の本を積み、最初からそこにいたかのような仏頂面で本から視線を離さない。
+
+Evaは当然のように隣に座り始める。Quanは目だけ上げ、怪訝な顔でこちらを見た。
+
+Quan「何だ」
+Eva「いや別に」
+Quan「邪魔」
+Eva「『機会があれば』って言われたから、今がそうかも」
+Quan「…面倒」
+
+相変わらず冷たい態度である。だが拒絶はしない。
+
+Eva「今日さ、進路相談だった」
+Quan「脈絡がない」
+Eva「いいから。教師に詰められた」
+Quan「そうか」
+
+興味の薄い相槌。だがEvaはそのまま続ける。
+
+Eva「成績良いんだからちゃんと考えろ、将来が見えてないのはもったいない、みたいな」
+Quan「よくある話だな」
+Eva「で、だるくなって適当に医者になるかもって言っといた」
+Quan「そうか」
+Eva「…もうちょっと興味もってくれたりしない？」
+Quan「他に何を言えばいい」
+Eva「いや、もっとこう、意外とか馬鹿にしてきたりとかあるでしょ」
+Quan「その場を終わらせるための発言だろう」
+Eva「まあそうだな」
+
+Quanが読んでいる本は高度な物理学の本だった。
+しかし、傍らには生物学・歴史学・医学など多種多様な分野の本が積まれている。
+特定の分野に対して明確な探求の意思があるようには見受けられない。
+
+Eva「そっちはどうだったの」
+Quan「何が」
+Eva「進路相談。あんたもあったでしょ」
+Quan「あった」
+Eva「何て言ったの」
+Quan「何も考えていない、と言った」
+Eva「それだけ？」
+Quan「それだけ」
+Eva「誤魔化しすらしなかったの？」
+Quan「誤魔化す必要がない」
+
+あまりにも意外性のない返答で、Evaは思わず笑った。
+
+Eva「相変わらずだな」
+Quan「事実を述べただけだ」
+Eva「教師困ったでしょ」
+Quan「困っていた。将来の目標が未設定であることを問題視している」
+Eva「そりゃそうだ」
+Quan「それで、現時点で特定の職業や進路を目指す志はないと説明した」
+Eva「それで？」
+Quan「それでは困ると言われた」
+Eva「お前からしたら困るのは私だよってところだな」
+Quan「私もそう言った」
+Eva「最悪」
+
+静かな図書室で、Evaだけが肩を震わせる。
+司書に睨まれそうなほどではないが、笑いを完全には殺せていない。
+
+Eva「私が適当に取り繕ってる傍ら、あんたは真正面から面倒起こしてたわけだ」
+Quan「取り繕った結果が医者か」
+Eva「響きだけは立派でしょ」
+Quan「お前に医療への関心があるようには見えない」
+Eva「ないよ、今は全然」
+Quan「なら不適切だな」
+Eva「全くだ」
+
+自分で言って、自分で机に突っ伏しそうになる。本当に何も考えていない。
+
+Eva「でもさ、こういう時適当にでも何か答えられる私の方がまだマシじゃない？」
+Quan「虚偽の予定を提出しても、その後の説明コストが増えるだけ。面倒事を自分から増やしているだけだ」
+Eva「徹底的に合理的だなお前……」
+Quan「非合理を求めて何が面白い」
+
+Quanはそこでようやく本を閉じた。と思いきや、会話に向き合うそぶりも見せずに適当な生物学の本を開き始める。
+
+Quan「お前は、その場をやり過ごすために仮の回答を出した」
+Eva「うん」
+Quan「私は、やり過ごすことすら面倒だった」
+Eva「うん」
+Quan「差はそれだけしかないということだ」
+
+Evaは少しだけ目を細めた。
+確かにそうかもしれない。
+根本は似ているが将来像がないし、切実さもないし、周囲の期待に対して温度が低い。
+そのくせ、成績だけは良いから教師からすると扱いにくい。なんとも嫌な生徒だ。
+
+Eva「……私たち、ずいぶん厄介物だな」
+Quan「そうなのか」
+Eva「そうでしょ。教師から見たら最悪だぞ」
+Quan「評価に興味はない」
+Eva「私はちょっとあるかも。面白いから」
+Quan「趣味が悪いな」
+Eva「お前ほどじゃないって」
+
+少しだけ沈黙が落ちる。Evaは頬杖をついたまま、Quanを見た。
+
+白っぽい髪も、細い体も、感情の薄い顔も、最初に見た時と印象は変わらない。
+でも、話してみると、ただ冷たいだけではなかった。
+むしろ妙なところだけ筋が通りすぎていて、そのせいで他人と噛み合わない感じがある。
+
+たぶん自分も、別の方向でそうなのだろう。
+
+Eva「次また聞かれたらどうするの」
+Quan「同じことを言う」
+Eva「ブレないね」
+Quan「そういうお前は」
+Eva「どうしようかな。気が変わったとかいったらどんな顔されるんだろうか」
+Quan「最初から非合理的な行動を起こすからそうなる」
+Eva「…まあ、こういうのがきっかけで本当にそうなるとかもあるじゃん？」
+Quan「何にもなれない人間が好む言い訳だな」
+Eva「中々言うねえ」
+
+少しムッとして、でも少しだけ図星で、Evaは机の下で足を組み替える。
+
+Eva「そういうあんたは？」
+Quan「何だ」
+Eva「何にもなれない側？」
+Quan「…そういう意味で言ったのではないが」
+Eva「図星か。まあ私もだけど」
+Quan「…不快」
+
+Quanは初めて露骨に眉間に皺を寄せて、本に目線を戻した。
+その様子を面白おかしく思いつつも、Evaには少しだけ救いみたいに感じられていた。
+
+自分だけが空っぽなわけではない。
+目の前の、何でもできそうな人間も、未来を持て余している。
+前向きな話ではないが、妙に気は楽だった。
+
+Eva「じゃ、厄介物同士、今後も適当にやろうよ」
+Quan「適当に、という表現は具体性が無い」
+Eva「そういうことじゃなくて」
+Quan「だが、否定はしない」
+
+図書室の静けさの中で、その短い返答だけが妙に残った。
+優秀なくせに将来がない二人。教師からしたら面倒そのものだろうがまだ何者でもない時期なんて、だいたいそんなものだった。
+
+------------------------------------------
+
+それから、二人は妙な形でつるむようになった。
+
+別に、昼休みに一緒に弁当を食べるとか、登下校を合わせるとか、そういう分かりやすいものではない。
+ただ、図書室の奥に行けば大体どちらかがいて、もう片方が後から来ても追い返さない。
+空き教室に流れても、階段の踊り場に座っていても、相手がいることを特に歓迎しないくせに、いないと少しだけ拍子抜けする。
+
+そんな、かなり感じの悪い友達だった。
+
+ある日の昼休み。
+図書室の隅、ほとんど誰も来ない棚の間。
+
+Quanは高校分野などと一つも関係のない数学書を開いており、Evaはその向かいで適当な雑誌をめくっていた。
+
+Eva「……ねえ」
+
+Quan「何だ」
+
+Eva「今、私がここで倒れたらどうする？」
+
+Quan「は？」
+
+Eva「仮定の話なんだけど」
+
+Quan「放置する」
+
+Eva「即答か！」
+
+Quan「その程度のくだらない質問をする余裕があるなら倒れないだろ」
+
+Eva「じゃあ本当に倒れたら？」
+
+Quan「その時は保健室に運ぶ」
+
+Eva「思ったより優しいじゃん」
+
+Quan「放置すると面倒なだけだ」
+
+Evaは本を閉じて、少しだけ笑った。
+
+Eva「やっぱ口悪いね、あんた」
+
+Quan「今さら何を」
+
+Eva「最初もっと静かなタイプかと思ってた」
+
+Quan「今でも変わらない。私は必要な時しか喋らない」
+
+Eva「必要な時の言葉選びが最悪なんだよ」
+
+Quan「お前にだけは言われたくない」
+
+そのまままた沈黙が戻る。
+でも、その沈黙は前みたいに空疎ではなく、話さなくて済む相手としてちょうどよかった。
+
+------------------------------------------
+
+昼休み、屋上へ続く階段の踊り場。
+立ち入り禁止の札はあるが、みんな気にしていない場所だった。
+
+Eva「今日の現文、眠すぎて死ぬかと思った」
+
+Quan「そのまま死ねば」
+
+Eva「そういうことはさらっと言うもんじゃないと思うぞ」
+
+Quan「どうせ死なない」
+
+Eva「はは…ていうか、今日また男子に絡まれてたでしょ」
+
+Quan「絡まれてない。話しかけられただけだ」
+
+Eva「嫌そうな顔してたじゃん」
+
+Quan「大体の人間が私にとっては不快だ」
+
+Eva「その中で私は？」
+
+Quan「…比較的不快度が低い」
+
+Eva「ふ～ん」
+
+Quan「…なんだその反応は気持ち悪い。やはり不快だ」
+
+Eva「まあ、私もあんたは比較的不快度が低い方かな。私はあんたと違って誰とでも仲良くしますけど」
+
+Quan「光栄だな。反吐が出るから二度と話しかけるな」
+
+Eva「そ、そこまで言う？」
+
+少し風が吹いて、階段の窓が鳴る。
+お互い黙っていても、どちらも立ち去らない。
+
+Evaはふと、こんなふうに誰かと並んでぼんやりする時間は案外少なかったかもしれない、と思った。
+誰かといても、話を合わせるか、気を使うか、適当に流すかのどれかになる。
+Quan相手だと、その全部がかなり省略される。にしてはお互い刺しすぎであるが。
+
+Eva「ねえ」
+
+Quan「何だ」
+
+Eva「私たちって、友達ってことでいいのかな、これ」
+
+Quanは少しだけ眉を寄せる。
+
+Quan「今さら何を」
+
+Eva「いや、こういうのって定義が分かんないから」
+
+Quan「…お前がそう思いたいのなら勝手に思えばいいだろう」
+
+Eva「否定しないんだ」
+
+Quan「否定する理由がない」
+
+Eva「ふ～ん……ツンデレ？」
+
+Quan「…殺すぞ」
+
+Eva「物騒すぎ！」
+
+Evaは小さく笑って、膝を抱え直す。
+
+Eva「分かった分かった。じゃあ他人以上ってことで」
+
+Quan「最初からそうだ」
+
+Eva「えっ、やっぱ友達って思ってたってこと？」
+
+Quan「……もう帰る」
+
+Eva「また明日な」
+
+------------------------------------------
+
+それからも、二人は変わらずつるんだ。
+
+Evaが図書室へ行けば、Quanがいる。
+Quanが誰もいない空き教室に移れば、しばらくしてEvaが来る。
+会えば皮肉を言い、嫌味を返し、たまに相手の言葉尻を潰す。
+でも、片方が休むともう片方は少しだけ調子が狂う。
+
+Eva「おはよ。昨日いなかったじゃん」
+
+Quan「いたくなかっただけだ」
+
+Eva「つまんなかったんだけど」
+
+Quan「知るか。お前一人で勝手に腐ってろ」
+
+Eva「感じ悪」
+
+Quan「今さらか」
+
+そう言いながら、Quanはいつもの席に座る。
+Evaも当然みたいな顔でその向かいに腰を下ろす。
+
+冷たい。可愛げもない。
+たぶん周囲から見れば、仲が良いようには見えない。
+
+それでも、このどうしようもなく愛想のない距離感が、妙に居心地いいことを二人だけは分かっていた。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-3.html" class="nav-button prev">← ep4-3へ戻る</a>
+      <a href="episode-04-5.html" class="nav-button next">ep4-5へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

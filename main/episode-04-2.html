@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4-2</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4:"空白の少女" sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+定期テストの返却が一通り終わった日の放課後、教室の空気はいつもより少しだけ甘かった。
+
+解放感だとか、順位のざわつきだとか、そういう高校生らしい諸々が薄く混ざっている。窓の外では運動部がまだ騒いでいて、教室の中では答案用紙の音と、誰かの笑い声と、机を引く音が重なっていた。
+
+Evaはその全部を、少し離れた場所から聞いているみたいな顔で、自分の答案を机に広げていた。
+
+数学九十八。
+現代文九十四。
+英語九十七。
+化学百点。
+生物九十六。
+
+悪くない。むしろかなり良い。
+というか、周囲の反応を見る限り、かなりどころじゃないらしい。
+
+「Eva、また上位でしょ？」
+「見せて見せて。え、うわ、理系ほぼ壊れてんじゃん」
+「ていうか化学満点って何」
+
+机の周りに人が集まってくる。答案を覗き込む顔、勝手に点数を合計し始める声、半分冗談で持ち上げるような調子。
+
+Evaは椅子の背にもたれたまま、答案を隠しもしなければ、誇りもしなかった。
+
+「別に」
+「別に、じゃないでしょ」
+「いや、なんか……取れたから取れたってだけだし」
+
+そう言うと、周りは「出た」「余裕あるやつ」と勝手に盛り上がる。
+余裕があるわけではなかった。ただ、本当に感触が薄いだけだった。
+
+問題を解いて、埋めて、返ってきて、点数がつく。
+その一連の流れに対して、あまり気持ちが動かない。
+
+嬉しくないわけじゃない。悔しくないわけでもない。
+ただ、そのどちらも長く続かないのだ。
+
+良い点を取ったところで、その先に何があるのかはよく分からない。
+大学。就職。資格。将来。
+先生たちはやたらその辺りを口にするけれど、Evaにはどれも少しだけ輪郭がぼやけて見えていた。
+
+頭が良いね、と言われるたびに、で、それが何になるのだろうと思う。
+何者かになりたいのかと問われれば、別にそこまででもない。
+かといって何もいらないわけでもない。
+
+自分の人生に対して、本人が一番ふわふわしている。
+そんな感覚が、ずっとあった。
+
+「学年順位、廊下に貼られてるって」
+「見に行こ」
+
+誰かがそう言って、数人がわっと動く。
+Evaの机の周りにいた連中も、その流れに乗って散っていった。
+
+一人になると、教室は少し静かになった気がした。
+実際にはまだ全然うるさいのに、周囲に話しかけてくる人間がいないだけで、ずいぶん楽だった。
+
+Evaは答案を雑に重ねて、立ち上がる。
+
+自分の順位に興味がないわけじゃない。
+ただ、確認作業として見に行くだけだ。今日の昼に何を食べたか思い出すくらいの温度で。
+
+廊下の掲示板の前には、すでにちょっとした人だかりができていた。
+上位の名前を見て騒ぐ声、友達同士で順位を探し合う声、落ち込んでいるのか笑っているのか分からない声。
+高校という場所は、こういう瞬間だけ妙に分かりやすい。
+
+Evaは人の肩越しに紙を見る。すぐに見つかった。
+
+**1位　Quan_Taiza　総合500**
+**2位　Eva_Nescentia　総合485**
+
+「……五百？」
+
+思わず、声が漏れた。
+
+そのすぐ後ろにいた男子が振り向く。
+
+「え、ああ。そいついつもそうじゃん」
+「いつも？」
+「知らない？ Quan。毎回満点のやつだよ」
+
+毎回満点？
+
+そんなことあるんだ、とEvaは思った。
+いや、理屈ではあるのかもしれない。出題範囲を完璧に押さえて、ケアレスミスもしなければ、百点は取れる。五教科全部でも、原理上は可能だ。
+しかし、現実にそれを毎回やる人間がいる、というのは少し別の話だった。
+
+Quan。
+名前だけが、やけに浮いて見えている。
+珍しくEvaの意識にはその一部分だけが引っかかった。音の響きのせいか、見慣れなさのせいか、それともただ一位の欄にあるからか。
+
+「…どんな人」
+「どんなって……なんか、いるじゃん。いつも一人の、図書室の奥とかにいる人」
+「…わからん」
+「…まあ確かに誰かと喋ってるの見たことないかも。先生とも必要最低限しか話してない感じだし」
+
+周囲の生徒たちは、知っているようで何も知らない口ぶりだった。
+噂とも情報ともつかない言葉が、ぽつぽつ飛ぶ。
+
+いつも一人。
+喋らない。
+毎回満点。
+
+それだけ聞くと、人間というより現象みたいだった。
+
+「興味あるの？」
+誰かに聞かれて、Evaは少しだけ首を傾げた。
+
+「……まあ、ちょっと」
+「珍しいじゃん。Evaって他人に興味なさそうなのに」
+「失礼だな」
+
+実際図星である。
+普段なら、学年一位が誰だろうと、ふうんで終わる。
+すごいね、で済む話だ。自分に関係ない。
+
+けれど今回は、その「関係ない」で処理するには少しだけ引っかかりが強かった。
+
+自分がかなり勉強できる側にいる自覚はあるが、その上を行く者がいる。
+しかも相手は五教科全部満点。圧倒的、という言葉が似合う差だった。
+それが不快というわけではないが、ただ、妙に気になる。
+
+たかが定期テストの順位で、ここまで他人に意識が向くなんて珍しい。
+よほど暇なのかもしれないし、あるいは、あまりに自分の先が見えていないせいで、分かりやすく異質なものに目が引かれただけかもしれない。
+
+そんなことを薄ら思いながらEvaはもう一度だけ一位の名前を見た後、掲示板の前を離れる。
+そして、教室へ戻る途中、廊下の角を曲がった先で一人の女子生徒とすれ違った。
+
+自分と同じ透き通るような白い髪。見ていると吸い込まれそうな色素の薄い瞳。
+妙に細く、無駄のない足取りで、こちらを見ることもなく通り過ぎていく。
+手には何冊か本を抱えていて、その横顔は凍てつくように静かだった。
+
+すれ違いざま、Evaはなんとなく立ち止まりそうになったが、相手は本当に何事もなく通り過ぎていった。
+
+少しだけ振り返る頃にはもうその背中は廊下の向こうへ遠ざかっていた。
+呼び止める理由はないし、呼び止める気も別にない。
+
+ただ、さっき見た名前と、その静かな後ろ姿が、妙に自然につながった。
+
+たぶん、あれだ。
+
+確信はない。
+けれどたぶんそうだろうと、根拠の薄い直感が言っていた。
+
+「…Quan、ね」
+
+自分だけに聞こえるくらいの声で、響きを確かめるようにEvaはその名前を口にする。
+
+そして、自分より明らかに先の景色を見ていそうなのに、たぶんそうでもないかもしれない、まだ正体の分からない存在。
+
+Evaは少しだけ会ってみたいと思った。理由はまだ、自分でも上手く言えなかった。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-1.html" class="nav-button prev">← ep4-1へ戻る</a>
+      <a href="episode-04-3.html" class="nav-button next">ep4-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
