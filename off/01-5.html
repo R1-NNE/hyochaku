@@ -1,0 +1,784 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep1-5:料理当番制導入</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep1:料理当番制導入 sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+翌日、夕方。
+
+その日だけは、珍しく全員が少し早めに共用スペースへ集まっていた。
+理由は単純で、担当がQuanだからだ。
+
+Sol「逆に楽しみではあるよな」
+
+Veris「私は普通に不安です」
+
+Stella「でもQuanって、やろうと思えばすごく正確に作れそうじゃない？」
+
+Eva「その“正確”が、料理に向くかは知らん」
+
+Quan「では始める」
+
+そう告げるとQuanはキッチンに向かう。
+すると、冷蔵庫を開けて何かを取り出す。そしてそれを何の気負いもなく持ってきた。
+
+大きめの透明タッパーが四つ。そして自分用が一つ。
+中には、液状の何か。とろみはあるが、具は見えず薄い灰色を一様に放っている。
+
+食卓に置かれた瞬間、四人は黙った。
+
+Sol「……なにこれ」
+
+Quan「夕食」
+
+Eva「……やりやがったな」
+
+Veris「ちょっと待ってください、まさか本当にこれだけですか？」
+
+Quan「これだけだが」
+
+Stella「ス、スープ……なのかな？」
+
+Quan「分類上は近い。固形物を極力減らして、栄養効率と摂取速度を優先したものだ。今朝仕込んできた」
+
+Veris「タッパーのまま出すんですか！？」
+
+Quan「洗い物が減るだろう」
+
+Stella「せめて器に移そうよ！」
+
+Quan「必要性がない」
+
+Sol「必要性しかないだろ！食卓に研究途中の培養液みたいなの置くんじゃねえ」
+
+Quan「培養液ではないが」
+
+Quanは一切動じず、自分のタッパーのふたを開ける。
+
+豆乳っぽいような、出汁っぽいような、でも最後に薬品みたいな乾いた匂いが混ざっている。
+
+Stella「……なんか、初めてちょっとだけ怖いかも」
+
+Veris「ちょっとどころじゃないでしょう」
+
+Sol「見た目0点どころの話じゃないな。私の方がまだ救いがあっただろ」
+
+Quan「見た目に点数を割く理由がない」
+
+Eva「昨日委員長が散々説教したの聞いてたかお前？」
+
+Quan「栄養成分は十分だ。たんぱく質、脂質、糖質、食物繊維、塩分も調整した」
+
+Veris「だからって、なんで全部液体にしちゃうんですか！？」
+
+Quan「咀嚼は非効率的」
+
+Sol「言い切ったよこいつ」
+
+Stella「でも、ほら、味は案外いいかもしれないし！」
+
+Eva「無理だろ」
+
+Quan「早く食え。冷める」
+
+四人は恐る恐るそれぞれのタッパーを手に取り、スプーンを差し入れる。
+
+Stellaが一番最初に口へ運んだ。
+
+一口。
+
+ぴたりと止まる。
+
+Sol「どう？」
+
+Stella「…………」
+
+Eva「おい」
+
+Stella「……美味しくない………………」
+
+Veris「そんなにですか！？」
+
+Stella「ダイエットとかしてる人でもこんなの食べないよ……うぅ……」
+
+Quan「減量を目的にした料理ではない」
+
+Stellaが涙目になる中、Evaが怪訝そうに一口飲む。
+
+数秒後、すごく嫌そうな顔になった。
+
+Eva「うわ」
+
+Sol「おっ」
+
+Eva「最悪だなこれ……」
+
+Quan「曖昧な表現だな」
+
+Eva「味がまずいんだよ。なんか全部が中途半端に溶けてて、豆っぽいのか出汁っぽいのかもぼやけてるし、後味だけ妙に苦い」
+
+Quan「微量栄養素の影響だろうな」
+
+Sol「後味の苦さに理由つけるな」
+
+Verisも意を決して口にした。
+
+その瞬間、わかりやすく眉が寄る。
+
+Veris「……っ、え、なんで……？」
+
+Quan「何だ」
+
+Veris「なんでこんな味になるんですか！？ 材料をどうしたらこうなるんですか！？」
+
+Quan「必要なものを入れて攪拌した」
+
+Stella「攪拌って言った！かくはん！！」
+
+Eva「料理の説明で聞きたくない単語すぎるだろ」
+
+Solも興味半分で口に運び、即座に顔をしかめた。
+
+Sol「うっわマズ！！！！！！」
+
+Quan「静かにしろ」
+
+Sol「こんなん食わされたら誰でも声出るわ！！！」
+
+Veris「今回ばかりはSolに全く同意です」
+
+Quanはしかめっ面を浮かべながら自分の分を普通に飲み進めている。
+
+Stella「……Quanちゃん、これで本当にいいと思ったの？」
+
+Quan「何がだ。栄養素を補給という観点で最も効率的な手段だろう」
+
+Eva「会話してくれ頼む」
+
+Sol「私達は“うまいかどうか”を気にしてんの！！」
+
+Quan「食事に美味さの追求が必要なのか？」
+
+Veris「当たり前でしょう！！」
+
+Stellaがついに箸……ではなくスプーンを置いた。割と本気の困り顔をしている。
+
+Stella「……これはだめ」
+
+Quan「何が」
+
+Stella「何が、じゃないよ。だってこれ、みんな全然食べられてないじゃん」
+
+Eva「珍しくStellaがはっきり切ったな」
+
+Sol「これはさすがにな……」
+
+Veris「私もこれはちょっと無理です。本当に無理です。栄養がどうとか以前に、食事として成立してませんよ！」
+
+Quan「成立はしている。摂取は可能だ」
+
+Stella「そうじゃないよ！！タッパーのままだし、見た目もなんか、つらいし、泣き出しちゃうよ！？」
+
+Quan「器に移して評価が変わるなら、次からはそうする」
+
+Eva「そこじゃないって言ってるだろ」
+
+Sol「いやでも、そのズレ方はQuanっぽくて逆に安心するわ」
+
+Veris「安心してる場合じゃないです！」
+
+Quanはわずかに眉を寄せた。
+
+Quan「お前らの批判は感覚的すぎる。具体性がない」
+
+Eva「あるよ。まずい、気持ち悪い、食卓に出したくない。十分具体的だろ」
+
+Sol「あと“また食いたいと思わない”」
+
+Veris「“夕飯当番として認められない”も追加です」
+
+Quan「チッ……」
+
+Sol「今舌打ちした！？」
+
+一向に折れる気配が無いので、耐えかねたStellaがぱん、と手を叩いた。
+
+Stella「決定。Quanちゃん、明日やり直し！」
+
+Quan「は？」
+
+Sol「“は？”じゃねえよ」
+
+Eva「何被害者みたいな顔してんだ」
+
+Veris「当然です。むしろやり直しで済ませてあげてるだけ温情でしょう」
+
+Quan「理不尽……」
+
+Sol「理不尽なのはこんなん食わそうとしてきたおめえだよ」
+
+四面楚歌と言わんばかりに猛批判されるQuan。流石の彼女にも逃げ場はなかった。
+
+Stella「わかったら返事は！？」
+
+Quan「……分かった」
+
+Sol「かなり嫌そうだな」
+
+Eva「相当だな。こいつがここまで露骨なの珍しい」
+
+Veris「でもやってもらいますからね！」
+
+Quan「一回で通らない制度設計が……」
+
+Eva「まだ制度のせいにしてる」
+
+Stella「明日は、ちゃんと“ごはん”作ってね！」
+
+Quan「……分かったからもう話しかけるな」
+
+Quanは自分のタッパーを静かに見下ろした後不機嫌そうに自室に帰っていった。
+
+Sol「……で、明日のQuanが何出してくるか賭ける？」
+
+Veris「賭けなくていいですって……でもEvaさんみたいな兵器を繰り出して来たらどうしましょう」
+
+Eva「おい」
+
+Stella「でも料理した事あるって言ってたよねぇ、まあキッチン破壊しそうになったら今度はちゃんと止めるから」
+
+Veris「そう言われると余計に不安なんですけど…………」
+
+----------------------------------
+
+翌日、夕方。
+
+前日の「タッパー液体事件」の余波で、共用スペースには妙な緊張感があった。
+
+誰も口にはしないが、今日は本当に大丈夫なのかと全員思っている。
+
+Sol「……で、再試験受験者の様子は？」
+
+Stella「キッチンに入ってくるなって言われちゃった。まあ変な音とかしないし多分大丈夫かな」
+
+Eva「これでヘタクソな料理出してきたら一週間くらいバカにしてやる」
+
+Veris「貴方が言えたことですか……」
+
+やがて、キッチンの奥からQuanが現れた。
+
+両手には大きめの配膳トレー。
+その上に、料理がきっちり整列していた。
+
+白い皿がいくつか。
+小鉢。
+汁物。
+主菜。
+副菜。
+ご飯。
+
+全部、異様に整っていた。
+角度も位置も妙に正確で、まるで学食の見本か、病院の特別食か、あるいは食品サンプルの試作みたいである。
+
+色味は地味で、全体的に茶、灰、薄緑、白。
+照りも控えめ、盛り付けは整っているのになぜか食欲をそそる華やかさがない。
+
+Eva「……？」
+
+Sol「うわ、なんか今度は真逆に来たな」
+
+Veris「……昨日よりは遥かにまともですが」
+
+Stella「配膳トレー？」
+
+Quan「器ごと持ってくるより効率的」
+
+Quanはそのまま一人ずつの前に、やけに正確な動作で皿を並べていく。
+
+主菜は焼いた鶏らしきもの、副菜は和え物と煮物。
+汁物は澄んだ色で、ご飯はきっちり均されている。
+
+見た目は、たしかに昨日よりは遥かに人間の夕飯をしているが、妙に色気がない。
+
+Sol「……なんだろ。すごいちゃんとしてるのに、全然テンション上がんない。Verisのみたい」
+
+Veris「私のはちゃんと見た目に気を遣ってます！」
+
+Eva「あっちが葬式のメシなら今日は刑務所のメシだ」
+
+Veris「黙ってください！！！！」
+
+Stella「あはは……でも昨日のアレより百倍マシだって！」
+
+Quan「与太話はいい。さっさと食え」
+
+Sol「はいはい」
+
+4人とも期待してなさそうな顔のまま、雑に主菜を口に運んだ。
+
+数秒後、誰もが思わなかった展開となった。
+
+Sol「……は？」
+
+Eva「え」
+
+Veris「……えっ？」
+
+Stella「…………おいしい！！！」
+
+Solがもう一口食べる。今度はかなりはっきり目を見開く。
+
+Sol「いや、ちょっと待てなんだこれ！？普通にめっちゃうまいけど！！」
+
+Evaも無言で汁物をもう一口飲んだあと、嫌そうな顔ではなく、妙に納得いかない顔になる。
+
+Eva「……腹立つな」
+
+Quan「何が」
+
+Eva「うまいんだよ。普通に」
+
+Verisが煮物を口にしたまま、ゆっくりQuanを見る。
+
+Veris「味のしみ方が……え、ちょっと待ってください、なんでこんなにちゃんとしてるんですか？」
+
+Quan「ちゃんとしていないと困ると言われたから」
+
+Sol「そういう話じゃなくて！ 昨日あんな培養液みたいなもん出してきたやつとマジで同一人物か？」
+
+Quan「昨日も同一人物だが」
+
+驚きを隠せない3人をよそに、Stellaはすでにかなり機嫌よく食べ始めている。
+
+Stella「……このお肉も柔らかいし、汁物もすごく落ち着くし、副菜も全部味がちゃんとしてる！！すごいよQuanちゃん！！」
+
+Veris「……びっくりするくらい本当においしいです。塩気もきつくないのに薄くないし、絶妙な匙加減ですね……」
+
+Quan「そうか」
+
+Sol「軽！」
+
+Eva「……なんで昨日の時点でこれを出さなかった？」
+
+Quan「昨日の方が合理的」
+
+四人「「「「は？」」」」
+
+四人ともありえないといった表情をしている。Quanは責められてないのに何故かやや不機嫌そうである。
+
+Quan「今日のはお前らが“食事らしさ”だの“みんなで食べる感じ”だの、曖昧な条件を要求したからそれに合わせただけだ。昨日の方が合理性は高い」
+
+Sol「合わせた結果、クソうまいもん出してくるか！？」
+
+Eva「しかもお前、味の優先順位低いとか言ってたよな」
+
+Quan「低い」
+
+Veris「低くてこれなんですか！？」
+
+Quan「要求仕様に沿って調整しただけだ」
+
+Stella「要求仕様って言い方やだ！でもほんとにおいしいよ！」
+
+Solは主菜と副菜を交互に食べながら、半ば笑っていた。
+
+Sol「やべ、これ普通に今までで一番うまくないか？」
+
+Eva「……認めたくないがそうだな」
+
+Veris「Stellaさんにも引けを取らない味ですね。久しぶりに毎日食べたいと思える食事を味わった気がします」
+
+Quan「過大評価だな」
+
+Veris「してませんよ！？」
+
+4人がベタ褒めの中、Quan本人は何故かむっとしていた。むしろ褒められるほど不機嫌になっている。
+
+Evaがその顔を見て、じわっと笑う。
+
+Eva「なあ、お前今、機嫌悪いだろ」
+
+Quan「悪くないが」
+
+Sol「嘘つけ。昨日のアレをボロクソに言われた時より顔に出てるぞ」
+
+Veris「普通、褒められたら少しは機嫌良くなりません？」
+
+Quan「ならない」
+
+Stella「なんで？」
+
+Quanは少しだけ箸を止め、本当に少しだけ考えるみたいに間を開けた後、低く告げる。
+
+Quan「こんなのの方が評価されるのが理解できない」
+
+Sol「こんなのって！」
+
+Quan「無駄が多い、工程も多い、咀嚼も必要。盛り付けまで気にする必要がある。昨日の方が合理的だろうが」
+
+Eva「昨日はゲロマズだっただろ」
+
+Quan「栄養は摂れている」
+
+Veris「“夕飯”としては大失敗だったんですよ！」
+
+Quan「お前らの許容値が低すぎるだけ」
+
+Sol「なわけあるか！！」
+
+Quanはますます不服そうに、ご飯をひと口食べる。その様子が、妙に拗ねて見えた。
+
+Veris「……もしかして、わざわざ私たち向けに調整したのが不本意なんですか」
+
+Quan「別に」
+
+Eva「別に、の顔じゃないな確実に」
+
+Sol「“こんなことで喜ぶのかこの馬鹿共は”って思ってる顔だ」
+
+Quan「事実」
+
+Stella「ひどい！！でも、本当においしくて今日はみんな幸せそうだよ、Quanちゃんもこういうの嬉しくならない？」
+
+Quan「ならない」
+
+Stella「なんで！！！」
+
+Sol「すねてるすねてる」
+
+Veris「拗ねてますね……」
+
+Quan「拗ねていない」
+
+Stella「ねえねえ、また作ってよ！！たまにでいいからさ！お願い！！」
+
+Quan「作らない」
+
+四人「「「「早！！」」」」
+
+Quan「今後作ることはない。二度と」
+
+Stella「そこまで！？」
+
+Quan「昨日の方が合理的だった。今日はお前らのために余計な条件を満たしただけだ。再現する価値を感じない」
+
+Veris「価値ありますよ！ 実際、全員評価が覆ってるじゃないですか！」
+
+Quan「お前らに評価されても嬉しくない」
+
+Sol「カタブツすぎだろコイツ……」
+
+Verisは少し悔しそうに、でも素直に言った。
+
+Veris「……少なくとも、今日のは文句なしです。見た目はやっぱりちょっと地味ですけど、味は本当に良いです」
+
+Quan「見た目も文句を言うのか。いちいち注文が多い」
+
+Sol「いやでも確かに、見た目は最悪だな。配膳トレーってのも尚更」
+
+Eva「コイツにとっては理想的な味を理論に基づいて構築したとしか思ってなさそう」
+
+Stella「そこもQuanちゃんっぽくていいじゃん！」
+
+Quan「良くない」
+
+Eva「でも、これでコイツがちゃんとやろうと思えば料理出来るということが分かったな」
+
+Quan「作れる」
+
+Veris「認めるんですね……」
+
+Quan「事実だからな」
+
+Sol「でも作らない、と」
+
+Quan「作らない」
+
+Stella「むー……」
+
+Eva「めんどくっさ」
+
+しばらくして、みんな黙って食べ進めた。
+
+昨日までのQuan評をほぼ全部ひっくり返すには十分な出来栄えの味なのに、作った本人だけが不機嫌なので食卓には変な空気が漂っている。
+
+Sol「なあ、今日のやつなんて名前？」
+
+Quan「ないが」
+
+Veris「ないんですか！？」
+
+Quan「必要ない」
+
+Stella「じゃあ私がつける！ “Quanちゃんの拗ね定食”！」
+
+Sol「わはは！！それ最高！」
+
+Quan「やめろ」
+
+Veris「“非合理定食”とか……」
+
+Quan「もっと嫌だ」
+
+Sol「“もう作らない定食”！」
+
+Quan「本当に二度と作らない」
+
+Eva「わかったわかった。まあコイツの場合次作らせようとしたらタッパー液体で来るんだろ」
+
+Quan「そう考えている」
+
+Veris「やめてください！」
+
+Sol「まあ今日ので私達はおまえが絶品作れるって知っちゃったからな。私達の図太さなめんなよ」
+
+Veris「なんですかその脅し文句は」
+
+Quanは少しだけ嫌そうに目を細める。
+
+Eva「効いてんじゃねえか」
+
+Veris「はあ……ほんとに面倒ですね、この人」
+
+Stella「でもおいしかったね！」
+
+Sol「そこは満場一致！」
+
+Quan「……理解できない」
+
+そう言いながらも、Quanは最後まで黙々と食べ切った。
+
+やがてStellaがぽん、と手を叩く。
+
+Stella「よーし、じゃあ一通り終わったし明日は久しぶりに私が作っちゃうね」
+
+Sol「やったーーー！！！！！！」
+
+Veris「やっとですか……」
+
+Quan「二度とやるな」
+
+Eva「私の輝かしい地位に泥を塗りやがって」
+
+Stella「なんで私責められてるの！？」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="01-4.html" class="nav-button prev">← offep1-4へ戻る</a>
+    <a href="01-6.html" class="nav-button next">offep1-6へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
