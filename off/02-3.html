@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep2-3:Verisツッコミ封印</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep2:Verisツッコミ封印 sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+夕時。Stellaは半泣きになりながら研究室を整理し、Quanは解呪法を探している。Evaは……何もしていない。
+
+そんな中、Solは全く凝りもせずにVeris弄りを続けていた。
+
+Sol「委員長〜」
+
+Veris「…………」
+
+Sol「返事してよ〜」
+
+Veris「…………」
+
+Verisは完全に無言のまま、Solの方は見向きもせずにひたすら書類整理をしている。
+
+その背中からは妙な圧だけが出ていた。
+
+Sol「ねえねえねえねえ」
+
+Veris「…………」
+
+Sol「委員長って怒らないとだいぶ静かだよね」
+
+Eva「お前が普段どんだけ怒られてるかって話だな」
+
+Sol「えへへ」
+
+Eva「得意気にすんな」
+
+その直後。SolがVerisの積んでいた資料の山から一枚だけスッと抜く。
+
+Veris「…………」
+
+Sol「お、これ何？“高濃度魔力触媒の安定化”……へえ〜」
+
+Veris「…………返してください」
+
+Sol「やだ」
+
+ﾋﾟｷｯ
+
+棚に小さい亀裂。
+
+Quan「出力の上昇を確認。全員備えろ」
+
+Eva「実況するなするな」
+
+Sol「じゃあ次〜」
+
+Solは笑いながら今度はVerisの詰んでいた資料に落書きをし始める。
+
+Veris「…………」
+
+Sol「見てコレ。委員長が怒れないから代わりに怒ってる委員長描いてあげたよ」
+
+Verisが怪獣のように暴れてるヘタクソな絵を周りに見せびらかす。
+
+Eva「似てる」
+
+Veris「…………」
+
+Stella「Solちゃん……そろそろ」
+
+Sol「まだ大丈夫まだ大丈夫」
+
+Verisは無言で資料を整え続けている。その横で、Solが床に大の字で寝っ転がりながら追撃する。
+
+Sol「委員長ってさ、絶対お母さんに向いてるよね」
+
+Veris「…………」
+
+Sol「毎日怒ってるし、くそまじめだし、家事してるし」
+
+Veris「…………」
+
+Sol「でも最近は怒れなくてかわいそーだね。Stellaが悲しんじゃうからなぁ」
+
+Veris「…………」
+
+Sol「あと昨日の“かわいい”で爆発したのマジで面白かっ」
+
+ﾐｼﾞﾐｼﾞﾐｼﾞｯ……
+
+研究室全体が嫌な音を立てる。
+
+Stella「ひっ！」
+
+Eva「来るか」
+
+Quan「避難しろ」
+
+Veris「…………」
+
+Verisは深呼吸した後、Stellaを見る。
+
+Stellaは完全にヒヤヒヤした顔で、両手を合わせていた。
+
+完全に、「お願いだから壊さないで〜」の顔をしている。
+
+Veris「…………っ」
+
+ぎりっ、と歯を食いしばり、眉間に鈍い皺を寄せながら堪えている。
+
+Sol「おお、耐えたな」
+
+Eva「お前マジで調子に乗りすぎ」
+
+Sol「だって面白いじゃん。というか委員長がプンスコしてない日なんて未来永劫無いぞ。今だけチャンスタイム」
+
+Eva「どういう解釈だよ」
+
+Sol「大丈夫大丈夫。Stellaが守ってくれるから」
+
+Stella「それでもやめて欲しいな～……」
+
+そう言いつつもSolは一向に止まる気配が無い。しまいには先日散々Verisに叱られたスケボーをどこからともなく取り出しては、部屋の真ん中で堂々と乗り始めた。
+
+Sol「ヒャッホウウ！！！」
+
+Quan「邪魔」
+
+Sol「なんだよお前らしけてんなー！！今日しかないってのに！！」
+
+外野は呆れた目で暴れるSolを見つめている。そして、その光景を黙って見続けていたVerisが遂に限界を迎えた。
+
+Veris「Sol」
+
+Sol「おん？」
+
+Verisがすっと立ち上がる。いつものようにプンスコ顔ではなく、真顔である。
+
+Sol「……どったん委員長？委員長もスケボーやる？」
+
+Veris「ちょっと来なさい」
+
+Sol「えっ」
+
+そう告げると、VerisはSolの首根っこを掴む。異様に力が入っている。
+
+Sol「え、ちょ痛っ！！首！！　首掴まないで！！」
+
+そのままずるずる引きずられていく。
+
+Sol「待って待って待って！！　何！？　どこ行くの！？」
+
+Veris「いいから」
+
+Sol「嫌な予感しかしない！！」
+
+Stella「あっ、ヴェリちゃん目が据わってる……」
+
+Quan「マジギレしている時の顔だな」
+
+Eva「南無」
+
+そのままドアの方まで引きずられて行き、静かに研究室の扉が閉まった。
+
+呆気に取られているStellaをよそに、やがてQuanが呟く。
+
+Quan「合理的だな」
+
+Eva「何が」
+
+Quan「屋外で発散すれば建物被害は抑えられることに気づいたか」
+
+Eva「もっと早く気づいてくれ……」
+
+Stella「でもSolちゃん大丈夫かなぁ」
+
+Eva「どう考えてもあれは大丈夫じゃないだろ。まあ無事じゃなくても静かになるからいいだろ」
+
+Stella「ひどーい！」
+
+その瞬間。
+
+「ぎゃあああああああああああ！！！！」
+
+外から凄まじいSolの悲鳴が聞こえてきた。
+
+続いて、
+
+ﾄﾞｫｫｫｫﾝｯｯｯ!!!!!
+
+地面が激しく揺れる。研究室の窓もビリビリ震えている。
+
+Eva「……」
+
+Quan「推定出力、昨日比で三倍以上」
+
+Stella「わあー」
+
+Eva「感心してる場合か」
+
+さらに外から。
+
+Sol「ごめんなさいごめんなさい！！　委員長ほんとごめんなさい！！」
+
+Veris「誰のせいだと思ってるんですかぁぁぁぁ！！！！」
+
+ﾄﾞｺﾞｫｫｫﾝｯｯｯ!!!!!
+
+Eva「怪獣映画か」
+
+Quan「一部ノンフィクション」
+
+Stella「大学の人に怒られないかなぁ」
+
+Eva「全部あいつのせいだからいいだろ」
+
+溜まったツケを払わされる時が来ていた。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="02-2.html" class="nav-button prev">← offep2-2へ戻る</a>
+      <a href="02-4.html" class="nav-button next">offep2-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

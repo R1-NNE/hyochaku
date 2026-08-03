@@ -1,0 +1,752 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep2-4:Verisツッコミ封印</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep2:Verisツッコミ封印 sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室の外から、しばらく断続的に轟音が響いていた。
+
+「ギャアアアアアアアアアア！！」
+
+「毎回毎回！！　余計なことばっかり！！！！いい加減にしなさい！！！！！！」
+
+「ちょっ、待っ、委員長！！　そこはダメ！！　岩はダメぇぇぇぇ！！！」
+
+ﾄﾞｺﾞｫｫﾝ!!
+
+ﾊﾞｷﾞｨｯ!!
+
+ﾒｷﾒｷﾒｷｯ!!
+
+窓から大学構内の公園が見える。
+
+そこでは地面が抉れ、木が何本か根元から倒れ、土煙が何度も舞い上がっている。
+
+Eva「……」
+
+Stella「わあー」
+
+Quan「……」
+
+三人は窓際に並び、まるで花火でも眺めるような顔で外を見ている。
+
+Evaは非常に悪い顔でニヤニヤしているし、Stellaは何も考えてない顔、Quanは心底軽蔑した目で見ている。
+
+Stella「すごいね～」
+
+Eva「地形が変わっている」
+
+Quan「局地災害レベルだな」
+
+Stella「ヴェリちゃん、相当溜め込んでたんだねえ」
+
+Eva「普段から毎日キレてるからな」
+
+Quan「むしろ定期的に放出しないと危険なのでは？」
+
+Eva「活火山か」
+
+その直後。
+
+「ごべんなざいぃぃぃぃ！！！」
+
+遥か向こうでSolが吹き飛ぶのが見えた。くるくる回転しながら空中を漂っている。
+
+Stella「あっ、飛んでる」
+
+Eva「よく死なないなあいつ」
+
+Quan「施設育ちだから頑丈なんだろ」
+
+Eva「中々ライン越えの発言だが今日は言ってもいい気がするな…………」
+
+十数メートル先まで転がったあと、また首根っこを掴まれて引き戻される。
+
+「ここぞとばかりに調子に乗って！！！！どれだけ普段私が我慢してると思ってるんですか！！！！」
+
+「ウワアアアアアアアアアアア！！！！！ちょ服焦げるやめオワアアアア！！！！」
+
+ﾄﾞｺﾞｫｯｯｯ!!!!
+
+地面が派手に陥没し、何故か火の粉が舞っている。SOlも舞っている。
+
+「ぎゃああああああ！！！！！！！！！！！！！」
+
+Eva「今日のSol、よく飛ぶな」
+
+Stella「鳥さんみたいだね～」
+
+Quan「鳥はあんな放物線を描かない」
+
+完全に対岸の火事の様相で見物していた。
+
+「ごめんなさいごめんなさい！！！！二度とやりません！助けてぇ！！！！委員長ぉぉぉぉ！！！！！Evaあああ！！Stellaあああ！！！！！！！」
+
+Quan「呼ばれてるぞ」
+
+Eva「知るかバカ」
+
+Stella「外出るのこわいよ～」
+
+Quan「……好きにしろ」
+
+こうして、暫くSolの悲痛な叫びとVerisの怒号、地形がえぐれる音が何度か聞こえたあと、ようやく静かになった。
+
+……
+
+……
+
+数十分後。
+
+ガチャ。
+
+研究室の扉が開く。
+
+Veris「……戻りました」
+
+Verisが戻ってきた。
+
+髪がかなり乱れ、肩で息をしている。顔には疲労が色濃く浮かび、普段より数倍げっそりしていた。
+
+その後ろ。
+
+Sol「…………」
+
+外野3人「」
+
+Solだったものがあった。
+
+服は泥まみれでボロッカス、髪には葉っぱが何枚も刺さり、頬は土と煤まみれ。
+
+全身あちこち擦り傷だらけで、肩を落として微動だにしていない。
+
+いつものニヤニヤ顔は跡形もなく、抜け殻のように辛うじて立っていた。
+
+Stella「Solちゃん……」
+
+Sol「…………」
+
+Stella「ボロボロだね」
+
+Sol「…………はい」
+
+返事まで小さい。
+
+Quan「犬か」
+
+Sol「…………」
+
+いつもなら「誰が犬だ！」くらい返してくるのに、今のSolはただ静かに床へへたり込んだ。
+
+完全に子犬である。
+
+Verisは壁にもたれかかりながら大きく息を吐く。
+
+Veris「……多分、これで一週間分くらい怒ったと思います。なので……しばらくは……怒る気力も湧きません……」
+
+そう言って盛大なため息をついた。
+
+Stella「お疲れさま、ヴェリちゃん」
+
+Veris「ありがとうございます……」
+
+Eva「……」
+
+その姿を見ていたEvaが、ぼそっと呟く。
+
+Eva「あれで一週間分なのか……」
+
+Veris「…………」
+
+ﾋﾟｷｯ
+
+窓ガラスが一枚だけ鳴った。
+
+Eva「……撤回する」
+
+Veris「……違います、今のは……反射です」
+
+Eva「危ね」
+
+Quan「もはや条件反射で発動しているな」
+
+Veris「好きでなってるわけじゃありませんからね……」
+
+そう告げて、一仕事終えたと言わんばかりにVerisは近くのソファに勢いよく腰かけた。
+
+一方。
+
+部屋の隅ではSolが毛布を被って体育座りしている。
+
+Stella「Solちゃん、おやつ食べる？」
+
+Sol「…………いりません」
+
+Eva「重症だ」
+
+Quan「ここまで静かなSolは初めて観測する」
+
+Stella「プ、プリンなら？」
+
+Sol「…………」
+
+一瞬だけ反応する。
+
+しかし。
+
+Sol「……大丈夫です」
+
+その一言だけ告げて、再び毛布に潜ってしまった。
+
+Eva「すげえ」
+
+Quan「どんな馬鹿でも流石に学習するか」
+
+Stella「えへへ、久しぶりに静かな研究室だねぇ」
+
+Veris「……その原因を作った人が言いますか」
+
+Stella「あっ」
+
+一瞬だけ全員が身構える。
+
+しかし何も起きない。
+
+Verisは苦笑しながら頭を抱えた。
+
+Veris「……本当に、一週間くらいは勘弁してください。私も誰も得しません」
+
+Sol「…………はい」
+
+------------------------------------
+
+翌日。
+
+研究室には珍しく平和な空気が流れていた。
+
+Verisは昨日の一件が嘘のように穏やかで、資料を静かに整理している。
+
+Solはというと。
+
+ソファの端で体育座りをしながら、大人しく漫画を読んでいた。
+
+表情筋は完全に死んでいる。
+
+Eva「……気持ち悪いな」
+
+Sol「なんでそんなこと言うの」
+
+Eva「昨日までギャーコラ言ってたやつが急に静かになってお行儀良くしてたらそりゃ気持ち悪いだろ」
+
+Sol「反省してるから……」
+
+Stella「私は今のSolちゃん結構好きだよぉ」
+
+Sol「ほんと？」
+
+Stella「うん！だって研究室壊れないもん」
+
+Sol「…………」
+
+その横。黙って何か作業していたQuanが試験管を机に置いた。
+
+Quan「完成した」
+
+Veris「え？」
+
+Quan「解呪薬」
+
+Stella「おっ！」
+
+Eva「早かったな」
+
+Quan「解析自体は昨日終わっていた。魔力の共鳴を打ち消すのに少々手間取ったが」
+
+Veris「つまり……これで元に戻るんですか？」
+
+Quan「ああ」
+
+研究室に、ようやく安堵の空気が流れる。
+
+Stella「よかったぁ……これでヴェリちゃんも安心だね」
+
+Veris「本当に良かったです……。もう怒るたびに何か壊れるのは勘弁です」
+
+Sol「私もそう思う」
+
+Eva「お前は特にだな」
+
+Verisが一息ついた顔でQuanの元に駆け寄ってくる。だが、Quanは試験管を持ったまま動かず、何かを考えている。
+
+Eva「……どうした」
+
+Quan「一つ気になっている」
+
+全員がQuanを見る。
+
+Quan「治療する必要があるのか」
+
+Veris「……はい？」
+
+Quan「昨日から今日にかけて観察した結果、この能力はSolの素行を著しく抑制していると見受けられる」
+
+Sol「え」
+
+Quan「普段なら一日に三回は何か壊したりしているだろう。今日は未だにゼロだ」
+
+Sol「……」
+
+Quan「研究室全体の騒音も減少している。快適だ」
+
+Eva「まあ確かに」
+
+Quan「相乗効果で、Verisの怒る頻度も激減している」
+
+Stella「確かに今日は一回も怒ってないねぇ」
+
+Quan「つまり双方に抑止力として機能している。ならば治療する合理性は薄いと結論付ける」
+
+Sol「待って待って待って！！！！」
+
+Quan「？」
+
+Sol「それはダメ！！！」
+
+Quan「何故だ」
+
+Sol「何故だじゃないよ！！」
+
+Solが勢いよく立ち上がる。
+
+Sol「私昨日死にかけてたんだけど！？！？！？」
+
+Eva「昨日は命懸けだったな」
+
+Sol「そうじゃなくて！！！あれから委員長が息吸うだけでビクッてなるんだけど！！？」
+
+Veris「お、大袈裟な……」
+
+Sol「今も怖いもん！！」
+
+Veris「普通に話してるだけじゃないですか！」
+
+Sol「いつ怒りだすか怖いもん！！怒ったらまた昨日みたいになるでしょ！！！」
+
+Stella「あはは……」
+
+Quan「しかし私達にとっても現在の状況は有益だ。騒がしい個体が静かになっている」
+
+Sol「私を害獣みたいに言うな！！！」
+
+Eva「否定材料あるか？」
+
+Sol「…………」
+
+Sol「……ないです」
+
+Eva「草」
+
+Sol「でも！！！ずっとこれとか絶対イヤ！！おねがい！！」
+
+Quan「……」
+
+Quanは明らかに納得行ってない顔で試験管から手を離さない。
+
+やがてEvaが寝返りを打ちながら口を開いた。
+
+Eva「無理だろ」
+
+Quan「何が」
+
+Eva「あのだな、コイツが仮にずっと大人しくなったとしてもだな、」
+
+EvaはVerisの方を見た。
+
+Eva「私らが怒らせるだろ」
+
+Veris「……」
+
+Stella「あっ」
+
+Sol「あっ」
+
+Quan「……なるほど」
+
+Eva「昨日だってSolだけじゃないかろ。私も皮肉言って窓にヒビ入れたし」
+
+Stella「私もしょっちゅう爆発させてるからヤバいかも」
+
+Veris「自覚あるならやめてくださいよ！！」
+
+ﾋﾟｷｯ
+
+全員「」
+
+Veris「……」
+
+Eva「……そういう訳だ」
+
+Quan「……Verisを恒久的抑止力として運用するのは難しいか」
+
+Veris「何ですかその核兵器みたいな扱いは！？」
+
+ﾊﾞｷｯ
+
+Sol「ひっ！！」
+
+無意識に机の陰へ隠れるSol。
+
+Eva「条件反射になってるじゃねえか」
+
+Stella「Solちゃんが雷嫌いの犬みたいになってる……」
+
+Quan「有効性が実証されているな」
+
+Sol「お願いします！！！！治してください！！！！お願い！！！！！！」
+
+Quan「しかしメリットが……」
+
+Stella「研究室壊れる方がやだよぉ。治しちゃおうよ」
+
+Quan「……まあそうか」
+
+Quanは半分納得行ったのか行ってないのか分からない顔で試験管をVerisへ差し出す。
+
+Quan「Solだけ静かでも結局私達が原因になる。治療した方が研究室全体として合理的とも言える」
+
+Eva「おめぇも自覚あんのかよ」
+
+Veris「……じゃあ飲みますからね。いただきます」
+
+Verisは恐る恐る薬を受け取り、一気に飲み干した。
+
+Quan「……魔力反応消失」
+
+Stella「治った？」
+
+Quan「恐らく」
+
+Veris「……本当に？」
+
+Quan「試してみろ。……Eva、なんか怒らせてみろ」
+
+Eva「いや急に振られても…………あー…………委員長の服エロいよね」
+
+Veris「はぁ！！！？？？」
+
+Sol「ギャッ！！！」
+
+Solが反射的に頭を手で覆う。
+
+だが。
+
+何も起きなかった。
+
+Veris「……」
+
+Eva「……治った？」
+
+Quan「今の反応で何も起きないという事は、完治したと思われる」
+
+Stella「よかった～～～～」
+
+Veris「はぁ…………というか私の服は別に破廉恥では……」
+
+Verisは少々顔をしかめつつも、やがて心底ほっとしたようにソファへ座り込んだ。
+
+そして、ずっと固まっていたSolがようやく顔を上げた。
+
+Sol「…………やっっっと終わったぁぁぁ！！！！！」
+
+さっきまでの大人しさが嘘のように飛び跳ねている。
+
+Sol「自由だーーー！！！うおおおお！！！！！！！」
+
+Quan「静かにしろ……」
+
+Eva「こいつはなんかスイッチでもついてんのか」
+
+Stella「いつもの感じに戻ってきたね～」
+
+Solがウキウキで部屋中を走り回る。次第に散らかる資料を見て、一息ついていたVerisの顔がどんどん険しくなっていく。
+
+Veris「…………Sol」
+
+Sol「ひっ！！」
+
+走り回っていたSolが急停止する。
+
+Veris「……またですか」
+
+Sol「ご、ごめんなさい」
+
+Veris「……まだ何も言ってませんけど」
+
+Sol「お、怒らないで！！やめて！！ごめんなさいごめんなさい！！」
+
+Veris「……」
+
+あまりに素直すぎる反応に逆にVerisは困惑し始めている。その様子を見てEvaが吹き出した。
+
+Eva「ぶっ……！ワハハハハハ！！」
+
+釣られてStellaも笑いだす。
+
+Stella「あははは！」
+
+Sol「わ、笑うなよ！！」
+
+Eva「効果あったじゃねえか。能力は消えても、お前の恐怖体験だけ残ってんじゃねえかよ」
+
+Quan「……興味深いな。所謂外発的動機付けと言える」
+
+Stella「条件反射ってことかな？」
+
+Sol「う、うるせえ！！！！」
+
+Veris「私は猛獣か何かなんですか……」
+
+Eva「窓の外見てみろよ」
+
+窓の外を見るVeris。外には確かに、猛獣が荒らしまくった跡がくっきりと残っていた。
+
+Veris「…………」
+
+Quan「大学も同意見だろうな」
+
+Stella「でもこれなら、当分Solちゃんも大人しくなりそうだね！」
+
+Sol「…………」
+
+Verisは深いため息をついた。
+
+Veris「なんなんですか私は……。怒ると災害扱いされて、治っても猛獣扱いされて……」
+
+Eva「天然兵器だな」
+
+Veris「違います！！」
+
+Sol「ひっ！！！」
+
+研究室が壊れなくなっても、結構な間研究室の騒音源は大人しくなり、Verisの胃が痛くなる頻度もほんのりと減ったのであった。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="02-3.html" class="nav-button prev">← offep2-3へ戻る</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

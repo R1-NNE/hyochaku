@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep2-1:Verisツッコミ封印</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep2:Verisツッコミ封印 sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+昼下がりの研究室。
+
+Evaはソファで昼寝、Solは携帯ゲーム機を必死に操作しており、Quanはよくわからない本を読み続けている。
+
+そんな中、Stellaは極彩色の試薬を鼻歌交じりに混ぜていた。その様子をVerisが資料整理しつつ呆れた目で見ている。
+
+Veris「Stellaさん、さっきからなんなんですかその怪しい液体は……」
+
+Stella「んー？わかんない！」
+
+Veris「わ、わからないって……この前もそんな感じで研究室の壁吹っ飛ばしましたよね、やめてください」
+
+Stella「きょ、今日は大丈夫だって！！あれはたまたま！！」
+
+Quan「その台詞はもう飽きる程聴いたし飽きる程爆発した」
+
+Veris「頼むからやめてくれませんか…………」
+
+Stella「やだ！！！！」
+
+誰も止められる者がいないままStellaは試薬をぽいぽい放り込んでいる。やがて間もなく、試薬が激しく発光し、轟音が響いた。
+
+ﾄﾞｫﾝｯｯｯｯ！！！！！！！！
+
+Sol「わああああ！！！？？？」
+
+Eva「……あー……折角寝てたのに……」
+
+Stella「わーっ、なんか今日は七色に爆発してる！」
+
+Veris「“なんか今日は”じゃないんですよ！！　まず爆発を日常にしないでください！！」
+
+Quan「静かにしろ…………」
+
+研究室中に乾いた爆発音が響き、カラフルな煙が机の上から勢いよく噴き上がっている。
+
+いつもの光景だった。気づいたらStellaがなにか試薬を爆発させては、何かが凍ったり、植物が急成長したり、部屋中が虹色になったり、訳の分からない現象が始まる。
+
+それが研究室の日常であったので、全員自然と身構える体勢になっていた。というより慣れているかもしれない。
+
+しかし。
+
+……
+
+……
+
+……
+
+Stella「……あれ？」
+
+Sol「終わり？」
+
+Quan「……反応終了。生成物も不活性。失敗か」
+
+Veris「……た、助かった……」
+
+爆発音で叩き起こされたEvaも欠伸を一つすると、再びソファへ身体を沈めた。
+
+Eva「あー……今日はハズレの日か」
+
+Veris「何がですか」
+
+Eva「爆発だけして終わる日。面白味ゼロ。起こされ損だ」
+
+Veris「面白味を求めないでください！　というか、そもそも爆発させないでください！！もう！！！！」
+
+Verisがいつものようにプンスコしている。ともあれ事態は収束した。
+
+と誰もが思った次の瞬間。
+
+バキィィィンン！！！！！！！
+
+Eva「え」
+
+鈍い音を立ててEvaの寝ころんでいたソファが、唐突に真ん中から綺麗に真っ二つになった。
+
+支えを失ったEvaはそのまま床へ投げ出された。
+
+Eva「痛って！！！…………は？」
+
+いつもの気怠げな表情は完全に消え失せ、豆鉄砲を食らったように目を丸くしている。
+
+Veris「…………え」
+
+Sol「…………は？」
+
+Stella「えぇ！？」
+
+Quan「…………」
+
+全員がEvaに釘付けになる。Evaは情けない体勢で天井を見つめたままやがて呟く。
+
+Eva「……いや、意味分かんないんだけど」
+
+Veris「わ、私だって分かりませんよ！！」
+
+Stella「な、なんで！？」
+
+Quan「ソファの耐久性に問題があったのでは」
+
+Veris「にしてもこんな偶然ありますか！？」
+
+困惑する4人。だが、Solはすぐに興味を携帯ゲーム機の方に戻し、ボタンを連打しながら適当に言う。
+
+Sol「えー、委員長がキレたら物が壊れるようになったんじゃない？　なんかゲームでもあるじゃん、声でダメージ与える奴」
+
+Veris「そんな訳ないでしょうが！！！！」
+
+また怒号が響く。その瞬間。
+
+パァンッ！！
+
+Sol「……え」
+
+乾いた爆発音と共にSolの持っていたゲーム機が粉々になった。
+
+Eva「…………はぁ！？」
+
+Stella「ええっ！？」
+
+Quan「……」
+
+全員が今度はSolに釘付けになる。Solは状況の飲み込めずしばらくフリーズしていたが、やがて洒落にならない顔になり始める。
+
+Sol「えっ……えっ……ええぇぇぇぇぇぇぇぇぇっ！！？！？！」
+
+Solは床へ崩れ落ち、粉々になったゲーム機の残骸を必死にかき集め始めている。
+
+Sol「私のデータがあああああああああ！！！あとラスボスだけだったのにぃぃぃ！！！やだやだやだ！！！！！！」
+
+床に散らばる基板を抱え込み、子供のように泣きわめいている。
+
+Veris「わ、私のせいじゃありませんからね！？　本当に違いますからね！？」
+
+Eva「いや今のは完全にお前がキレた瞬間爆発してなかったか」
+
+Sol「委員長何してくれてんのほんとに！！！！！ふざけんな！！！！！」
+
+Veris「い、いやそんなわけないでしょう！！！ありえません！！」
+
+Stella「あわわ……」
+
+4人が騒然とする中、Quanは砕けたゲーム機の破片を拾い上げ、断面をじっと眺めながら数秒考え込んで静かに口を開いた。
+
+Quan「……Verisの怒号を起点として、周囲の物質が局所的に破壊されている可能性がある」
+
+Veris「Q、Quanさんまでそんな……」
+
+Quan「最初はソファで次は携帯ゲーム機。いずれもVerisが大声を発した直後に発生している」
+
+Eva「……マジで？」
+
+Quan「偶然で片付けるには再現性がありすぎる。Veris、試しにもう1回キレてみろ」
+
+Veris「そんな訳ないでしょうが！！！」
+
+反射的にまた怒るVetis。その瞬間。
+
+バァァン！！！！！
+
+Quanの持っていた本が散り散りになった。
+
+Veris「………………」
+
+Stella「ほ、ほんとに破壊されてる……」
+
+Quan「…………これで成立しただろう。大した本じゃなくて助かった」
+
+Eva「ということは、委員長がキレるたびにこの研究室が破壊されていくわけか」
+
+Veris「な…………」
+
+ようやく事態を認識した5人。困惑しながらも、やがてStellaが口を開く。
+
+Stella「じゃあヴェリちゃん、治るまでお願いだから怒るのやめて☆」
+
+Veris「そ、そんな！！原因を作ったのは貴方でしょうが！！！」
+
+ビシッ。
+
+近くの椅子にヒビが入る。もはや選択肢など残されていないと言わんばかりに全員の視線が一斉にVerisへ向く。
+
+Veris「…………」
+
+Eva「諦めろ」
+
+Verisは青ざめた。
+
+Veris「わ、私……しゃべるのやめます……」
+
+Sol「うわぁぁぁん！！ゲームぇぇぇぇ！！！」と、未だに床で残骸を抱きしめて泣き続けていた。
+
+一方Evaは、真っ二つになったソファを眺めながら小さく呟く。
+
+Eva「……今日は当たりの日だったな」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="02-2.html" class="nav-button next">offep2-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
