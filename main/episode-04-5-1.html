@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4.5-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4.5:"リハビリ" sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+リハビリ室は朝の病棟よりずっと騒がしかった。
+平行棒、ゴムバンド、低い段差、やたら清潔な床。どこもかしこも「転ぶ前提」で作られている。
+
+Quanは平行棒の前に立ち、無表情のまま金属のバーを握っている。
+義足をつけた右脚は見た目だけならもうそれらしいが、動きはまだまるで身体の一部ではない。
+
+Eva「じゃあ今日は重心移動を確認してから……歩行する感じで。無理せんでもいいからな」
+
+Quan「“無理”の定義が曖昧だ」
+
+Eva「そこ突っかからなくていいから……とりあえずやってみようか」
+
+Quanは一瞬だけEvaを見たが、黙って前を向き直って歩み始めた。
+右、左。杖ではなく平行棒に頼って、慎重に重心を送る。
+
+最初の二歩はどうにか形になったが、三歩目で、義足側の接地がわずかにずれる。
+
+Quan「っ……あ」
+
+Quanの身体がぐらりと傾き、平行棒に肩をぶつけるようにして崩れた。
+
+Evaは一歩だけ前に出たが、支える直前で止まった。
+
+Eva「……受け身はまだマシだな」
+
+Quan「慰めとして最低だな」
+
+Eva「慰めるつもりはねえよ」
+
+Evaはしゃがみ込み、義足の位置と断端のずれだけ確認する。
+
+Eva「痛みは」
+
+Quan「許容範囲」
+
+Eva「許容してるような顔には見えんが」
+
+Quan「表情の読解精度が低いな」
+
+Eva「今のかんわいい声出た奴がよく言えるな」
+
+Quanの眉がぴくりと動く。
+
+Quan「……殺すぞ」
+
+Eva「やれるもんならやってみろ」
+
+Quan「クソ…………」
+
+Evaは仏調面のままバーを軽く叩く。
+
+Eva「ほら、続けるなら立って。どうせ何回も転ぶよ今日は」
+
+Quanは何も返さず、平行棒をつかんで立ち上がる。
+
+二回目はもう少し進めた。
+右、左、右。Quanの歩き方はぎこちないながらも一応前へ進んでいる。だが義足側に乗る瞬間だけ、どうしても身体がためらう。
+
+四歩目、五歩目。
+
+六歩目でまた崩れてしまう。
+
+バーをつかみ損ね、上半身が前へ突っ込み、足元がもつれて床へ派手に倒れ込んだ。
+
+Quan「ぅあっ……く……」
+
+息を呑むようなひどく不格好な声と体勢でうずくまる。Quan本人だけが、その一瞬をいちばん嫌っている顔をしている。
+
+しかしEvaは容赦しない。
+
+Eva「今の、思ったより可愛い声出たねｗ」
+
+Quan「……本当にお前は……」
+
+床に手をついたまま吐き捨てると、Quanはそのまま立ち上がろうとする。
+だが、痛みと体勢の立て直しで上手く起き上がれない。Quan本人の体力も平均を遥かに下回る故に本人には過酷すぎる試練である。
+
+見かねたEvaがやや真面目な顔になる。
+
+Eva「立てる？」
+
+Quanは数秒黙ったあと、短く言った。
+
+Quan「立てる」
+
+Eva「そ。じゃあ頑張って」
+
+突き放した言い方だが、中途半端な気遣いを彼女は最も嫌う事を知っている故の対応だった。
+
+やがてQuanがよろめきながら立ち上がる。
+
+Quan「……次」
+
+明らかに疲弊した顔をしている。それでもQuanはやると言って譲らない。
+
+誰でも中途半端な気遣いが出るような光景である。
+
+Eva「……今日はここまででもいいんじゃないのか」
+
+Quan「いいわけがないだろ」
+
+即答。
+
+Evaが半目になる。
+
+Eva「珍しく根拠も無しにムキだな」
+
+Quan「ある。ここで引くとやらなくなる」
+
+Eva「理屈っぽく言えば無茶が正当化されるわけじゃないんだけど」
+
+Quan「知っている」
+
+Eva「なのにやるんだ」
+
+Quan「そうだ」
+
+Evaは一度だけ息を吐いた。少し考えた後、やがて口を開く。
+
+Eva「じゃあどうぞ。危なくなったら止めるから」
+
+そう言って壁際に下がる。しかし目線は一瞬たりとも外さない。
+
+3回目の歩行はさらに露骨だった。
+彼女の知能では理屈は理解しているはずなのだが、身体はついてこないのである。
+
+歩き始めて間もなく、左脚が接地の衝撃をうまく吸えずQuanの肩が大きく揺れ、大きく体勢を崩す。
+
+Quan「っ、ぅ……！！」
+
+今度は抑えきれずに、少し高い声が漏らしてまた派手に床に打ちつけられた。
+立ち上がる前にEvaがさっと前に出てきた。
+
+Eva「はい終了。今のはさすがにダサい」
+
+Quan「……立てる」
+
+Eva「説得力ねえよ」
+
+Quan「……」
+
+Eva「反論してこないってことは自覚ありか」
+
+Quanは舌打ちしかけてやめた。
+息が上がっている。額にも薄く汗が浮いていた。無表情を貼りつけようとしているぶん、息の荒さだけがリハビリ室にやけに目立っている。
+
+EvaはQuanを起こし、肩を貸したまま告げる。
+
+Eva「持っといてやるからこれで進んでみ」
+
+Quan「余計なお世話だ」
+
+Eva「まだ言うか。そう何度もお前が転んでる所が面白いと思うなよ」
+
+Quan「…………」
+
+Evaは小さく笑って、支えながら立ち位置を直す。
+その笑い方があまりに普段通りで、Quanは文句を言いながらも振り払わなかった。
+
+EvaがQuanを支えながら、ゆっくりと前に進む。
+転倒こそしないものの、進みもひどく遅い。鏡に映る自分の歩き方を見て、Quanは口元がわずかに硬くなっていく。
+
+Evaがそれに気づいて笑う。
+
+Eva「見るなよ、そんなに」
+
+Quan「見ないと修正できない」
+
+Eva「見すぎるとムカつくだけだぞ」
+
+Quan「……」
+
+Eva「まあ、もっとひどいの想定してたし十分なんじゃないか」
+
+Quan「それはそれで失礼だな」
+
+Eva「いまさら？」
+
+その直後、またつまずいた。
+今度は前ほど派手ではないが、膝から崩れてその場に座り込んでしまった。
+
+Quan「…………クソがっ……」
+
+Quanが低く吐き出した声は、痛みより苛立ちの色が強かった。
+Evaはいそいそとその前にしゃがみ、顔を覗き込む。
+
+Eva「遂に『クソが』か」
+
+Quan「出るだろ……これだけ転べば……」
+
+Eva「ふふっ……今日感情モリモリじゃん」
+
+Quan「苛立ちは感情のうちに入らない」
+
+Eva「屁理屈だな」
+
+Quan「定義の話だ」
+
+Eva「転びながら定義とか言うな。だいぶ間抜けだぞ」
+
+そう笑いつつEvaがペットボトルの水を差しだす。Quanはそれを受け取って一口飲むが、表情は硬いままだ。
+
+Quan「……お前、笑いすぎだろ」
+
+Eva「だって転ぶたびに声変わるんだもん」
+
+Quan「不快」
+
+Eva「私は愉快かも」
+
+Quan「最低最悪」
+
+Eva「でもちゃんと付き合ってるじゃん、私」
+
+その一言にQuanは水を飲む手を止める。
+
+Evaは床に片膝をついて義足の位置を軽く直しつつ、また真面目な顔に戻る。
+
+Eva「……何回転んでも別にいいよ。ここで転ぶぶんには、ただの練習だからね」
+
+Quan「……慰めが下手」
+
+Eva「慰めてないって。事実だ」
+
+Quan「真似するな」
+
+Eva「似てた？」
+
+Quanは顔をしかめつつも、数秒何も言わなかった。
+その沈黙は反論というより、うまく返せない時のものだった。
+
+やがてEvaが立ち上がる。
+
+Eva「さ、次で終わりにしよ。これ以上は色々とね」
+
+Quan「まだやれる」
+
+Eva「やれるのと、やるべきかは別だから」
+
+Quan「……」
+
+Eva「はいはい素直になって。そういう日もあるから」
+
+Quanは不服そうにしながらも立ち上がる。
+さっきまでより動きは重い。だが一歩目は、少しだけ安定していた。
+
+二歩。
+三歩。
+四歩。
+
+義足側に乗る瞬間、まだ怖さは見える。けれど今度は落ちなかった。
+最後の数歩をなんとか保ち、遂に所定の位置までたどり着いた。
+
+Eva「やればできるじゃん」
+
+Quan「辿り着くまでが長すぎる」
+
+Eva「でも最後は転ばなかった」
+
+Quan「回数の統計としては悪い」
+
+Eva「いちいちめんどくせえな。最後がよければ今日はそれでいいだろ」
+
+Quan「雑な評価基準だ」
+
+Eva「でもさ、転びまくったくせに最後だけ妙に形になってたのはちょっと嬉しかったでしょ」
+
+Quanは黙る。その沈黙を見てEvaがかなり悪い顔になり始める。
+
+Eva「図星かQuanちゃん」
+
+Quan「…………疲れた」
+
+Eva「話そらしたな」
+
+Quan「いい加減にしてくれ」
+
+Eva「はいはい。今日はもう十分頑張ったし戻ろっか。歩けるか？」
+
+Quan「歩かせろ」
+
+Eva「どうぞ」
+
+Quanは少しだけ息をついた後、Evaに支えながらゆっくり歩き出す。
+
+右脚はまだ感覚があまり残っていない。身体も長期入院で細っておりあまりに頼りない。
+それでも、さっきよりほんの少しだけ、前に進む形にはなっていた。
+
+Evaはそれを横目で見ながら、わざと軽口をぶつける。
+
+Eva「にしても、今日の転び方はバリエーション豊かすぎたな。あんな可愛いQuanちゃんはレアだぞ」
+
+Quan「死ねよ」
+
+Eva「次はカメラ持ってくか」
+
+Quan「今すぐ医療従事者を辞めろ」
+
+Eva「もうやめてるが」
+
+Quan「…………」
+
+そう返しながら、EvaはちゃんとQuanの少し前ではなく、少し横を歩いていた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-5-2.html" class="nav-button next">ep4.5-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

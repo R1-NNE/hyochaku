@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4.5-6</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4.5:"リハビリ" sec-6</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+夕食時。
+
+研究室のテーブルにはStellaの手料理が並び、五人が揃って食事をしていた。
+
+Quanが加入してからまだ日が浅いにもかかわらず、すでに食卓での会話には彼女も普通に混ざって馴染んでいた。
+
+だが。
+
+Quan「……この煮物、味付けが少し濃い。味そのものに問題は見られないが、塩分量を考えるならもう少し薄くするべきだ」
+
+Stella「そうなんだ！じゃあ次はちょっと薄くしてみるね！」
+
+Quan「別に食べられないわけではない」
+
+Veris「……」
+
+Verisは黙々と箸を動かしながら、向かいのQuanを見ていた。
+
+何だかんだで会話は出来るし、Solがくだらないことを言えば呆れながらも反応する。
+
+ただ、表情だけは一向に変わらなかった。
+
+常に仏頂面であり、言い方も一向に柔らかくなる気配が無い。
+
+Sol「Quanってさ、メシ食ってる時までずっとそんな顔なの？」
+
+Quan「どういう意味だ」
+
+Sol「ずっと怒ってる顔じゃん。いや……怒ってないならもっと怖いんだけど」
+
+Quan「お前らが勝手に過剰反応しているだけだ」
+
+Veris「いえ……まあ、確かにその通りなんですけど……もう少し言い方というものが……」
+
+Quan「事実を伝えるのに余計な装飾は不要だ」
+
+Veris「そういうところですって！」
+
+Solがけらけら笑う。Stellaはそんな三人を眺めながら、相変わらず楽しそうにご飯を食べていた。
+
+Evaだけは、少し離れたところでQuanを眺めている。
+
+そして、先ほどの会話を思い出しながらふと口元を歪めた。
+
+Eva「……そういえばさ」
+
+Quan「何だ」
+
+Eva「あんた、高校の頃もそんな感じだったよね」
+
+Quan「当然だ。私は当時から何一つ変わっていない」
+
+Eva「それはそう。だけど一個、思い出してさ」
+
+Quanの箸が止まった。
+
+Quan「……何だ」
+
+Eva「高校二年の時さ」
+
+Quan「やめろ」
+
+Eva「まだ何も言ってないだろ」
+
+Quan「お前のその顔はロクでもない話をする時の顔だ」
+
+Sol「お？」
+
+Veris「何ですか？」
+
+Stella「昔のQuanちゃんの話？」
+
+Evaは嫌な顔のまま頷いた。
+
+Eva「そうそう。あんたら、Quanが昔からこんなカタブツだったと思ってるでしょ？」
+
+Sol「うん」
+
+Veris「まあ……はい」
+
+Eva「まあ実際そうだったんだけど、一回だけ、訳わからん事してきたんだよ」
+
+Quan「Eva」
+
+Eva「なに」
+
+Quan「黙れ」
+
+Eva「やだ」
+
+Quan「……」
+
+Quanの眉間に深い皺が刻まれる。Solは既に興味津々だった。
+
+Sol「えっなになに聞きたい聞きたい！何やったの？」
+
+Eva「えー、高校二年の私の誕生日にさ」
+
+Quan「やめろ」
+
+Eva「放課後に私が教室で勉強してたらQuanがやってきてさ、なんか無言で紙袋を渡してきたんだよ」
+
+Stella「プレゼント？」
+
+Eva「そう。で、私が『何これ？』って聞いたら、こいつなんて言ったと思う？」
+
+Quan「……」
+
+Evaは満面の笑みを浮かべ、ものすごく低い声で言う。
+
+Eva「『別に大したものではない。お前が以前、欲しいと言っていたから買っただけだ。あと、誕生日という行事に特別な意味はない。人間関係を維持する上で、こうしたイベントに最低限参加しておくことは合理的だと思った』」
+
+研究室が静まり返った。
+
+Sol「…………」
+
+Veris「…………」
+
+Stella「……ふふっ」
+
+そして。
+
+Sol「ぶはっ！」
+
+盛大に吹き出した。Solが机を叩いている。
+
+Sol「何それ！？ｗｗ　何その言い訳！！ｗｗ　めちゃくちゃプレゼント渡したかっただけじゃん！！ｗｗｗｗ」
+
+Verisも口元を押さえている。
+
+Veris「なんなんですか、それは……！　もっと普通に『誕生日おめでとう』って言えないんですか？」
+
+StellaはニコニコしながらQuanを見ていた。
+
+Stella「……Quanちゃん、意外とかわいい？」
+
+Quan「……殺すぞ」
+
+Sol「めっちゃキレてるｗｗ」
+
+Eva「ちなみに紙袋の中身は私が欲しいって言ってた本だった。しかもやたら可愛い包装までされてた」
+
+Sol「包装まで！？」
+
+Quan「……店員が勝手にやった」
+
+Eva「嘘つけ。お前私と本屋行った時、自分で包装の仕方を店員に細かく確認してただろ。まさか私宛だとは思わなかったが」
+
+Quan「……」
+
+Eva「『この折り方は強度が足りない』とか事細かく難癖つけやがってさ。困ってたぞ当時の店員」
+
+Sol「ぎゃはははは！！！！！ｗｗｗｗｗｗｗ」
+
+Veris「…………この人なんなんですか？」
+
+Quanの顔が、目に見えて不機嫌になっていく。
+
+Quan「お前は……六年前から何も成長していない……人間関係における機密情報を、本人の許可なく第三者へ流布するな……」
+
+Sol「機密情報てｗ」
+
+Eva「でも、めちゃくちゃ可愛かったし嬉しかったぞ」
+
+Quan「黙れ。今すぐその記憶を消せ、さもなくば死ね」
+
+Eva「ムリ」
+
+Quan「……お前は本当に性格が悪い。昔からそうだ。人の弱点を見つけると何年経っても執拗に弄り続ける。心が捻じ曲がっている」
+
+Veris「……お言葉ですが先程から強い言葉ばっかり使ってるあなたの方が心が捻じ曲がってますよ」
+
+Quan「…………」
+
+Eva「論破されてんじゃねえよ」
+
+Sol「ｗｗｗｗｗｗｗｗｗ」
+
+Quanが凄い表情をしている。Stellaは笑顔のまま夕飯を頬張っている。
+
+Stella「でもEva、すっごく嬉しかったんだね」
+
+Eva「まあな。こいつも私も、友達なんていなかったし」
+
+素直に答えるEva。Quanはそれを聞くと、ほんの一瞬だけ黙るがすぐに視線を逸らす。
+
+Quan「……あれは、お前が欲しがっていたから渡しただけだ。それ以上の意味はない」
+
+Eva「はいはい」
+
+Quan「……不愉快」
+
+Solは笑いながらQuanの顔を覗き込む。
+
+Sol「なんかコイツさっきより普通の顔になってない？」
+
+Quan「なっていない」
+
+Sol「いや、なってるって」
+
+Quan「なっていない。私は最初からこの顔だ」
+
+Sol「照れ隠し？」
+
+Quan「違う」
+
+Sol「昔の話されて恥ずかしい感じ？」
+
+Quan「違う」
+
+Sol「Evaに昔から弱い？」
+
+Quan「……殺す」
+
+Sol「図星じゃねえか！ｗｗ」
+
+Eva「へえ」
+
+Quan「……Eva」
+
+Eva「はいはい」
+
+Quanは完全に不機嫌そうな顔をしていた。
+
+だが、加入当初のような張り詰めた冷たさは、もう少しだけ薄れている。
+
+Verisもそれに気づいたのか、呆れたように笑う。
+
+Veris「……まあ、少しは人間らしいところもあるじゃないですか」
+
+Quan「私は最初から人間だ」
+
+Sol「そういうところだよ」
+
+Quan「うるさい」
+
+Sol「ほら、また普通に返してくるしｗ」
+
+Quan「……」
+
+Evaが隣で小さく笑う。
+
+Eva「馴染んできたな」
+
+Quan「なわけあるか」
+
+Stella「してるよ！」
+
+Veris「してますね」
+
+Sol「めっちゃしてる」
+
+三人から同時に言われ、Quanはしばらく黙った。
+
+そして箸を置き、深いため息を吐く。
+
+Quan「……お前ら、全員煩い」
+
+Eva「それ言えるようになっただけでも大進歩だよ」
+
+Quan「Eva」
+
+Eva「はいはい」
+
+その返事に、Quanはまた露骨に嫌そうな顔をする。
+
+その口元が夕飯前より緩んでいた事は、最後まで認めようとしなかった。
+
+---
+
+翌日。
+
+朝食を終えた五人は、いつものように研究室の共用スペースに集まっていた。
+
+Quanは昨日と同じく、仏頂面でコーヒーを飲んでいる。だが、まるで最初からそこにいたような雰囲気である。
+
+Verisがテーブルの上に書類を置く。
+
+Veris「それで……改めて確認したいのですが、Quanさんはこちらで暮らすつもりなのでしょうか」
+
+Quan「別にどちらでもいい」
+
+Veris「……どちらでも？」
+
+Quan「出ていけと言われれば出るが、ここにいても私は困る事が無い。他に選択肢がない以上留まるのは合理的だと認識している……少々煩いのが難点だが」
+
+あまりにも淡々としているが、すぐにStellaが割って入ってきた。
+
+Stella「じゃあここにいて！」
+
+Quan「……なぜそうなる」
+
+Stella「だってQuanちゃん、すごいんだもん！」
+
+Quan「何がだ」
+
+Stella「昨日の研究の話！　あれから教えてもらったところ直してみたら、実験結果がかなり良くなったんだよ！」
+
+Stellaは机の上に何枚もの資料を広げる。
+
+Stella「それに、今朝ちょっと話しただけでも新しい実験方法をいくつか考えてくれたし。Quanちゃんがいたら、研究がもっと進むと思う！」
+
+Quan「それは研究上の話だろう」
+
+Stella「うん。だからいてほしい！」
+
+Quan「……」
+
+StellaはにこにことQuanを見る。
+
+Quanは少し黙ったあと、やがて表情一つ変えず呟く。
+
+Quan「……好きにしろ」
+
+Stella「やったーー！！！」
+
+Veris「……決まるの早いですね」
+
+Quan「私はどちらでもいいと言った」
+
+Veris「でもStellaさん、絶対に譲る気ありませんでしたよね」
+
+Stella「うん！！！」
+
+Veris「流石ですね……」
+
+ゲームしていたSolがソファから顔を出す。
+
+Sol「じゃあ決まりか。五人目だな！」
+
+Stella「うん！！」
+
+次第に和気あいあいとしたムードになっていく。Evaは半分寝ながらも、Stellaにボヤいた。
+
+Eva「……研究が理由ではないよな」
+
+Stella「バレた？」
+
+Eva「今までどんな理由で私達を攫ってきたと思ってる……」
+
+Stella「言い方！！」
+
+Eva「……ま、こちらとしては結果的にはありがたい。よろしく頼む」
+
+Stella「Evaもお世話するんだよ！！」
+
+Eva「やだ」
+
+Quan「……私を何だと思ってる」
+
+こうしてQuanは研究室の一員として溶け込んでいた……のだが。
+
+Sol「なー、お前の事なんて呼べばいい？」
+
+Quan「名前でいいだろ」
+
+Sol「堅物野郎は？」
+
+Quan「やめろ。不愉快」
+
+Sol「合ってるじゃん！」
+
+Quan「……お前は本当に人を苛立たせる才能だけはあるな」
+
+Sol「褒められた？」
+
+Quan「褒めていない」
+
+Sol「んー、じゃあ理屈屋で」
+
+Quan「……お前」
+
+Solが楽しそうに笑う中、Quanは露骨に眉をしかめる。
+
+Verisが慌てて二人の間に入る。
+
+Veris「ちょっと、朝から喧嘩しないでください！　Quanさんも、Solがそういう人なのはもう分かったでしょう！」
+
+Quan「分かっている。だから余計に腹が立つ」
+
+Sol「こっちは楽しいけどな」
+
+Quan「お前の娯楽に私を巻き込むな」
+
+Veris「いい加減にしてください！！」
+
+Sol「でもこいつ面白いしさ」
+
+Quan「お前に面白いと言われる筋合いはない」
+
+Sol「じゃあつまんない？」
+
+Quan「そういう問題ではない」
+
+Sol「じゃあカタブツ野郎？」
+
+Quan「やめろと言ってるだろ、殺すぞ」
+
+Veris「二人とも！！！」
+
+研究室の朝は、ものの数分で騒がしくなっていた。
+
+少し離れた場所では、Stellaがそんな三人を眺めながら楽しそうに笑っている。
+
+Stella「ふふっ。なんかいいね」
+
+Evaはソファに起き上がり、眠そうな目でコーヒーを飲みながらその光景を眺めていた。
+
+SolがQuanを煽り、Quanが本気で言い返し、それをVerisが止めようとして逆に巻き込まれている。
+
+つい最近までEvaとStellaしかいなかったのに、もはや最初からそうだったかのように成立している。
+
+Eva「……ここも賑やかになったもんだな」
+
+Stella「だねぇ」
+
+Eva「……良かったと思うか」
+
+Stella「…………本当に嬉しいよ」
+
+Eva「そう」
+
+そう告げた後、ソファに深く沈み込んだ。
+
+Sol「Quan、今の絶対負け惜しみだろ！」
+
+Quan「お前と議論すること自体が時間の無駄だとさっきから何度も言っている」
+
+Veris「だから二人とも落ち着いてくださいってば！！」
+
+Stellaは笑いながら三人を眺めている。
+
+Evaも止める気はないらしい。
+
+Eva「……この先どうなるかは知らないけど、前よりは確実に良くなったな」
+
+Stella「いい事言ってくれるじゃん！」
+
+Eva「まあ……その分手間が増えそうだな」
+
+Stella「またそう言って！Evaも楽しみにしてるんでしょ？」
+
+Evaは少しだけ黙った。
+
+そして、騒がしい三人へ視線を戻す。
+
+Eva「……まあ、退屈はしないか」
+
+その直後。
+
+Sol「だから堅物だって！」
+
+Quan「……次に言ったら本当に怒るぞ」
+
+Veris「二人ともいい加減にしてください！！」
+
+Stella「ふふふ」
+
+Eva「……やっぱり、うるさいかも」
+
+Evaが顔をしかめているが、どこか穏やかそうである。
+
+そんなこんなであっさりと、漂着研究室5人目の居住者が決定した。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-5-5.html" class="nav-button prev">← ep4.5-5へ戻る</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

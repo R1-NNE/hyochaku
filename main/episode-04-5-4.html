@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep4.5-4</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep4.5:"リハビリ" sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+退院当日の朝。
+
+Quanの荷物はほとんど片付いていた。ベッド脇に置かれているのは最低限の私物と退院時に必要な書類、それから義足の調整器具くらいである。
+
+Evaは椅子に座り、退院説明書を眺めながらふと思い出したように口を開いた。
+
+Eva「そういえば……あんた退院したらどうするの」
+
+Quanはそれを聞いて、暫く黙っている。
+
+Eva「……まさかお前」
+
+Quan「考慮していなかった」
+
+Eva「嘘だろ天才様」
+
+Quan「仕方ないだろ。六年間寝てて、起きたら生活基盤など飛んでいる状態だ。住居も仕事も人間関係も考える場合ではなかった」
+
+Eva「いや考えるだろ普通……いやでもそこ考えてなかった私も私か」
+
+Quan「思えば、私達は高校の時も社会からの鼻つまみ者だったな」
+
+Eva「そこ感傷に浸らなくていいから！　あーマジでどうすんだ……」
+
+Evaが頭を抱えている。Quanは何も考えてなさそうである。
+
+Quan「お前以外に現在の知人がほぼいない。身内も海外赴任中だ」
+
+Eva「なんか昔お前の親父さんは教授だかなんとか言ってたな……あー……」
+
+Evaはしばらく考えるように天井を見たあと、やがて半ば投げやりな感じで切り出した。
+
+Eva「あ……じゃあ、うちの研究室一旦来てみるか？」
+
+Quan「……研究室？」
+
+Eva「たまに話してたやつ。多分部屋は余ってるはず」
+
+Quan「お前が居候しているとやらだったな」
+
+Eva「そ。厳密にはStellaって子が持ってる研究室。そこに何人かいて、共同生活してるわけ」
+
+Quan「表現が随分曖昧だな。共同の研究員なのか」
+
+Eva「まあ……そういうことになってるかも」
+
+Quan「“なってる”というのは何だ」
+
+Eva「いや…………一言で言いきれないというか……」
+
+Quan「説明しろ」
+
+Eva「めんど……」
+
+Evaはややゲンナリしつつ、椅子に深く腰掛けて話し始める。
+
+Eva「じゃ、一人ずつ行くよ。まずStella。こいつが研究室のオーナーで、七曜魔法という学問を研究している」
+
+Quan「魔法か。高校の時には把握していなかった分野だな」
+
+Eva「んまあ他に言う事と言えば、あいつはほわほわしてて感覚で研究するタイプ。優しいんだが大体かなり適当だな」
+
+Quan「……研究能力は？」
+
+Eva「ちゃんと高いよ。私等ほど頭いいってわけじゃないけど、専門分野はちゃんと芯持ってる……はずなんだが、普段はマジで適当な事しか言ってねえな」
+
+Quan「……」
+
+Quanは納得行ったのか行ってないのか微妙な顔で頷く。
+
+Eva「次ね。Veris、コイツは責任感強くて、研究室の規則とか生活面を全部気にしてる。基本的に他の全員へ小言を言ってる委員長基質だ」
+
+Quan「その人物が場を取り仕切ってるのか」
+
+Eva「いや」
+
+Quan「何故だ」
+
+Eva「……誰も言うこと聞かないから」
+
+Quan「……合理性に欠けている」
+
+Eva「共同生活なんてそんなもんでしょ。ま、悪い娘じゃないしみんなからイジられ……可愛がられてる感じの存在だな」
+
+Quan「お前みたいなのが日夜からかってるんだろうな」
+
+Evaは少々目線をそらしつつも、気にせず続ける。
+
+Eva「そんで最後、Sol。コイツが一番の問題児」
+
+Quan「具体的には？」
+
+Eva「よく分からないことしかしてないし、後先考えずにふざけるしうるさい。要はバカで、研究室のトラブルのかなりの割合がSol絡みだな」
+
+Quan「……何故そんな奴を置いているんだ？」
+
+Eva「はは……だがコイツはひらめきというか、直感が凄いんだよ。時々私でも解決できない問題をあっさりと解決しやがることもある。後は……賑やかし役だな」
+
+Quan「…………」
+
+ひとしきり聞いたQuanの顔から、明確に呆れが滲み出た。やがて、いつもの数倍低い声で切り出す。
+
+Quan「……それは研究室ではなく、問題行動を起こす人間を収容する施設ではないのか」
+
+Eva「あながち間違ってないが言い方な」
+
+Quan「お前もそこに住んでいるんだろう。なら尚更だ」
+
+Eva「私は違うよ。寝てるだけだからなんにも問題行動なんてしてない優等生」
+
+Quan「威張って言うことではない」
+
+Evaがくすくす笑う。
+
+Eva「まあみんないい奴だよ。Stellaはかなり優しいし、Verisは面倒見いいし、Solもまあ……楽しい」
+
+Quan「問題行動を起こすが悪人ではないといった具合か」
+
+Eva「そんな感じかな」
+
+Quan「お前は悪人だから例外だ」
+
+Eva「お前が加わると2人だな」
+
+皮肉で返すEvaをよそにQuanは腕を組んで考える。
+
+Quan「……その環境で、私は何をする」
+
+Eva「別に、身体慣らしながら適当に研究でもしてればStellaは簡単に喜んでくれるだろ。私でも理解できるくらいだからお前にとっては尚更だろう」
+
+Quan「……研究費や生活費はどう賄っている」
+
+Eva「私が単発手術で働かされてる」
+
+Quan「……運営体制が杜撰すぎる。お前に任せているという時点でだ」
+
+Eva「残念だが世間の求める水準より私の能力の方が上だ」
+
+Quanは無視しつつ、しばらく黙って考える。
+
+研究室という響き自体には悪くない印象を持てる。自分の知識を活かせる環境があるなら、生活基盤を再構築するまでの仮住まいとしては合理的である。
+
+だが。
+
+Quan「……適応できるのか？」
+
+Eva「また弱気？」
+
+Quan「そうではない。単純に、私を受け入れることが出来るのかという点と、私が受け入れられるかの2点がある」
+
+Eva「なんだその偉そうな言い方は……」
+
+Quan「事実だろう。私はお前の事も嫌いだが、他の人間共の大半はもっと嫌いだ」
+
+Eva「自信もって言うとこじゃねえぞ」
+
+Quan「だが……他に合理的な当ては無さそうだな」
+
+Eva「じゃ、決まりだな。一応伝えておくか」
+
+そういうとEvaはさっそくと言わんばかりに携帯を取り出す。間もなく通話口にやかましい声が聞こえてくる。
+
+Eva「……うるさ！すぐ帰るから、ちょ話だけ聞け」
+
+Quan「……」
+
+Eva「あー……Quanいるじゃん、今日あいつ退院だからちょっとの間研究室に置いておこうかって考えてて……大丈夫そうか」
+
+電話口から瞬時に「いいよ！！！」と爆音が聞こえてくる。
+
+Eva「…………助かる。夕方には帰るから……誰が爆破させたのか知らんが片付けとけよ」
+
+そう言って電話を切った。喜ぶところではあるが、Quanはかなり顔をしかめている。
+
+Eva「OKだって」
+
+Quan「…………爆発とは」
+
+Eva「いつものことだから」
+
+Quan「ありえない」
+
+Eva「慣れてもらわないと困るぞ」
+
+Quan「…………」
+
+Eva「まあ……あそこならあんたみたいな堅物でも置いてくれるだろうし、お互いさまって事で」
+
+Quanは深く息を吐き、暫く黙った。ものすごくめんどくさい事やらいろいろを考えた後、やがて諦めたような声で切り出す。
+
+Quan「……一応、行ってみる」
+
+Eva「お、素直出たな」
+
+Quan「勘違いするな。現状における選択肢の最善手がこれなだけだ」
+
+Eva「はいはい」
+
+Quan「それに、研究設備があるなら無駄ではない。共同生活という環境が人間の行動に与える影響にも興味がある。合理的な判断だ」
+
+Eva「はいはい」
+
+Quan「何だその返事は」
+
+Eva「いやあ、如何にもお前らしいなって。優しいから今日はからかわんでやるよ」
+
+Quan「不快……」
+
+Evaはニヤニヤしながら病室の出口へ向かう。既に退院準備は整えていた。
+
+Eva「じゃ、そろそろ出るぞ」
+
+Quan「……本当に大丈夫なのか」
+
+Eva「もう決まった事なんだから、受け入れの準備とかをした方が合理的だぞ」
+
+Quan「……不安しかない」
+
+そう言って立ち上がり、歩き始める。義足は既に身体に馴染んでおり、はっきりと歩けるようになっていた。
+
+だが、この先の事はQuanにとって全然はっきりしていないらしく、めでたい日なのに顔はいつも通りである。
+
+Quan「……よりによってEvaの研究室か」
+
+ボヤいた数秒後、また考え直す。
+
+Quan「いや、そもそもコイツがいる時点で何かがおかしい」
+
+Eva「うるさい。早よ歩け」
+
+退院を目前にして、ようやく得た今後の生活先。
+
+それが人生最大級の判断ミスになることを、Quanはまだ知らなかった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-5-1.html" class="nav-button prev">← ep4.5-3へ戻る</a>
+      <a href="episode-04-5-3.html" class="nav-button next">ep4.5-5へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
