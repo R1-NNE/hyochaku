@@ -1,0 +1,677 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep5-2</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep5:"七曜魔法研究" sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+扉が開くと、薄暗い廊下の奥に研究室別棟へ続く扉が見える。Stellaはそこへ歩いていき、慣れた様子で鍵を開けた。
+
+Stella「ここだよ～」
+
+Sol「おお……」
+
+Eva「……随分ちゃんとした場所だな」
+
+Veris「こんなところがあったんですね……」
+
+Quan「……」
+
+扉の向こうには、いつもの研究室とは少し雰囲気の違う空間が広がっていた。
+
+古い研究設備と新しい測定機器が混在しており、中央には七曜魔法の適性を測定するためと思われる大きな魔法陣が描かれていた。
+
+Stella「懐かしいな～ママと一緒に研究してた時からあんまり来てなかったからねぇ」
+
+Veris「……メンテナンスとかしてたんですか」
+
+Stella「……？」
+
+Eva「答えろよ」
+
+やがてStellaが月、火、水、木の4つの魔石を机の上へ並べ終え、4人に告げる。
+
+Stella「じゃあ改めて……みんなの七曜魔法適性を調べて行きます！まずそれぞれの魔法について簡単に説明するね」
+
+Stellaは魔石を一つずつ指差していく。
+
+Stella「月輪はね～、闇魔法かな。生命力を奪い取ったり、対象を呪い殺すとか、そんなのらしい」
+
+Sol「なんか怖くない？」
+
+Stella「ちょっと怖いね～」
+
+Veris「ちょっとどころじゃないでしょう……」
+
+Stella「火輪はそのまま火魔法だね。火を出したり、熱を操ったりするタイプ」
+
+Quan「単純だな」
+
+Stella「水輪は治癒魔法。傷を治したり、身体の状態を整えたりする魔法だね」
+
+Eva「……治癒魔法か」
+
+Sol「ダル医者向けの魔法だな」
+
+Eva「誰がだ」
+
+Stella「それで最後、木輪は自然魔法だよ。植物とか、成長とか、そういうものに関係してるみたい」
+
+Quan「かなり抽象的だな」
+
+Stella「まだ研究途中だからね。それで、実験結果はこの子に見てもらうよ」
+
+Veris「……この子？」
+
+Stellaが部屋の奥にある区画に向かっていき、やがて何かを抱えて戻ってきた。
+
+がちゃり。
+
+小さなケージを持って戻ってきた。中には一匹の実験用ラットが入っている。
+
+Veris「………………」
+
+Stella「魔石を持った状態で、この子に色々魔法を当ててみて、経過を見るって感じ！」
+
+Veris「嫌です」
+
+即答だった。
+
+Stella「え？」
+
+Veris「いやです」
+
+Verisは一歩後ろへ下がる。
+
+Stella「な、なんで？」
+
+Veris「どうしてそんなに平然としてるんですか！？　普通、もっとこう……説明とか、心構えとかあるでしょう！」
+
+Stella「でも実験用だよ？」
+
+Veris「それは分かっていますけど！！」
+
+Sol「実験用でしょ？」
+
+Eva「実験用だな」
+
+Quan「実験対象として用意されている以上、実験に使うこと自体に何も倫理的な問題は無い」
+
+Veris「皆さん、そういうところだけ妙に冷静なのやめてください！！」
+
+Sol「いや、私も昔はちょっと可哀想かなって思ったけどさぁ」
+
+Solはケージの中を覗き込む。
+
+Sol「これから私たちが魔法使えるか調べるために必要なんでしょ？　だったら仕方なくない？」
+
+Eva「そうだな。医学生の時も何回もやったが、別に意味もなく虐待してるわけじゃないからな」
+
+Veris「そ、そりゃあ理屈では分かりますよ！　分かりますけど、だからって『はいじゃあ撃ってみて』で済ませるのはどうなんですか！」
+
+Stella「じゃあ優しく撃ってあげる？」
+
+Veris「変わりませんよ！！」
+
+Stellaは何の躊躇も無くケージを魔法陣の前へ置く。ラットは何も知らずに鼻を動かしている。
+
+Stella「みんな危なくなったらすぐ止めるから、そこは任せといてね」
+
+Eva「うっす」
+
+Quan「承知」
+
+Sol「あー早くやりて～」
+
+Veris「…………」
+
+せっせと準備する3人をよそにVerisはラットをStellaを交互に見ている。
+
+Veris「……Stellaさん」
+
+Stella「なに？」
+
+Veris「この子、何かされるって分かってないですよね」
+
+Stella「そうかな？」
+
+Veris「…………」
+
+Stella「？」
+
+Veris「……本当にこの人、たまに怖くないですか」
+
+Eva「分かる」
+
+Evaが何故か反応してくる。
+
+Eva「コイツ、普段ぽやぽやしてて優しそうな雰囲気しといてさ、たまーに倫理観をどっかに置いてきたような言動するからな」
+
+Stella「え、えぇ……」
+
+Sol「あははは！！　Stella怖いよ～」
+
+Stella「そ、そんなつもりないのに……」
+
+Quan「本人に悪意や罪悪感が一切無いのが余計に問題だな」
+
+Veris「そこ！！そこです！！」
+
+Stella「え、気にしたことなかった……ヴェリちゃんもゴキブリ出たらすぐ殺すでしょ？」
+
+Veris「そ、それは…………」
+
+Eva「反論として適切なのかどうか微妙だが的は得ているな」
+
+Verisは頭を抱える。
+
+しかし、いつまで拒否していても研究は進まないし、そもそも自分たちはこの研究室に拾われて暮らしている身だ。
+
+しばらく勝手に一人で葛藤していた後、やがてVerisが口を開く。
+
+Veris「……分かりました。ただし、できるだけこの子に負担が掛からない方法でお願いできませんか」
+
+Stella「もちろん！」
+
+Veris「あと、何か異常が出たらすぐ中止しましょう」
+
+Stella「わかった～」
+
+Veris「……本当に分かってます？」
+
+Stella「わかってるよぉ」
+
+Sol「わかってなさそう」
+
+Verisは不安そうな顔をしながら、魔法陣の前へ移動した。
+
+Eva「委員長からか」
+
+Quan「実験対象が惨い事になるのが嫌なら先に終わらせた方が気が楽だからな」
+
+Veris「黙ってください！！！！」
+
+Stella「じゃあ、まずどれからやってみる？」
+
+Veris「……」
+
+四つの魔石を見る。
+
+Veris「……水輪からにします。治癒魔法なら、万が一この子に傷がついても、その場で治せる可能性がありますから」
+
+Eva「よく考えたな」
+
+Stella「はーい」
+
+Stellaが水輪の魔石をVerisへ手渡す。淡い青色をした魔石が、手の中で微かに光っている。
+
+Veris「……これを持って、この子に魔法を使えばいいんですよね」
+
+Stella「うん。持った状態で、手をラットちゃんに向けつつ、『水輪詠唱』って言ったらできるはず」
+
+Veris「……はい」
+
+Verisは意を決したように息を吐き、恐る恐るラットへ手を向けた。
+
+Veris「……では、いきます。……水輪詠唱」
+
+Stella「頑張ってヴェリちゃん！」
+
+Verisが呟いた直後、手のひらからぽたっ、と水滴が落ちた。
+
+ぽた。
+
+もう一滴。
+
+Veris「…………」
+
+Sol「おー、水出てるな」
+
+Eva「出てるといえるのかコレ？」
+
+Veris「……どうなんですかこれ」
+
+Stella「うーん……？」
+
+Stellaが近くに寄ってきて様子を見る。もう水は出てない。
+
+Stella「……全然ダメ」
+
+Veris「でしょうね……」
+
+Sol「殺意が足りないんだよ殺意が」
+
+Veris「黙っててください！！」
+
+Stella「じゃあ次、木輪！」
+
+Veris「はい……」
+
+今度は木輪の魔石を握り、詠唱を行った。すると目の前にぽこっ、と小さな芽が現れた。
+
+Veris「…………」
+
+Sol「かわい」
+
+Quan「用途が見当たらない」
+
+Veris「だから魔法としてはどうなんですか！」
+
+Stella「これもダメだねぇ。水よりはマシかな……？」
+
+Quan「少なくとも適性が高いとは言えないな」
+
+Veris「ですよねぇ……」
+
+次は火輪。
+
+Veris「……これで火が出たら、まだ分かりやすいんですけど」
+
+詠唱すると、ぼすっ、という音と共に細かい灰が散らばった。火すら出ていない。
+
+Veris「…………」
+
+Sol「燃えカス？」
+
+Eva「しょぼ」
+
+Veris「全然ダメじゃないですか！！」
+
+Verisがとうとうプンスコし始める。
+
+Veris「水は水滴がちょっと出て、木は芽が出ただけ、火は燃えカスがちょこっと！！これじゃ何も使えてないのと同じでしょう！」
+
+Stella「あ、あれぇ……？」
+
+Stellaが困ったように首を傾げる。
+
+Eva「……そもそもやり方が間違ってるんじゃないかコレ」
+
+Stella「おかしいなぁ……理論上は、どれかには結構強く反応すると思ったんだけど……」
+
+Quan「まだ一個残っている」
+
+Veris「……これですか？」
+
+Verisは目の前に置かれた月輪の魔石を見る。
+
+Veris「……これ、試さなきゃダメですか？」
+
+Stella「うーん、なんか不安だけど一応……」
+
+Eva「まあ出なかったらStellaが悪いということで」
+
+Sol「この調子だったら闇魔法でも大丈夫でしょ。がんばれがんばれ」
+
+Veris「あまりに適当ですがなんか私もそんな気がしますね……」
+
+そんな中、Stellaが何かを思い出したように顔を上げる。
+
+Stella「あ、月輪はちょっと特殊だから最初は弱めにね」
+
+Veris「……と言うと？」
+
+Stella「詠唱者の生命力とか奪い取っちゃうみたいなデータもあるから……まあ正直、真面目なヴェリちゃんに向いてると思わないけど……」
+
+Veris「なんかこの流れならあまり怖く聞こえません……」
+
+Eva「全くだな」
+
+Stella「はぁ……壊れてたらどうしよう……」
+
+どんよりしたムードの中、Verisが渋々月輪の魔石を手に取った。
+
+その瞬間。
+
+空気が変わった。
+
+Veris「……え？」
+
+魔石から、黒い魔力が一気に噴き出し、足元から這い上がるようにして黒いオーラがVerisの身体を包み込んでいく。
+
+Stella「…………え？」
+
+Eva「…………は？」
+
+Quan「……反応値が急上昇している」
+
+Sol「ちょ、すごいことになってない？」
+
+Veris「ちょ、ちょっと待ってください！！　これ何なんですか！！」
+
+やがて黒いオーラがVerisの全身を覆う。彼女の髪が揺れ、周囲の空気が低く唸り始めている。
+
+Veris「S、Stellaさん！！これ止められないんですか！！」
+
+Stella「……」
+
+Stellaはぽかんと口を開けたまま反応しない。やがて。
+
+Stella「すごい…………」
+
+Eva「なんてこった」
+
+Quan「……これが七曜魔法の本質か」
+
+Veris「か、感心してる場合じゃないでしょう！！どうにかしてください！！！」
+
+間もなく、黒い魔力がVerisの腕へ集中し始める。
+
+Veris「えっ」
+
+グォン、と空気が震えた直後、なんとも形容しがたい野太い黒い光線が実験台のラットへ向かって放たれた。
+
+"ズドォォォォォォン！！！！"
+
+Veris「ぎゃああああああああああ！！！！」
+
+Sol「うわっ！！！」
+
+Eva「Veris！！！」
+
+凄まじい轟音と共に光線がラットに命中した後、やがて黒いオーラが晴れる。
+
+そして、そこにいたはずのラットは、急激に水分を失ったかのように干からびて原形を留めないほど完全にミイラ化していた。
+
+Eva「…………」
+
+Quan「…………」
+
+Stella「……大丈夫ヴェリちゃん？」
+
+Veris「…………いやああああああああああああ！！！」
+
+Verisが凄い勢いで後ろに倒れ込んできた。
+
+Veris「なななな何ですかこれ！！　何なんですかこれ！！　私、今何をしたんですか！！？？」
+
+Stella「げ、月輪魔法だね……」
+
+Quan「……対象の急激な衰弱が見て取れた」
+
+Sol「…………」
+
+Solは数秒固まっていたが、やがて腹を抱えて笑い始めた。
+
+Sol「あっはははははは！！！ｗｗｗ委員長やっばｗｗｗｗｗ　よりによって委員長が闇魔法のエキスパートだなんてｗｗｗｗｗ」
+
+Veris「わ、笑わないでください！！」
+
+Sol「だってさｗｗ　他全然ダメだったのに最後だけラスボスみてーな魔法出してミイラ作るもんｗｗ」
+
+Eva「そんなに闇を抱えてたのかお前」
+
+Veris「なわけあるか！！！！な、何かの間違いでは……」
+
+なんだか抗議するような視線をStellaに向けるが、本人はミイラになったラットを執拗に観察している。
+
+やがて、こっちを振り向いてきて満面の笑みを浮かべた。
+
+Stella「ヴェリちゃんすごいよ！！」
+
+Veris「何がですか！！」
+
+Stella「月輪、ものすごく適性あるよ！！こんなに強く反応するなんて思わなかった、今まで見たことないくらいだよ！」
+
+Veris「私はこんな結果見たくありませんでしたよ！！！よりによってなんでこれなんですか！！」
+
+Quan「適性に善悪は無いだろう」
+
+Veris「ありますよ！！こんなの絶対に嫌です！！」
+
+勝手にやり場のない怒りを発散するVerisをよそに、Evaはミイラになったラットを眺めながら、口元を僅かに歪め始める。
+
+Eva「いやぁ、普段あれだけ真面目に倫理だの安全だの言ってる委員長が、闇魔法とご縁があるというのは面白いな」
+
+Veris「私は断じてお断りですよ！！！嬉しそうに言わないでください！！」
+
+Stella「でもすごいよ、ヴェリちゃん！　これなら月輪の研究をかなり進められるかも、またやって欲しいな！！」
+
+Veris「絶対に絶対に嫌です！！」
+
+Stella「えー」
+
+Veris「えーじゃなくて！！」
+
+Verisは月輪の魔石を机へ置き、青ざめた顔で魔法陣から距離を取った。
+
+Veris「はぁ……私、もっと普通の魔法が良かったです」
+
+Sol「普通の魔法って何さ」
+
+Veris「いや……普通に火とか……水とか……」
+
+Eva「お前、火も水もほぼ出てなかったじゃねえか」
+
+Veris「それを言わないでください！！」
+
+Quan「しかし、これで一人目の適性はかなり明確になったな」
+
+Stella「うん！」
+
+Stellaは嬉しそうに研究ノートへ書き込んでいく。
+
+"Veris：月輪に極めて高い適性"
+
+Veris「いやだぁ…………」
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-05-1.html" class="nav-button prev">← ep5-1へ戻る</a>
+      <a href="episode-05-3.html" class="nav-button next">ep5-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

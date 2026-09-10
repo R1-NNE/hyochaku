@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep5-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep5:"七曜魔法研究" sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+いつもの研究室。
+
+机の上には読みかけの論文、書きかけの術式、飲みかけのコーヒー、そして誰が置いたのか分からない菓子の袋が散乱している。
+
+Quanはソファの端で本を読み、Verisはその隣で研究資料を整理している。Evaはいつものようにソファへ沈み込み、Solは床に寝転がって携帯ゲーム機を弄っている。
+
+Stellaはというと、珍しく机に向かっていた。
+
+もっとも、真面目に研究しているのかと思えば大量の紙を前にして時々「あー……」とか「うーん……」とか唸っているだけである。
+
+Veris「……Stellaさん、さっきからずっとその紙と睨めっこしてますけど何か進展あったんですか？」
+
+Stella「うーん……もうちょっと……」
+
+Veris「さっきからずっとそんな調子な気がしますが……」
+
+その後もしばらく同じような光景が続いた後、唐突にStellaが立ち上がって声を上げた。
+
+Stella「で、できたぁーー！」
+
+Sol「え？」
+
+Eva「うるさ」
+
+Quan「静かにしろ」
+
+Stella「みんなひどいよ！！」
+
+Veris「いや、だから何なんですか……」
+
+Stella「七曜魔法の基礎理論が出来上がったの！」
+
+全員の視線がStellaへ集まる。そして、ほぼ同時に首を傾けた。
+
+Veris「……はい？」
+
+Sol「……七曜魔法って何？」
+
+Eva「お前ら普段何してたんだよ」
+
+Sol「いやいや、だって研究室来てからずっと『七曜魔法の研究』って言われてたから、そういう名前の研究をしてるんだなってことしか知らなかったけど」
+
+Veris「正直私も似たような認識です……」
+
+Quan「私も詳細については知らない。伝えられたタスクをこなしていただけだ」
+
+Eva「お前もかよ」
+
+Stella「えっ、みんな七曜魔法知らないの！？」
+
+Veris「説明された試しがないですが……」
+
+Sol「私は一回『七曜魔法って何？』って聞いたことがあるよ。そしたらStellaに『七曜魔法だよ～』って返された」
+
+Eva「なめてんのか」
+
+Stella「ちゃんと答えたよ？」
+
+Veris「答えてませんよ！！」
+
+Stellaは不思議そうに首を傾げた。本人としては本当に説明したつもりらしい。
+
+Eva「まあ……私も一番長く住んでるとは言えあんまり知らないな。この機会に説明してやれよ」
+
+Stella「えっとねぇ……」
+
+Stellaは椅子をくるりと回し、4人の方へ向き直った。
+
+Stella「そもそも、この研究室って元々は私のママの研究室だったんだよ」
+
+Veris「……お母様？」
+
+Stella「うん。Nebula_riaっていう名前でね。昔、この研究室にずっと住んでたの」
+
+Stellaは研究室を見回す。
+
+今では5人が好き勝手に暮らしているこの場所も、元々は一人の研究者が使っていた場所だったらしい。
+
+Stella「お母さんは七曜魔法の研究者だったんだ。すごく優秀な人で、私が小さい頃からずっとここで研究してた」
+
+Veris「Nebulaさん……ですか。それで、この研究室を引き継いだということですか」
+
+Stella「そうそう！」
+
+Stellaはいつものように明るく笑ってはいるものの、その声はいつもより少し小さかった。
+
+Stella「ママが亡くなったあと……ここはずっと使われないままになってたんだ。それで私が卒業した後、大学に残ってたこの研究室を私がもう一回使わせてもらえることになって」
+
+Sol「じゃあ、最初からここで七曜魔法の研究するつもりだったんだ」
+
+Stella「うん。お母さんの遺した研究ノートがいっぱいあって、その中に七曜魔法の研究について書かれてたんだ」
+
+Stellaは机の下から一冊の古びたノートを取り出した。表紙には長い年月を経た跡があり、角も少し擦れている。
+
+Veris「それが……Nebulaさんの研究ノートですか。……なんだか、すごいですね」
+
+Stella「うん。私も最初に見たときビックリしたよ」
+
+ノートを開くと、大量の数式や術式、図形、魔力の流れを示すような線がびっしりと書き込まれていた。
+
+Veris「……」
+
+Sol「……」
+
+Eva「……」
+
+Quan「……これは」
+
+Quanがようやく本から顔を上げた。
+
+Quan「興味深い。単純な魔法体系の研究ではないな……お前はこれを理解しているのか？」
+
+Stella「……なんとなく？」
+
+Quan「なんとなくで研究を継げられたらたまったもんじゃないな」
+
+Stella「えへへ……」
+
+Veris「笑って誤魔化さないでください……」
+
+Stellaはノートをめくりながら説明を続ける。
+
+Stella「七曜魔法っていうのは、簡単に言えば七つの系統に分かれた魔法体系なの。それぞれが違う性質を持っていて、七つの魔法が一つの体系として成立している……っていうのがお母さんの研究だったみたい」
+
+Sol「七つってことは、火とか水とか？」
+
+Stella「そうそう。そういう感じ」
+
+Eva「随分ざっくりしてんな」
+
+Stella「まだ詳しいところは全然わかってなかったからねぇ」
+
+Veris「それで、その七曜魔法を完成させることが……」
+
+Stella「うん。それがママの目標だった」
+
+研究室の空気が、ほんの少しだけ静かになる。
+
+Stella「私も……お母さんから直接ちゃんと説明されたわけじゃないんだけどね。最後に遺してくれたものの中に、『七曜魔法を完成させて』っていう言葉があった」
+
+Veris「……遺言、ですか」
+
+Stellaはそれ以上は語らなかった。
+
+母がなぜ七曜魔法を完成させたかったのか。なぜそこまで長い年月をかけて研究していたのか。Stella自身にもそれは分かっていない。
+
+ただ、母が遺した研究とこの場所だけは残っていたので、長い時を経て引き継いだのである。
+
+Stella「……だから私、ここをもう一回動かしたんだ。ママが途中までやってた研究を、私が最後までやろうと思って」
+
+Sol「なるほどねぇ」
+
+Solは腕を組んで、珍しく少し真面目な顔をする。
+
+Sol「つまり、私たちが今やってる研究って、Stellaのお母さんの研究の続きなんだ」
+
+Stella「そういうこと！」
+
+Eva「……なんで今まで黙ってたんだ」
+
+Stella「え？」
+
+Eva「いや、こっちは研究室入った時から『これやっといてね～』って言われて、何を研究すればいいのか分からないまま資料渡されたんだけど」
+
+Stella「だって、みんな頭いいから分かるかなって……」
+
+Eva「ムチャ言うな」
+
+Veris「そもそもの目的が分からないので何を目指してるのか分かりませんでしたよ……」
+
+Stella「ご、ごめんねぇ……」
+
+Sol「私は普通にゲームしかしてないけど」
+
+Veris「それは論外でしょう！！」
+
+Eva「ごめん私も寝る場所としか思ってない」
+
+Veris「研究室に何しに来たんですか！！」
+
+Eva「居候？」
+
+Sol「シェアハウス？」
+
+Veris「ふざけないでください！！！」
+
+Stella「私は別にいいよ～だってEvaが生活費稼いでくれるし」
+
+Veris「………………」
+
+Eva「まいったか」
+
+Sol「何がだよｗ」
+
+いつものような騒がしさが戻ってくる中、Quanは机の上に置かれた研究ノートを見つめていた。
+
+Quan「……それで、今回できたというのは何だ」
+
+Stella「ん？」
+
+Quan「七曜魔法の基礎理論が完成したと言っただろう、説明しろ。具体的な話についてまだ聞いていないが」
+
+Stella「あ！そうだったね」
+
+Stellaは先ほどまでの話とは打って変わって、ぱっと表情を明るくした。
+
+Stella「今まではママの研究ノートに書いてあることを読み解いて、七曜魔法がどういう構造になってるのかをずっと調べてたの。それで、ようやく最初のところが分かったんだよ」
+
+Eva「最初のところと言うと？」
+
+Stella「七曜魔法を研究するために、まず七つの魔法がどういう関係になっているのかを整理しないといけなかったの。それが今まで全然分からなかったんだけど、今回ようやく一つの理論として繋げられたんだ」
+
+Quan「つまり、七曜魔法そのものを完成させたわけではなく基礎理論の基礎の部分か」
+
+Stella「そうそう！」
+
+Stellaは研究ノートを開き、あるページを指差した。
+
+そこには複雑な術式がいくつも並んでいる。
+
+Stella「お母さんが残してくれた研究結果と、私がここ何年か調べた結果を合わせて、ようやく七曜魔法の基本的な構造を説明できるようになったの。今まではサッパリだったんだけど、みんなが協力してくれたからね」
+
+Quan「少なくとも、今までの資料を読む限りでは研究の方向性自体は成立している。七曜魔法が単独の魔法体系ではなく、複数の系統が相互に関連する構造なら個別の魔法だけを解析しても全体像には到達できない。今回その基礎構造を整理できたのなら、今後の研究方針を立てる上では意味があるな」
+
+Sol「……つまりドユコト？」
+
+Quan「お前には説明しても無駄だ」
+
+Sol「ひど！！」
+
+Eva「今の説明だけ聞くと結構面白そうだな。……で、次は何をするんだ」
+
+Stella「ここからは、実際に七曜魔法を一つずつ調べていきたいな～って」
+
+Veris「……一つずつ？」
+
+Stella「うん。理論上の構造は分かってきたから、今度は実際にそれぞれの魔法がどういう性質を持っているのか、どうやって扱うのかを調べていこうと思う！」
+
+Eva「……まあいいんじゃない。どうせ暇だし」
+
+Veris「Evaさんは暇なんじゃなくてサボってるだけでしょうが」
+
+Eva「似たようなもんだろ」
+
+Veris「全然違います！！」
+
+Quan「七曜魔法が既存の魔法体系とどのように異なるのかは興味があるな。それで……具体的に何をするんだ」
+
+Stella「えっとね、まず七曜魔法には日曜日から土曜日まで、それぞれ対応した七種類の魔法があるの」
+
+Sol「曜日？」
+
+Stella「そう。日輪、月輪、火輪、水輪、木輪、金輪、土輪。この七つ」
+
+Eva「……多くて面倒だな」
+
+Veris「そうでもないですよ……」
+
+Stella「えっと、まず日輪はママが研究してたからある程度どういうものなのか分かってるの。それから、金輪は私がずっと研究してて、もう習得してるかな」
+
+Stellaはそう言って、自分の手をひらひらと振った。
+
+Eva「……習得したらなんか出来るのか？」
+
+Stella「うん。具体的には結晶を生やしたり、降らせたりができるかな」
+
+Sol「なんかしょぼいな……」
+
+Stella「そんなことないよ！！」
+
+Quan「……実際に今出来るか」
+
+Stella「うーん、危ないからちょっとだけなら……」
+
+Veris「……危ない？」
+
+Stellaはそう言うと、近くにあった透明色の石を手に取り、何か呟き始めた。
+
+Stella「……金輪詠唱」
+
+Eva「え」
+
+Veris「ちょ」
+
+Sol「なんかカッコいいなそれ」
+
+Quan「……」
+
+そうつぶやいた直後、研究室のテーブルの上にどこからともなくミネラル結晶のような透明色の物体が出現し、カラン、とテーブルの上に落ちた。そしてまもなく、砂のように消え去っていった。
+
+Sol「……すげー！！！」
+
+Veris「び、びっくりしました……」
+
+Eva「……伊達にぽやぽやしてるだけじゃなかったんだな」
+
+Quan「……興味深い」
+
+Stella「ふぅ、久々にやったけど上手くいってよかったー。普段使わないからねぇ」
+
+Veris「確かに、日常用途は薄いですね……」
+
+Eva「コイツの事だから『キラキラしてる～』とか言いつつ普段から出しまくってそうだったが」
+
+Stella「そこまで適当じゃないよ！！」
+
+与太話が続く中、Quanがやがて呟く。
+
+Quan「……それで、他の七曜魔法については」
+
+Stella「えっと、残ってるのが月輪、火輪、水輪、木輪、土輪で、この五つはまだ分かってないことが多いんだ」
+
+Eva「じゃあ、日輪と金輪以外は全部未解明ってことか？」
+
+Stella「だいたいそんな感じかな。でも、土輪に関してだけそもそも何がなんだかすら分かってないんだよねぇ」
+
+Sol「じゃあ実質四種類じゃん」
+
+Stella「うん。月輪、火輪、水輪、木輪の四種類を中心に調べることになるかな」
+
+Veris「それで私たちの協力が必要って訳ですか。……具体的には何をするんでしょうか」
+
+Stellaはそこで少しだけ嬉しそうな顔をする。
+
+Stella「みんながどの七曜に適性があるのか調べたいの」
+
+Eva「適性？」
+
+Stella「そう。まずみんなが月、火、水、木のどれに向いてるのか調べてみたいんだよね」
+
+そう言ってStellaが戸棚から何か石のようなものを取り出してくる。黒、赤、青、緑と鮮やかな色をしている。
+
+Sol「……これがさっきの石の別バージョンってやつ？」
+
+Stella「そうそう！それぞれ七曜の魔力が込められてるから、みんなに実際に手に取ってもらって研究してみたいってわけ！」
+
+Veris「なるほど……」
+
+Verisは机の上に置かれた研究ノートを見る。
+
+『危険！！』だの、『研究室が爆発した！！』だの、Nebula_riaのやたらアバウトな実験結果が目に映り、少し表情が曇る。
+
+Stellaはその表情を見て、少し声色を落とす。
+
+Stella「……危ないのは間違いないね。ママも何回もやらかしてたみたいだし、無理にやらせるつもりはないからね」
+
+Eva「適当さも親譲りか……」
+
+Stella「そ、そんなことないって！でも、今回は真剣だから。……お願いします」
+
+Stellaが深々と頭を下げる。
+
+Solは首を傾げ、Verisは少し考え込む。
+
+Evaはソファに寝転がったまま天井を見上げ、Quanは腕を組んでいる。
+
+しばらく沈黙が続いた後、やがてEvaが口を開いた。
+
+Eva「まあ……別にいいか」
+
+Stella「……ほんと？」
+
+Eva「そもそも私達、ここに拾われて住ませてもらってるようなもんだし。研究の手伝いくらいで拒否する理由もないでしょ」
+
+Sol「そうだね。私もいいよ、ここ面白いし」
+
+Veris「その理由はなんなんですか……それはそれとして私も構いません。研究室に置いてもらっている以上、Stellaさんの研究を手伝うのは当然だと思いますし、魔法の適性を調べるだけなら特に問題もありません」
+
+Quan「私も拒否する理由はない。適性が判明すれば今後の研究効率も上がる。試すのが合理的判断であろう」
+
+Stella「……！」
+
+Stellaの顔が一気に明るくなる。
+
+Stella「やったーー！！！」
+
+Sol「……そんなに嬉しいの？」
+
+Stella「だって、これでようやくちゃんと七曜魔法の研究が進められるんだよ！」
+
+Eva「はいはい。分かったから落ち着け」
+
+Stella「えへへ……じゃあ実験しに行こっか！」
+
+Veris「え、今からですか」
+
+Stella「うん！」
+
+Eva「お前、こういう時だけ行動早いよな。んで、実験しに『行く』と言うと？」
+
+Stella「研究棟の地下でやるよ！」
+
+Veris「ち、地下？」
+
+4人が一斉にStellaを見る。
+
+Stella「うん。このビルの地下に研究別棟があるんだけど……知らなかった？」
+
+Sol「知らない」
+
+Veris「私も聞いてません」
+
+Quan「最初に言え」
+
+Eva「……お前、自分の研究室に別棟があることを説明してなかったのかよ。私も初耳なんだが」
+
+Stella「だ、だって普段使わないし……まあ今日は使うから！」
+
+Veris「そういう問題ですか……」
+
+Stellaは魔石の入った箱を抱え、とてとてと研究室の扉へ向かう。
+
+Sol「地下ってなんかワクワクするな」
+
+Eva「お前はそういうところだけ小学生だな」
+
+Sol「いやいや、研究室の地下に秘密施設がありましたとかさ、絶対面白い奴じゃん」
+
+Quan「別にビル内に存在してるのなら秘密でも何でもないだろう」
+
+Sol「夢がねぇな！」
+
+Quan「意味が分からない」
+
+Veris「もういいですから、早く行きましょう……」
+
+5人は研究室を出て、研究棟のエレベーターへ乗りやがて人の気配がほとんどない地下階に到着した。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-04-5-6.html" class="nav-button prev">← ep4.5-6へ戻る</a>
+      <a href="episode-05-2.html" class="nav-button next">ep5-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

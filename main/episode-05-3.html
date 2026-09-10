@@ -1,0 +1,529 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep5-3</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep5:"七曜魔法研究" sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+
+ほどなくして新しいラットが用意され、魔法陣の前へ置かれた。
+
+先ほどまでの騒ぎが嘘のように、ラットは何も知らずに鼻をひくつかせている。
+
+Veris「……今度はちゃんと無事に終わって欲しいです」
+
+Eva「それは難しいんじゃねえのか？次はSolだし」
+
+Sol「うるせえぞバカ」
+
+Stella「じゃあSolちゃん、よろしく！」
+
+Sol「任せろーい！！」
+
+Solが意気揚々と魔石の前に出てくる。真っ先に取ったのは月輪魔石だった。
+
+Sol「よっしゃーじゃあ私もいっちょ委員長級のやつ撃ってやりますか、オラ死ねー！！」
+
+Veris「ひどすぎますよ流石に！！」
+
+Quan「コイツにとってはゲーム同然だな」
+
+Solがカッコつけながら指先をラットに向けた。だが。
+
+Sol「…………」
+
+何も起きない。
+
+Sol「……あれ？」
+
+もう一度魔力を込める。
+
+ぽふっ。
+
+ラットの足元に、ほんの少しだけ黒い煙が出た。
+
+Sol「…………」
+
+Eva「しょっっぼ」
+
+Stella「ダメダメだね～」
+
+Quan「……月輪は本当にVerisが適正だったんだな」
+
+Veris「言わないでください……」
+
+Sol「じゃ、じゃあ次！」
+
+Solが勢いよく火輪の魔石を手に取り、また指をラットに向けた。
+
+ぽっ。
+
+小さな火が出たかと思えば、一秒も経たずにすぐ消えた。
+
+Sol「…………」
+
+Eva「100円ライターか」
+
+Sol「次！！」
+
+次いで水輪。
+
+ぽた。
+
+Sol「…………」
+
+Quan「反応見られず」
+
+Sol「おもんねー！！！！」
+
+Solが地団太を踏み始める。
+
+Sol「何これ！！　もっとゲームみたいにすごいことになんないの！？」
+
+Eva「やっぱそう思ってたのかよ……」
+
+Sol「いやいやいや、せっかく魔法使ってるのに、ちょっと火出て、煙出て、水がぽたぽたするだけって地味すぎるでしょ！！」
+
+Quan「派手さを求めるのは理解できないが、適性があるのは仕方ないだろう」
+
+Sol「いやだ！！！！　もっとこう……ズバーン！！ってやりたいの！！！！！」
+
+Veris「子供か……」
+
+Stella「ま、まだ木輪が残ってるよ！！」
+
+そう言われてSolが木輪の魔石を受け取る。
+
+Sol「はぁ……これでダメだったら今日の検査おもんないなぁ。もっと委員長ダークファイアみたいなの出したかった」
+
+Veris「やめてくださいそんなダサい名前！！」
+
+Eva「そこかよ」
+
+Stella「まあまあ、とりあえずやってみようよぉ」
+
+Sol「へいへーい」
+
+完全にやる気を無くしたSolは気の抜けた様子で魔石を握り、ラットへ向けた。
+
+Sol「おりゃー」
+
+次の瞬間。
+
+"ゴォッ！！！！！"
+
+室内の空気が大きく揺れた。
+
+Sol「え？」
+
+魔法陣の周囲に緑色の魔力が爆発的に広がっていく。
+
+Veris「えっ」
+
+Eva「……またこのパターンか」
+
+Quan「ふむ……」
+
+Stella「わぁ！」
+
+やがて魔力がラットへ集中し始め、次第にラットの身体を何かが蝕んでいく。
+
+皮膚は乾き果てやがて朽ち、さらにその表面を苔が覆い始めている。
+
+Veris「ちょちょちょっとちょっと！！！」
+
+数秒後。
+
+そこにはまるで長い年月を経たかのように風化したラットだけが残されていた。
+
+Sol「…………」
+
+Solはポカンとしていたが、やがてやかましい声で叫び始める。
+
+Sol「すげーーーーー！！！！！すごいすごいすごいすごい！！　これだよこれ！！」
+
+Eva「いい感じになったじゃん」
+
+Sol「じゃね！？　すっごくゲームっぽい！！　なんか一気に時間進んだみたいになってるぞ！！」
+
+Stellaも完全にテンションが上がっている。
+
+Stella「木輪すごーい！！自然の力って奴なのかな？」
+
+Quan「木輪への適性は間違いなくあるな。月輪と似て取れる特性も感じる」
+
+Sol「んーどうしよコレ、名前は"ナチュラル・アポカリプス"とかでどう！？」
+
+Eva「ガキか」
+
+4人がはしゃいでいる中、Verisは変わり果てたラットを見て、顔を引きつらせている。
+
+Veris「……さっきから残酷すぎてイヤです」
+
+Sol「ねえねえStella、これもう一回やっていい？」
+
+Veris「は？」
+
+Sol「もう一匹持ってきてよｗもっかい撃ちたいｗ」
+
+Stella「オッケー！」
+
+Veris「ちょっと！？」
+
+Stellaはケロッとした顔で、再び実験室の奥へ向かっていった。
+
+Eva「楽しそうだな」
+
+Veris「止めてくださいよ！」
+
+Quan「試行回数を重ねるのは当然だ。特に本人にその気があるなら尚更だ」
+
+Veris「……この研究室、倫理観が雑すぎません？」
+
+数分後。新しいラットが用意され、Solが腕を振り回している。
+
+Sol「よっしゃーもう一回いくぞー！！喰らえナチュラル・アポカリプス！！！」
+
+Eva「採用すんのかよそれ」
+
+Solが矢鱈カッコつけながら腕を振り下ろした。だが。
+
+Sol「…………」
+
+何も起きない。
+
+Sol「…………あれ？」
+
+Stella「？」
+
+Sol「い、今の無し」
+
+もう一度腕を振り下ろす。
+
+何も起きず。
+
+Sol「…………」
+
+Veris「……何してるんですか」
+
+Sol「出ない」
+
+Eva「MP切れか？」
+
+Sol「そ、そこまで再現する？」
+
+さらに力を込めるが、特に何も起きずラットは元気に動き回っている。
+
+Veris「……さっきとは全然違いますね」
+
+Stella「おかしいなぁ？」
+
+Sol「いやいやちょっと待って、さっきはあんなに出てたじゃん！」
+
+Solが何度も魔石を握り直し、投げやり気味にまた腕を振り下ろした。
+
+すると、ラットの尻尾の先だけが妙に乾燥し始めた。
+
+Sol「おっ！」
+
+しかし、それだけで反応は終わってしまい、ラットは些かおぼつかない様子になっているだけである。
+
+Sol「…………なんで？」
+
+Quan「反応に大きなブレが見られる」
+
+さらに何度か試す。
+
+今度はラットの背中だけが少し風化する。
+
+その次は足元だけ。
+
+その次は何も起きない。
+
+Sol「…………」
+
+Veris「最初のは何だったんですか」
+
+Sol「知らないよ！！！」
+
+Solがまた地団太を踏み始める中、ひとしきり観察していたEvaは暫く何かを考えていた。
+
+そして、何気なく口を開く。
+
+Eva「……コイツが適当すぎるからじゃね？」
+
+Sol「は？」
+
+Eva「コイツ自体も適当だから出力にもムラがあるんじゃねえのって話。知らんけど」
+
+Sol「はぁ！？」
+
+Quan「……可能性はあるな、魔力制御の再現性が低いという点が先ほどからの結果と整合する」
+
+Stella「うーん、確かにSolちゃんって魔力を一定にするの苦手なのかもねぇ」
+
+Veris「……確かにそう考えると辻褄は合いますね」
+
+Sol「お前らなんで納得しちゃってんの！？」
+
+Veris「さっきから結果が毎回違いますし……」
+
+Sol「いやいやいや！！ちゃんとやってるって！！」
+
+Eva「ちゃんとやってる奴はな、対象の一部分だけ風化させたりしないんだよ。お前さっきから殺す気マンマンだったじゃねえか」
+
+Sol「ぐぬぬ……」
+
+Quan「しかしながら、最初の反応値を考えれば木輪との親和性は高いと見られる」
+
+Stella「うん。少なくとも木輪の適性は間違いないと思う」
+
+Sol「…………」
+
+Solはあまり納得行ってなさそうな顔をしている。
+
+Sol「一応聞くけど、私は木輪担当になるって感じ？」
+
+Stella「うーん……暫定的にはそうなるかなぁ」
+
+Sol「さっきのすごいやつもまた出せるようになる？」
+
+Stella「たぶん……練習すれば出るかも？」
+
+Sol「じゃあ頑張る！！アレ、めちゃくちゃカッコよかったもん！」
+
+Quan「動機が小学生」
+
+Sol「うるさい！」
+
+Stellaは研究ノートへ結果を書き込んでいく。
+
+「Sol：木輪に適性あり。ただし魔力出力・制御に著しい不安定性」
+
+Veris「私が月輪で、Solが……木輪ですか」
+
+Sol「委員長が闇で私が自然か。まあ当然の結果だよな」
+
+Veris「なわけあるか！！」
+
+Eva「七曜魔法って、意外と逆張りなのか？」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-05-2.html" class="nav-button prev">← ep5-2へ戻る</a>
+      <a href="episode-05-4.html" class="nav-button next">ep5-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

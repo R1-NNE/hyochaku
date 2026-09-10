@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep5-4</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep5:"七曜魔法研究" sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+次の実験対象はEvaだった。
+
+Eva「次、私か」
+
+Stella「うん！　Evaよろしく～」
+
+Eva「へい」
+
+Evaは特に緊張した様子もなく、最初の月輪の魔石を手に取った。
+
+Veris「……Evaさんは研究室にずっといますが、こういうの初めてですか？」
+
+Eva「そうだけど」
+
+Veris「……大丈夫なんでしょうか」
+
+Eva「私を誰だと思ってるんだよ」
+
+Sol「怠け者」
+
+Eva「お前あとで殴るからな」
+
+Sol「すみません」
+
+Evaが月輪魔石を握ると、すぐに周囲に薄い黒い靄が広がっていった。
+
+そして指先をラットに向けると、Verisほどではないものの黒いオーラが飛んでいき、ラットがやや痩せこけていった。
+
+Veris「……おお」
+
+Stella「おっ、いきなり出てるね！」
+
+Quan「ここに来て初めて平均的な出力が見られたな」
+
+Eva「まあ、こんなもんだろ」
+
+続いて火輪。
+
+Evaが魔石を握ると、先ほどのVerisやSolとは比べ物にならない程度の火が現れた。
+
+やや小さな炎ではあるものの、安定して燃え続けている。
+
+Sol「すげぇ、普通にめっちゃ出てるじゃん」
+
+Eva「普通にってなんだよ」
+
+Veris「私たちは出すらしませんでしたし……」
+
+Eva「まあ私、やれば出来る子だからな」
+
+Veris「調子に乗らないでください」
+
+さらに木輪。
+
+こちらもかなり安定した出力であり、ラットの周囲から細い蔓が伸び身体を這っている。
+
+Stella「すごいすごい！　月、火、木、全部かなり反応してるよ！！」
+
+Eva「やっぱ私って天才だな」
+
+Sol「なんかムカつくー」
+
+Veris「……素直に凄いです」
+
+Quan「この三系統については確かに平均以上の適性があるな」
+
+Eva「普段からそれくらい褒めてくれ。苦しゅうない」
+
+そして最後、Stellaが水輪魔石を差し出してくる。
+
+Stella「じゃあ、最後に水輪よろしくねー」
+
+Eva「……」
+
+Evaの表情が少しだけ曇りながら、水輪の魔石を受け取った。
+
+その瞬間、淡い光が強く輝き、水のようなオーラがEvaの周囲を巡り始めた。
+
+Stella「……お！」
+
+Quan「反応が大きいな」
+
+Eva「えっとそれで……？」
+
+Evaが恐る恐る腕を振り下ろすと、水のオーラがラットに向かっていきその身体を優しく包み込む。
+
+次第に先ほど傷ついた身体を修復するように淡い光を放ち始め、最終的にすっかり元の通りになった。運ばれてきた時より元気に動いている。
+
+Stella「す、すごい……！」
+
+Quan「あからさまに高適合だったな」
+
+Veris「まあ、元医者なら……ってことですかね」
+
+Sol「よっダル医者の本領発揮！」
+
+Eva「…………」
+
+周囲の高評価とは裏腹に、Evaは無表情で水に包まれているラットを見つめていた。
+
+そして、最終的に深いため息を吐いた。
+
+Eva「……はぁ。ここでも医療絡みかよ」
+
+Veris「え……嫌なんですか」
+
+Eva「いやさ……こういうのとは縁切ったつもりだったのに、またやんのかって……」
+
+Sol「めんどくさ」
+
+Eva「そういう矜持があるんだよ、矜持が」
+
+実験は成功しているはずなのにゲンナリしているEvaに、Stellaがぽやぽやと近寄ってくる。
+
+Stella「水輪いやだ？」
+
+Eva「ハッキリ言おう、イヤ」
+
+Stella「あはは……でも水輪ってすっごく難しくて、単純に水を出すだけなら簡単なんだけど治癒魔法として使うにはものすごく細かい魔力制御が必要なの。適性がない人にはかなり難しいんだよね」
+
+Eva「……そうか」
+
+Quan「納得行かなげだな」
+
+Eva「理屈は分かるが魂の部分が飲み込めん。一人の医者として本気でやって来て、んで忘れた頃にこういうので簡単に治癒方法を提示されたらなんか来るものがある」
+
+Veris「……いつになく真面目ですね」
+
+Eva「うるせぇ」
+
+その後も何か考え続けているEva。だが、Stellaから意外な言葉が返ってきた。
+
+Stella「でもね」
+
+Eva「ん？」
+
+Stella「水輪って、治癒だけじゃないんだよ」
+
+Eva「……？」
+
+Stella「水そのものを操る魔法だから、応用すれば攻撃にも使えるの」
+
+Eva「攻撃？」
+
+Stella「うん。頑張ればヴェリちゃんとかSolちゃんみたいな奴も出せるんだけど、難しいから言わなくてもいいかなって。やりたい？」
+
+Eva「先に言え。やる」
+
+Sol「やる気モード入ったな」
+
+Stellaは水輪の魔石を持ったEvaに近づき、何か身振りをし始める。
+
+Stella「えーっと、水を身体の周りに広げるんじゃなくて、もっと細くするように意識できる？」
+
+Eva「……こうか？」
+
+再び水がラットを包み込み始める。
+
+だが、それまで柔らかく流れていた水が次第に形を変えていき、だんだん刃物のように細くなっていく。
+
+Quan「……水圧を一点に集中させているのか」
+
+Stella「そうそう！」
+
+Eva「……面白いな」
+
+Evaが僅かに口角を上げる。
+
+次の瞬間。
+
+鋭い水の刃が急にラットに向き、一瞬で切り裂かれた後細かな肉片が飛び散った。
+
+Veris「きゃ、きゃああああああ！！！！」
+
+Sol「うおお！？！？」
+
+Quan「……！」
+
+Stella「す、すごーい！！」
+
+Eva「…………」
+　
+Evaは数秒、グチャグチャになった肉片と水しぶきを見つめつつやがて悪い顔で笑った。
+
+Eva「……これなら気に入ってやらんでもないな」
+
+Veris「なんで治癒魔法をそんな使い方するんですか！！」
+
+Eva「攻撃にも使えるって言ったのはStellaだろ」
+
+Stella「うん！」
+
+Veris「嬉しそうにしないでください！！」
+
+Sol「えー私もあんなの欲しい！！私も水の刃出したい！！」
+
+Stella「Solちゃんも練習すれば使えるようになるかもねぇ」
+
+Eva「こいつに変なこと教えると碌なことにならないぞ」
+
+Sol「Evaだけずるい！！」
+
+上機嫌になり始めるEvaをよそに、Stellaだけは完全に別のところで感動していた。
+
+Stella「とりあえず……Verisちゃんは月輪、Solちゃんは木輪、Evaは水輪。ちゃんとそれぞれ違う適性が出てるね！」
+
+Veris「私は全然嬉しくないですけど……」
+
+Sol「私は嬉しい！」
+
+Eva「悪くない」
+
+Veris「……Evaさん、さっきまで『ここでも医療絡みか』って嫌そうにしてたじゃないですか」
+
+Eva「治療しかできないなら嫌だったんだよ。殺傷力まであるなら話は別だ」
+
+Veris「医者としてどうなんですか……」
+
+Eva「元医者だっつーの」
+
+Evaは満足そうに水輪の魔石を眺める。
+
+一方でStellaは研究ノートへ結果を書き込んでいた。
+
+「Eva：水輪に極めて高い適性。月・火・木にも平均以上の反応」
+
+Veris「順調……と言えば順調ですね。そして最後は……」
+
+Quan「……私か」
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-0.html" class="nav-button prev">← epへ戻る</a>
+      <a href="episode-0.html" class="nav-button next">epへ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
