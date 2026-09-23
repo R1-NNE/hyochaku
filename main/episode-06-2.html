@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep6-2</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep6:"宿命" sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+その日、Celesは結局かなり長居することになった。
+
+大半をEvaの悪口に費やして研究室はかなり盛り上がっていた。Eva本人だけは疲弊していた。
+
+Celes「いやぁ、久しぶりにEvaの顔を見られて安心した。少なくとも生きてはいるようだし、ソファと一体化している点を除けば健康そうで何よりだ」
+
+Eva「人を家具みたいに言うんじゃねえ！分かったら私の精神衛生のためにもさっさと帰ってくれ」
+
+Celes「まあまあそう急かすな。お前がここでどういう扱いを受けているのかも大体分かったし、今日は十分楽しませてもらった」
+
+Sol「また来いよCeles。次はもっとEvaの恥ずかしい話持って来いよな」
+
+Eva「やめろ！」
+
+Stella「また遊びに来てねぇ、Celesさん！Evaのことならいつでも好きにいじっていいからね！」
+
+Veris「いいんですか……でも、Celesさんが来てくださるなら私も歓迎します。ちょうどEvaさんに強く出れる人が不足していたんです」
+
+Eva「はぁ！？」
+
+Quan「……概ね的を得ている。最近のコイツは調子に乗っていて不愉快だ」
+
+Celes「はは、随分と歓迎されているじゃないか。民意とは素晴らしいものだな、Eva」
+
+Eva「さっさと帰れ！」
+
+Celesは最後まで楽しそうに笑いながら研究室を出ていった。
+
+---
+
+それから、彼女は時々研究室へ顔を出すようになった。
+
+最初はEvaをからかうためだったが、何度か訪れるうちにStellaの料理を食べ、Verisの小言を聞き、Quanとどうでもいい議論を交わし、Solとは妙に気が合うようになっていった。
+
+Celes「Sol、お前またVerisを怒らせたのか。ここまで毎回同じ結末になるともはや才能だと思うぞ」
+
+Sol「いやいや、委員長が勝手に怒ってるだけだって。私は普通にしてるのに、なんか向こうから毎回突っかかってくるんだよ」
+
+Veris「どの口が言ってるんですか！　さっき私の机に大量の消しゴムを積み上げてたのは誰ですか！」
+
+Sol「崩したら怒ると思ったからそのままにしておいた」
+
+Veris「どっちでも怒りますよ！！」
+
+Celes「……なるほど、悪意があるのかないのか分からないところまで少しEvaに似ているな」
+
+Eva「私はもっと理性的だが？？」
+
+Quan「一日中寝転がって適当な発言しかしない奴の何が理性的だ。驕るな」
+
+Eva「ウッザ……」
+
+Celesはそんな日常を面白がっていた。
+
+そして、その中でも特にSolをよく見るようになっていた。
+
+本人には悟られない程度に何気なく視線を向ける。
+
+わざとらしいほど大きな身振り手振りでVerisと何か言い合っている。傍から見れば活発な女子学生のようである。
+
+それでも、最初の違和感が何なのかは分からなかった。
+
+---
+
+ある日。
+
+研究室ではStellaたちが何かの資料を囲んで騒いでいた。Solだけが少し離れたところで、机に肘をついていた。
+
+Sol「……なあCeles、さっきから私のこと見てない？」
+
+Celes「そうか？気のせいじゃないか」
+
+Sol「いや、見てるでしょ。私、目は見えないけど人がこっち向いてるくらいは分かるぞ」
+
+Celes「それは失礼した。少し興味深かっただけだ」
+
+Sol「へえ、私に興味あるの？　変な奴だな」
+
+Eva「お前がここで一番変な奴だろ」
+
+Sol「うるさい！」
+
+Solが笑う。
+
+その笑い声を聞いた瞬間だった。
+
+Celes「……！！」
+
+記憶の奥にあった何かが、突然ひっくり返った。
+
+---
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+薄暗い観察室。
+  
+壁一面のガラスの向こうで、白い拘束椅子に幼い少女が固定されている。
+
+年齢はまだ十代前半にも見えた。痩せすぎていて、肩骨が不自然に浮いている。  
+
+研究員「被験体D-217、脈拍上昇。痛覚閾値試験を継続します」
+
+少女「……っ、ぅ……あ、あぁ……っ」
+
+研究員「抵抗反応を確認。鎮静剤は？」
+
+別の研究員「不要です。直感反応を見る試験なので」
+
+少女「やめ……っ、やめろ……！」
+
+細い腕に無数のコードが巻かれ、電流が流れるたび、少女の身体が椅子ごと跳ねる。
+
+だが研究員たちの視線は、少女ではなくモニターだけを見ていた。
+
+研究員「やはり事前察知しているな。刺激前に筋緊張が発生している」
+
+研究員「予測能力か、あるいは極限環境下での感覚拡張でしょうか」
+
+研究員「どちらでもいい。数字が取れれば問題ない」
+
+研究員たちは何やら端末を入力している。
+
+その後方、照明も届かない位置に女性職員が立っていた。
+
+女性職員「……人気者ですね」
+
+同僚「上層部のお気に入りらしい。反応値がかなり良い」
+
+女性職員「はぁ」
+
+同僚「お前は興味ないのか？」
+
+女性職員「……興味持ったところで別に」
+
+その間にも、ガラスの向こうでは少女が苦鳴を漏らしている。
+
+少女「ぁ……っ、あ……っ……」
+
+研究員「次。視覚遮断状態で投薬」
+
+少女「……やだ……っ」
+
+研究員「記録」
+
+少女「やめろっ！！」
+
+暴れようとした瞬間、拘束具が腕に食い込み皮膚が裂けた。
+
+少女「あがっ…………」
+
+研究員「筋力上昇確認」
+
+研究員「恐怖時の反応値が高い。追加でストレス負荷を」
+
+少女「ひ……っ」
+
+女性職員はその声を聞きながら、端末に淡々と数字を入力していた。
+
+同僚「慣れてるな、お前」
+
+女性職員「……毎日見てますから」
+
+同僚「気分悪くならないのか？新人だろ？」
+
+女性職員「……もう慣れました」
+
+その後も表情一つ変えず、少女を見つめ続けていた。
+
+---
+
+別の日。
+
+研究員「被験体D-217。次に痛みが来る方向を答えろ」
+
+少女「……右」
+
+研究員「実施」
+
+電流は左脚へ流された。
+
+少女「……っっ！！？！？」
+
+研究員「珍しく外したな」
+
+研究員「いや、面白いぞ。通常なら右に来る配置だった」
+
+研究員「環境の微細変化を読んでいるのか？」
+
+研究員「いや。読みすぎている」
+
+そんな研究員をよそに、少女は荒く呼吸しながら涙で濡れた目を必死に動かす。
+
+誰かを探すように。
+
+だが、ガラスの向こう側は何も見えない。
+
+少女「……だれか……助けて……」
+
+誰にも届かない声に対し、女性職員は少しだけ視線を逸らした。
+
+同僚「どうした」
+
+女性職員「……別に」
+
+同僚「顔色悪いぞ」
+
+女性職員「……元からです」
+
+---
+
+その後も実験は続いた。
+
+薬剤注射、加熱冷却、睡眠剥奪などありとあらゆる実験が少女に対して行われ、その度に悲鳴が上がった。
+
+研究員「被験体の精神状態が不安定です」
+
+研究主任「問題ない。壊れる寸前が一番データが取れる」
+
+研究員「もし死亡した場合は」
+
+研究主任「次を作ればいい」
+
+その言葉を後ろで聞いていた女性職員の指が一瞬止まる。
+
+女性職員「……D-217、生命維持安定。試験続行可能」
+
+だが次の瞬間には、また事務的に記録を続けた。
+
+やがて少女はボロボロの身体でこちらを見つめ始めていた。向こう側からは何も見えていない。
+
+少女「……いるんだろ……」
+
+研究員「何だ？」
+
+少女「……だれか……そこに……」
+
+当然、返事はない。女性職員も答えない。
+
+答えれば終わるからだ。
+
+やがて研究員に連れ出される少女を見届けた後、誰にも聞こえないようにぽつりと呟いた。
+
+女性職員「……すまない」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-06-1.html" class="nav-button prev">← ep6-1へ戻る</a>
+      <a href="episode-06-3.html" class="nav-button next">ep6-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

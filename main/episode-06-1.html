@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep6-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep6:"宿命" sec-1</h1>
+
+<p>※新キャラが出ます。<font color="#800080"><a href="../subcharacters.html">サブキャラ</a></font>のページを見ておくとスムーズに読めます。</p>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+長い冬も後半に差し掛かったころ、いつもの研究室。
+
+共用スペースではStellaがクッキーと紅茶を頬張り、Verisはつまらなそうな顔で本棚を掃除している。Solはシャワー中、Quanはやたら高度な物理学の本を読んでおり、Evaは……ソファで死んでいる。
+
+五人で暮らしているというのに、研究室として機能している時間よりただの巨大な居住空間として機能している時間の方が長くなりつつある。なお、研究をしている者は一人もいない。
+
+Stella「ねえヴェリちゃん、今日のお昼どうする？　冷蔵庫見たら卵と野菜はあるんだけど、なんかこう……ぱーっと食べられるものがいいなぁって思ってるんだけど」
+
+Veris「ぱーっと食べられるもの、というのが何を指しているのか分かりませんが少なくとも昨日みたいに材料を全部鍋に入れてから考えるのはやめてくださいね。あれは料理というより、偶然できた何かでしたから」
+
+Stella「でも美味しかったよ？」
+
+Veris「美味しかったから余計に困るんですよ。結果だけ良ければ過程はどうでもいい、みたいなのはSolと同じですよ」
+
+Eva「別に食えるならよくね？」
+
+Veris「Evaさんは黙っててください。あなたはそもそも料理できないでしょうが」
+
+Eva「…………」
+
+Quan「……憐れ」
+
+いつものように歯切れの悪い会話が続く中、珍しい音が鳴った。
+
+"ピンポーン♪"
+
+四人の動きが止まる。
+
+Stella「めずらしっ、誰だろ？」
+
+Eva「大学か？無視でいいんじゃない」
+
+Veris「よくないに決まってるでしょう……前も設備破壊の賠償来たの忘れたんですか」
+
+Quan「早く誰か行け」
+
+Eva「お前が行けよ」
+
+Veris「誰も行く気無いじゃないですか！」
+
+Stella「じゃあ私が行ってくるね～」
+
+Veris「ちょStellaさんはダメです……最近のあなた、インターホンが鳴ったら何も考えず開けるでしょう。いらない新聞これ以上取らないでください」
+
+Stella「……そうだっけ？」
+
+Veris「そうです。…………結局また私ですか」
+
+渋々ながらVerisが立ち上がり、玄関へ向かっていく。
+
+"ピンポーン♪"
+
+Veris「はいはい、今開けますから勘弁願います……」
+
+鍵を開け、扉を開いた瞬間。
+
+そこに立っていた女性を見て、Verisはほんの少しだけ固まった。
+
+長身で整った身なりに分厚いコート。深い帽子からは僅かにケモミミが覗いているが、それを感じさせないくらい冷たい表情。無表情なはずなのに、なぜか妙な威圧感がある。
+
+女性はVerisを見ると、軽く頭を下げた。
+
+女性「失礼する。ここにEvaという研究者がいると聞いて来たんだが」
+
+Veris「あ、はい……Evaさんならいますけど……失礼ですが、どちら様でしょうか？」
+
+女性「……Celes_Tiaだ。Evaの上司をしていた。まあ、元上司が正しいな」
+
+Veris「え！？」
+
+Verisが少し驚いたような顔をする。
+
+そして、研究室の奥からその会話を聞いていたEvaは露骨に嫌そうな顔をし始める。
+
+Eva「……げ」
+
+Celes「その反応を見る限り、どうやら本当に本人がいるらしいな」
+
+Eva「帰れ」
+
+Celes「挨拶も無しか。随分と立派な無職になったものだな」
+
+Eva「帰れって言ってんだろ」
+
+Evaの言葉には全く耳を貸さず、靴を綺麗に揃えて共同部屋に足を進める。
+
+Celes「元気そうで何よりだな」
+
+Eva「話聞いてる？」
+
+Celes「聞いているとも。そして残念ながら帰る気は全く無い」
+
+Celesは全く動じていない。むしろ、Evaが心底嫌そうにしているのを見て楽しんでいるようにすら見える。
+
+やがてStellaがとてとてとCelesの元にやってくる。
+
+Stella「えっと……初めまして？私はStellaです。この研究室の……オーナーをしてます」
+
+Celes「こちらこそ初めましてだな、Celesと言う。Evaが転がり込んだ先の研究室の持ち主という認識で合っているか？」
+
+Eva「言い方な」
+
+Stella「うん、だいたい合ってるよ～」
+
+Eva「お前も否定しろよ」
+
+Veris「は、初めまして……Verisと申します……」
+
+Celes「よろしく。真面目そうで助かるな。Evaの世話は大変だろう？」
+
+Veris「え、ええ……まあ……その……」
+
+Eva「おい」
+
+Celes「そうか。苦労しているんだな」
+
+Veris「……はい」
+
+Eva「お前ら初対面だよな？」
+
+Stellaは楽しそうに笑いながら、Celesを共用スペースへ招き入れた。そして一ミリもその場を動いていないQuanと目が合う。
+
+Celes「邪魔するぞ。……お前はQuan_Taizaか」
+
+Quan「……誰だ」
+
+Celes「Evaの元上司、Celesだ。元……重要患者だから散々お前の事は職場で目にしてきた。こうやって元気に過ごしてる辺り何よりだ」
+
+Quan「……そうか」
+
+Celes「随分と愛想がないな」
+
+Quan「無関係の人間に愛想を振りまく合理的理由は無い」
+
+Celes「なるほど。Evaが執着するような奴はこれくらい面倒でなくてはな」
+
+Eva「マジでうるせえぞさっきから」
+
+Quan「比較対象が不愉快」
+
+Celes「仲が良いようで何よりだ」
+
+Celesは特に気にした様子もなく、研究室をゆっくり見回し始める。
+
+研究用の器具や大量の本、机の上に積まれた資料。そして、そのすぐ横に置かれた菓子の袋。
+
+さらにソファには、研究者らしからぬ格好で寝転がっている元部下。
+
+Celes「……なるほどな」
+
+Eva「何」
+
+Celes「思っていたより相応しい場所を見つけたな」
+
+Eva「喧嘩売ってんのか」
+
+Celes「はは。病院にいた頃のお前ならこの有様を見ただけで眉間に皺を寄せていただろう。その中心でお前が寝転がっている辺り、そういうことだ」
+
+Eva「…………」
+
+Veris「……やっぱ病院の頃は真面目だったんですね」
+
+Celes「仰る通りだ。だが皮肉なことに人間というものは変わるのだな」
+
+Eva「本当に帰ってくれ」
+
+Celes「嫌だ」
+
+即答した後、わざとらしくEvaのソファの真横に勢いよく座ってくる。
+
+Eva「……マジで何しに来たんだよ」
+
+Celes「気になったから来た」
+
+Eva「……は？」
+
+Celes「病院を追い出されてから何をしているのかと思ってな。だがまさか研究室で居候しているとは思わなかったぞ」
+
+Eva「居候じゃないから。ここの研究を手伝ってるの」
+
+Stella「うん！Evaすっごく頭いいから助かってるよ～」
+
+Veris「ほとんど何もしてませんけどね」
+
+Eva「お前も今日は黙っててくれないか」
+
+Celes「なるほど。研究室の収入は？」
+
+Stella「Evaがたまに手術して稼いでくれてるの！おかげでお金の事気にせずに済んでるよ～」
+
+Eva「おい」
+
+Celesが顔を覆い笑い始める。
+
+Celes「…………『今日でメスを握るのは最後です』ってのはなんだったんだ？ｗ」
+
+Eva「死ね本当に……」
+
+Evaが心底嫌そうな顔になる中、Verisは笑いを堪えながら改めてCelesを見る。
+
+Evaが露骨に嫌がっているにもかかわらずCelesは微塵も容赦する気が無い。それどころか、病院時代のEvaを知っているからこそ言える言葉を次々と悪意を込めて投げつけている。
+
+Celes「しかし、お前は随分と丸くなったな」
+
+Eva「なってないから」
+
+Celes「どこがだ。昔のお前なら私に向かって『つまらない冗談吐くくらいならカルテ見たらどうですか』くらいは言っていた」
+
+Stella「こわ！！」
+
+Eva「今でも思ってはいるぞ」
+
+Celes「まあ、減らず口だけは鈍って無いようで安心した」
+
+Eva「お前が相変わらず鬱陶しいだけ」
+
+Celes「それなら尚更だ」
+
+Eva「何がだ……」
+
+Celesはモノクルの位置を軽く直しながら、満足そうに研究室を眺めている。
+
+どうやら本当にEvaの様子を見に来ただけらしい。
+
+Celes「まあ……私は元上司としてだな、愛する部下が病院を辞めた後完全に腐っていたらどうしようかと心配していたんだぞ」
+
+Eva「微塵も思ってないだろその顔はな」
+
+Celes「だがこうして見る限りそれなりに元気そうで安心した。腐ってはいたがな」
+
+Eva「腐ってねえよ。今でもメスの握り方くらいは分かるわ」
+
+Quan「ソファで一日中寝ている人間が言う台詞ではないな」
+
+Eva「それは私の自由だろ！」
+
+Celes「ああ自由だとも。だが私がそれを面白がるのも自由だ」
+
+Eva「もうマジで嫌、今すぐ帰ってくれ、バカ」
+
+Celes「あと2時間くらいはいる」
+
+Eva「クソが！！」
+
+珍しく弄られまくるEvaの様子をStellaはニコニコしながら見ており、Verisは呆れ、Quanは無視していた。
+
+ちょうどその時、浴室の方から扉の開く音がした。
+
+濡れた髪をタオルで拭きながら、Solが廊下から共用スペースへ戻ってくる。
+
+Sol「はー気持ち良かった～　……って、なんか人いる？」
+
+その声に、Celesがゆっくりと振り向いた。
+
+そして。
+
+ほんの一瞬だけ、その表情が変わる。
+
+Celes「…………」
+
+Sol「ん？」
+
+研究室の空気が、一瞬だけ妙に静かになる。
+
+Solはそんなことには気付かず、濡れた髪をわしゃわしゃと拭きながらこちらへ歩いてきた。
+
+Sol「誰この人？　Evaの知り合い？」
+
+Celesは答えないまま、ただ目元を隠したSolをじっと見つめていた。
+
+Veris「ええと……この方はCelesさんです。Evaさんが以前勤めていた病院で上司をされていた方だそうですよ」
+
+Stella「今日はEvaに会いに来たんだって～なんか久しぶりに様子を見たいって」
+
+Quan「無職になった元部下が今どんな生活をしているのか気になってわざわざここまで来たらしい」
+
+Eva「……Sol、こいつは無視していいから」
+
+Celesは答えないまま、ただ目元を隠したSolをじっと見つめていたがやがて口を開いた。
+
+Celes「初めまして、……名をSolと言ったか。目隠しをしているのに普通に歩いているとは中々面白い」
+
+Sol「おっす、まあ私天才だからな。ここでは一番うるさい奴ってことで通ってるからよろしく～」
+
+Eva「いいのかよそれで」
+
+あまりにもあっさり自己紹介を済ませたSolに、Celesは一瞬だけ目を細めた。
+
+白い髪に細い身体、目元を覆う白い布。そして、その声。
+
+ほんの一瞬だけ、記憶の奥底に沈んでいた何かがちらついた。
+
+Celes「……そうか。よろしく頼む」
+
+だが、Celesはすぐにいつもの穏やかな表情へ戻った。
+
+Sol「おーなんだコイツ、また理屈屋みてーのが増えたな」
+
+Quan「誰がだ」
+
+Celes「はは、随分と元気な奴だな。Evaの周囲にはこういう人間が集まるのか？」
+
+Eva「知るか。勝手に集まってきただけだから」
+
+Sol「おいダル医者、私を捨てられた野良猫みたいに言うなよ！まあ否定はしないけどな」
+
+Stella「昔のSolちゃんは本当に野良猫みたいだったよねぇ、すっごい警戒心剥き出し！」
+
+Sol「おい、それ本人の前で言う話か？　まあ……ここは飯も出るし寝床もあるしゲームもできる、割と待遇はいい方かな」
+
+Veris「ツッコミどころしかないですが……少なくともSolはここの一員です、多分」
+
+Celes「……なるほど、随分と賑やかな研究室だ。Evaがここにいる理由も少し分かった気がするな」
+
+Eva「……分かったなら帰って。私はもう病院とは一切関係ないし、元上司に生活態度を監査される筋合いもないから」
+
+Celes「そう冷たくするなって、私は純粋に心配してたんだぞ、優秀だった部下が病院を追い出されてベッドで情けない姿になってると聞いたら普通は様子を見に来るだろう」
+
+Eva「誰から聞いたんだ」
+
+Celes「今見て確認した」
+
+Eva「マジで帰れ」
+
+Celes「嫌だ」
+
+Evaが露骨に顔をしかめる横で、Solが面白そうに首を傾げる。
+
+Sol「へえ～ダル医者でも頭が上がらない奴がいるんだな。珍しいもん見たわ」
+
+Eva「……今すぐ黙れ。私の尊厳に関わってきている」
+
+Sol「じゃあもっと聞きたいかもｗ　こいつ病院で何やらかしたの？」
+
+Celes「実に色々あるぞ。勤務態度は悪いし愛想も皆無で顔色も最悪、なのに手術だけは異様に上手いという非常に扱いに困る部下でな」
+
+Eva「余計なことを喋るな！」
+
+Veris「……Celesさん、随分と容赦がないですね」
+
+Celes「コイツの扱いはこれくらいでちょうどいい。昔から妙にプライドだけは高いから、舐めてかかるくらいで丁度良い」
+
+Stella「流石Evaのことわかってるね～」
+
+Eva「お前らホンマ……」
+
+Stellaがくすくす笑っている。Quanが本から顔を上げることすらせず淡々と口を挟む。
+
+Quan「……Evaがここまで一方的に負けているのは珍しいな。普段は口だけならかなり強いんだが」
+
+Eva「お前までそっちにつくの？」
+
+Quan「事実を述べているだけだ。お前が如何にCelesに好き放題されていたかが汲み取れる」
+
+Sol「理屈屋もっと言ってやれ！！」
+
+Eva「お前ら全員まとめて追い出すぞ」
+
+研究室には、すっかりいつもの調子の騒がしさが戻っていた。
+
+Celesもそれに合わせるように軽く笑っている。
+
+だが、その視線だけは時折、Solへ向いていた。
+
+Celes「……ところでSolとやら、お前は盲目と言ったが研究室で生活する上で不便はないのか？」
+
+Sol「ん？色々あったけど今は別にかな。音と気配が分かれば大体なんとかなるし」
+
+Celes「……いつからだ？」
+
+Sol「あ？子供の時だけど」
+
+Celesの表情がごく僅かに止まった。
+
+Sol「……まあ私は見えなくてもそんな困ってないけどな。むしろ見えたら見えたで、理屈屋のクソみたいな顔とか見たくないし」
+
+Quan「お前に見せるための顔ではない」
+
+Celes「……そうか」
+
+Celesは一瞬真面目な顔をしていたが、すぐに視線をEvaに向ける。
+
+Celes「……にしても、ここは面白い場所だな」
+
+Eva「今さら気づいたの？」
+
+Celes「ああ。お前がいる時点で相当面白いが、集っている連中も面白いやつらばかりと見受けられる」
+
+Veris「えぇ……」
+
+Stella「や、やったー？」
+
+Eva「……やっぱり帰ってくれない？」
+
+Celes「帰るか。せっかく来たんだしもう少しお前がどういう暮らしをしているのか見ていきたい」
+
+Sol「いいぞCeles、もっとEvaをイジってやれ！いっつもえらそーにしてるからなコイツ」
+
+Eva「お前はどっちの味方なんだよ……」
+
+Sol「面白い方の味方！」
+
+Celesは笑いながらSolを眺める。
+
+その笑顔の奥で、先ほどから消えない違和感だけが、静かに残っていた。
+
+「……こいつは」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-05-6.html" class="nav-button prev">← ep5-6へ戻る</a>
+      <a href="episode-06-2.html" class="nav-button next">ep6-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

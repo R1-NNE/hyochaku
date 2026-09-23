@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - Subcharacters</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Character Page Styles */
+
+    .character-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+
+    .character-name {
+      font-family: var(--font-main);
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--ink);
+      margin: clamp(18px, 3vw, 28px) 0 0 clamp(6px, 1vw, 12px);
+      padding-bottom: 12px;
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .character-description-label {
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.8);
+      margin: clamp(14px, 2vw, 20px) 0 0 clamp(6px, 1vw, 12px);
+    }
+
+    .character-content {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.85fr) minmax(300px, 1.15fr);
+      gap: clamp(24px, 4vw, 44px);
+      align-items: start;
+      margin-bottom: clamp(32px, 6vw, 52px);
+    }
+
+    .character-description-area {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    .character-description {
+      width: 100%;
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      color: rgba(62, 76, 80, 0.95);
+      font-family: var(--font-ja);
+      line-height: 1.6;
+      margin: clamp(14px, 2vw, 20px) 0 0 clamp(6px, 1vw, 12px);
+      padding: 0;
+    }
+
+    .character-description-image {
+      width: 100%;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      margin-top: clamp(16px, 3vw, 24px);
+      min-height: clamp(120px, 25vw, 240px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .character-description-image:hover {
+      border-color: var(--accent);
+    }
+
+    .character-description-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    .character-image-area {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .character-image-area:hover {
+      border-color: var(--accent);
+    }
+
+    .character-image-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      cursor: pointer;
+    }
+
+    /* Gallery Section */
+
+    .gallery-section {
+      margin-top: clamp(36px, 6vw, 56px);
+    }
+
+    .gallery-title {
+      font-family: var(--font-main);
+      font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+      color: var(--ink);
+      margin: 0 0 clamp(16px, 3vw, 24px) clamp(6px, 1vw, 12px);
+      font-weight: 400;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: clamp(12px, 2.5vw, 20px);
+      width: 100%;
+    }
+
+    .gallery-item {
+      aspect-ratio: 1;
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .gallery-item:hover {
+      border-color: var(--accent);
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: translateZ(0);
+      background-color: rgba(255,255,255,0.5);
+    }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(62, 76, 80, 0.4);
+      font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+      text-align: center;
+      padding: 8px;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+.modal-content {
+      position: relative;
+      max-width: 90vw;
+      max-height: 90vh;
+      background: #fff;
+      border-radius: 8px;
+      overflow: auto;
+    }
+
+    .modal-image {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 150ms ease;
+    }
+
+    .modal-close:hover {
+      background: rgba(0, 0, 0, 0.8);
+    }
+
+    @media (max-width: 900px) {
+      .character-content {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .gallery-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section character-header" aria-labelledby="character-title">
+      <h1 id="character-title" class="ribbon small">subcharacters</h1>
+    </section>
+<p>mainに絡むキャラも一部います。随時追加予定</p>
+
+    <section class="section" aria-labelledby="character-name-title-6">
+      <h2 class="character-name" id="character-name-title-6">Celes.Tia</h2>
+      <p class="character-description-label">Age:29</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">Evaの病院時代の元上司。<br>常にドライで中立的だが、非常に話術に長けており<br>病院という組織において完璧な立ち回りを行える。<br>（というかどこでも適応できる）<br>定期的に研究室に顔を出しており、EvaがCelesに<br>逆らえないのを知った上でしょっちゅうEvaを<br>こき使ったりオモチャにしている。
+          <br>likes:Eva弄り、責任逃れ、会話<br>dislikes:頭のケモミミに触れられる</p>
+          
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Celes.png" alt="Celes.Tia" loading="lazy" decoding="async">
+        </div>
+      </div>
+   </section>
+
+       <section class="section" aria-labelledby="character-name-title-6">
+      <h2 class="character-name" id="character-name-title-6">Nebula.ria</h2>
+      <p class="character-description-label">Age:/</p>
+
+      <div class="character-content">
+        <div class="character-description-area">
+          <p class="character-description">Stellaの母。<br>七曜魔法研究の第一人者であり、七曜魔法をずっと<br>研究していたがStellaが幼い時に病に倒れ故人に。<br>以後Stellaは母の意思を継いで七曜魔法の完成を目標にしている。<br>
+            likes:研究、Stella<br>dislikes:繊細な行動</p>
+        </div>
+
+        <div class="character-image-area" onclick="openModal(this.querySelector('img').src, this.querySelector('img').alt)">
+          <img src="Nebula.png" alt="Nebula.ria" loading="lazy" decoding="async">
+        </div>
+      </div>
+   </section>
+
+    <a href="index.html" class="back-link">← 戻る</a>
+  </main>
+
+  <!-- Modal -->
+  <div id="imageModal" class="modal" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <img id="modalImage" class="modal-image" src="" alt="">
+    </div>
+  </div>
+
+  <script>
+    function openModal(src, alt) {
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      
+      // 実画像がない場合はスキップ
+      if (src && src.includes('stub-image')) {
+        return;
+      }
+      
+      modalImage.src = src;
+      modalImage.alt = alt;
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('imageModal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function closeModalOnBackdrop(event) {
+      if (event.target.id === 'imageModal') {
+        closeModal();
+      }
+    }
+
+    // ESC キーでモーダルを閉じる
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+  </script>

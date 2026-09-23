@@ -1,0 +1,730 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep6-4</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep6:"宿命" sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+大学構内。
+
+さっさと歩くCelesにやっとEvaが追いついた。
+
+Eva「……Celes」
+
+Celes「どうした。ストレス発散機扱いが本気で嫌になったか」
+
+Eva「それは置いといてさ……最近、Solに対して妙に優しくない？」
+
+Celesの足が止まった。
+
+Celes「そうか？　別にいつも通りだと思うが」
+
+Eva「いや……そんなことはないな」
+
+Celes「……随分と曖昧な言い方だな。昔のお前なら、もっと堂々と断言していただろうに」
+
+Eva「そこはどうでもいいだろ。なんというか……Solを見る時だけ、あんたの顔が少し違う気がして」
+
+CelesはEvaを見る。
+
+病院にいた頃から、自分が何を言っても表面だけでは納得しようとせず何かを突き詰めようとしていた。
+
+Celesはそれを思い出し軽く肩をすくめる。
+
+Celes「……考えすぎだ。あいつは見ていて危なっかしい。この年になると老婆心というものが少し芽生え始めてくる」
+
+Eva「……本当にそれだけ？」
+
+Celes「ああ本当だとも、そもそも私はお前よりずっと人間ができているからな。ガキ一人程度の扱いでヘマなどしない」
+
+Eva「それなら、なんで最初にSolを見た時だけ固まったの？」
+
+Celesが思わず目を見開く。Evaはそれを見逃さなかった。
+
+Eva「……やっぱり。最近Solの動きや話し方を妙に観察してるよな。本人に気づかれないようにしてるつもりだったんだろうけど、あんた昔からそういう時だけ視線の動かし方が露骨なんだよ」
+
+Celes「……随分と細かいところまで見ているな」
+
+Eva「どれだけあんたの下にいたと思ってるの。あんたが人を誤魔化す時の話し方くらい分かるよ」
+
+Celes「……中々手厳しいな。昔はもう少し素直で可愛げのある部下だったと思うんだが」
+
+Eva「昔の話で逃げないで。Solと何かあるんでしょ、言って」
+
+Celes「…………」
+
+Celesは小さく息を吐いた。
+
+大体の人間なら誤魔化しつづけられるが、目の前にいるのはEva。
+
+数少ない腹心をお互い長い間晒し続けていた相手である。そして、いま最も厄介な存在であった。
+
+Celes「……参ったな。お前相手だと、こういう小細工は長く続かないらしい」
+
+Eva「そういうこと。話す気になった？」
+
+Celes「……分かった。だが、ここで聞いたことは他の連中には話すな。特にSol本人には絶対にだ」
+
+Eva「……承知」
+
+Celesは近くのベンチへ軽く腰かけた。
+
+そして、その表情からいつもの軽薄な笑みが消え始める。
+
+Celes「まず最初に、とある被検体がいた。被検体と言っても、人間だ」
+
+Eva「……は？」
+
+Celes「そいつの管理番号はD-217、名前すら与えられてない。そいつは生まれた時から研究対象として扱われていて、特に直感的な判断能力に凄まじい才能があった」
+
+Eva「……それって」
+
+Celes「そうだ。それがまさしくお前が今知っているSolのことだ」
+
+Evaの顔からいつもの気だるげさが一気に消し飛んだ。
+
+Celes「私は昔、その施設で一般職員として働いていた事があった。もっとも、研究そのものには関わっていないしましてやSolに危害を加えた立場ではない。記録や事務処理だけをする存在としてだ」
+
+Eva「…………」
+
+Celes「そして、実験が進むにつれてとある計画が発表された。ただでさえすさまじい直観力を更に究極化させるという内容だ」
+
+Eva「……まさか」
+
+Celes「Solの両眼を摘出すること。それが被検体D-217としての最終完成形だった」
+
+Evaが息を呑んだ。あまりの暴露に言葉が出てこない。
+
+Eva「……Solの目が見えないのって」
+
+Celes「ああ、あれは生まれつきではない。施設で奪われたんだ」
+
+Eva「…………そう、なんだ」
+
+Evaは暫くうつむいたまま何も言えなかった。しばらくして、ようやく顔を上げる。
+
+Eva「……お前は、その実験には関わってないと言ったな」
+
+Celes「直接はな。私には研究を止める権限なんてなかった。あの施設では、一般職員が研究員へ口を出すようなことは許されていなかったし、下手に逆らえば自分がどうなるかも分かっていた」
+
+Eva「なら……あんたを責めるつもりはない」
+
+Celes「……意外な反応だな。そう簡単に割り切っていいのか」
+
+Eva「いいとは思ってない。ただ、あんたが言ってることが嘘じゃないなら、少なくともあんたがSolを傷つけた側の人間じゃないことくらい分かる」
+
+Celes「……ありがとう」
+
+Celesは俯いたまま答えるが、Evaはまだ納得しきれていない顔をしていた。
+
+Eva「……だが、なんで今まで黙ってた」
+
+Celes「正直……私も最初は気づかなかったというのがある。気づいた後も……本人が知らない方がいいと思ったからだ」
+
+Eva「……そうか」
+
+Celes「……しかし、このままでは」
+
+Eva「いやいや……」
+
+Evaが頭を抱える。
+
+Eva「あのさ、もし本人に『昔の施設であんたを見てました』なんて言ったら、絶対面倒臭いことになるよ。Solのことだから、どんだけ暴れるか分からんしあと二度とうちに来れなくなるぞ」
+
+Celes「容易に想像できるな」
+
+Eva「しかもあいつ……妙なところで勘がいいから、下手に隠そうとしたら余計に食いつくはず。だから頼むから、本人には変なこと言うな、あと悟られるな」
+
+Celes「安心しろ、私はそんなヘマはしない。何年組織の中で人間関係をやってきたと思っている」
+
+Eva「……私に悟られてるじゃん」
+
+Celes「お前は……いつもそうだっただろう。Solには今まで通り接する。何も知らない、ただのCelesとしてな」
+
+Eva「……まあ……うん」
+
+Evaはそれでも、Celesの顔をじっと見ていた。
+
+Celesはいつも通りに見えるが、それでも何かを押し殺しているように見える。
+
+Eva「……Celes」
+
+Celes「何だ」
+
+Eva「無理に平気なふりしなくてもいいから」
+
+Celes「……何を言っている。私がこの程度のことで動揺する奴だと思ってるのか」
+
+Eva「本当に何でもないなら、あんたはこんなに話を引きづったりしてないから」
+
+Celesは返事をしなかった。
+
+あの時、ガラスの向こうで苦しむ少女を見ながら、記録を取ることしかできなかった。
+
+それを仕方のないことだと思い込んで施設を出たら、今になってその少女が目の前に現れた。
+
+そしてその少女は、当たり前のように笑ったり怒ったりしている。
+
+だから、あの頃にしてやれなかったことを今のSolへ無意識に返そうとしている。
+
+Celesはそれを認めたくなかった。
+
+認めてしまえば、自分があの日何もしなかったことまで真正面から見なければならなくなるからだ。
+
+Celes「……まあ、心配するな。私は私のやり方で何とかする」
+
+Eva「その言い方、昔から信用できないんだけど」
+
+Celes「失礼だな。私は一度だってお前を見捨てたことはないだろう」
+
+Eva「……それは、まあ」
+
+Celes「なら十分だ」
+
+Eva「……何が？」
+
+Evaが目を見開く。
+
+Celes「お前がこうして普通に笑っていることだよ。免職になって病院ほっぽり出た時は流石に少し心配したんだがな。あれだけ真面目に働いていた人間が突然職場も肩書きも失ったわけだから、もっと酷い顔をしているかと想像していた」
+
+Eva「酷い顔って何だ……今も大して変わってないだろ」
+
+Celes「そうだな、そこは訂正しよう。昔から酷い顔だったな」
+
+Eva「何が言いてえんだよさっきから」
+
+Celesは小さく笑うと、研究室の入ってるビルへ視線を向けた。
+
+Celes「しかし、随分と賑やかな所に来たな。昔のお前ならこんな環境では一週間も持たないだろう」
+
+Eva「私も最初はそう思ってたよ。でもまあ、慣れると案外悪くない。仕事しなくても飯は出てくるし、研究は勝手に進むし、騒がしいけど退屈はしない」
+
+Celes「つまり、医者を辞めた結果生活水準が上がったわけか。実に皮肉な話だな」
+
+Eva「そういうこと。だから心配して損した？」
+
+Celes「まったくだ。お前が人生に失敗したと思って少し気に掛けていた私が馬鹿みたいじゃないか」
+
+Eva「普通に心配していたって言葉をかけちゃダメなのか？」
+
+Celes「嫌だ」
+
+Eva「めんどくっさ」
+
+やがてまた短い沈黙になる。
+
+Celes「……Solも、元気そうで何よりだ」
+
+Eva「……うん」
+
+Celes「昔のことを考えれば、あれだけ普通に笑っていられるというのは私としては勿論嬉しい」
+
+Eva「……Celes」
+
+Celes「だがな」
+
+そこでCelesは一度言葉を切った。
+
+Celes「私は、あの子に向き合っていいのだろうか」
+
+Eva「……」
+
+Celes「私はあの子を傷つけたわけではない。だが、助けたわけでもない。目の前で何が行われているのか知りながら、命令された仕事をしていたのは事実だ。それを今さら、何も知らない顔をして隣に座って笑っていい存在なのかという事だ。あの子からすれば、私はただの何も知らない人間として接しているわけだろう」
+
+Eva「……それはそうだけど」
+
+Celes「勿論今さら過去を掘り返してあの子を苦しませたいわけじゃない。ただ、自分だけが知っているというのは随分と都合のいい話だと思ってな」
+
+Evaは少しだけ考えるように黙った。そして、また研究棟を見上げた。
+
+Eva「……CelesがSolに何かしてあげなきゃいけないなんて私は思わないよ。あんたはあんたで、今まで通り接してればいいんじゃない」
+
+Celes「……お前、本当に昔より適当になったな」
+
+Eva「褒め言葉として受け取っとく」
+
+少し笑い始める二人。やがてEvaが、いつもの気だるそうな調子で続ける。
+
+Eva「まあいつも通り来てよ。だけど仕事だけは本当に押し付けないで」
+
+Celes「お前ほど優秀で暇そうな人間を見つけたら、仕事を任せたくなるのが管理職という生き物だ」
+
+Eva「それをやったら次から出禁だから」
+
+Celes「ならあのふわふわした奴に言いつける」
+
+Eva「やめてくれマジで……」
+
+ゲンナリするEvaをよそに、Celesは会釈しながら先ほどよりどこか軽い足取りで再び一人歩み始めた。Evaはその姿を見ながら、嫌な顔のまま安心出来た気がした。
+
+---
+
+数日後。
+
+その日もCelesは何食わぬ顔で研究室に遊びに来ていた。
+
+もっとも、「遊びに来た」と本人は言っているが実態はソファで寝転がるEvaを捕まえて病院時代の話を肴に弄り倒しているだけだった。
+
+Celes「しかしEva、お前も随分と堕落したものだな。昔は私が少し注意しただけでその日のうちに反省点をまとめた報告書を提出してきたというのに、今ではソファと一体化しているじゃないか」
+
+Eva「人間は成長するんだよ。昔の私は無駄に真面目だっただけで、今の私の方がよっぽど人間らしい生活をしてるからね」
+
+Celes「なるほど、では次に病院へ戻る時はその人間らしい生活態度を面接官にも披露してみるといい。きっと感動して採用してくれるぞ」
+
+Eva「帰らないって言ってるでしょ！私を病院に戻そうとするなっつーの」
+
+Sol「ははは、Evaまた遊ばれてんじゃんｗ」
+
+Veris「Sol……あなたも人のことを笑っている場合ではありませんよ。また廊下でスケボーやりましたね」
+
+Sol「いや大丈夫、どっかにぶつけたりしてないから」
+
+Quan「床に思いっきりぶつかっていただろ」
+
+Eva「ダッサ」
+
+Sol「うるせぇ！！」
+
+Stella「あはは～」
+
+いつもの研究室だった。
+
+CelesがEvaを弄り、Solが横から茶化し、Verisが怒り、Quanが淡々と余計な一言を挟み、Stellaがその全てを楽しそうに眺めている。
+
+やがてCelesが机の上に置かれていた書類を取ろうとして何気なく手を伸ばす。
+
+その仕草を見たSolが、ぴたりと止まった。
+
+Sol「……ん？」
+
+Celes「……どうした？」
+
+Sol「いや……なんでもない」
+
+Solは白い布の向こうでCelesをじっと見ていた。勿論その姿は見えない。
+
+Veris「どうしたんですか急におとなしくなって」
+
+Sol「……なんだろうな。今の感じ、どっかで見たことある気がするような」
+
+Celesの手が、ほんの僅かに止まった。
+
+Sol「いや、動きっていうか……雰囲気かな。前にもこういう感じの人を知ってたような気がするんだよな……声も、なんか聞き覚えある気がするし」
+
+Celes「……人の声など似たようなものだ。どこかで似た声を聞くこともあるだろう」
+
+Quan「最も、お前に私達以外の知り合いがいたのか？」
+
+Sol「それもそうなんだけどさ」
+
+Solは首を傾げる。いつものSolなら、ここで適当に流して別の話題に飛ぶはずだが今日は違った。
+
+説明できない直感が妙に引っかかっており、何かがCelesと重なっていく。
+
+彼女の声、立ち方、人との距離の取り方。
+
+そして、何よりも自分でも説明できない既視感。
+
+Sol「……ねえ、Celes」
+
+Celes「なんだ」
+
+Sol「私たちって、どっかで会ったことある？」
+
+研究室の空気が、一瞬だけ止まった。
+
+Evaの表情が固まる。
+
+VerisもSolの唐突な質問に目を瞬かせ、Stellaは不思議そうに二人を見る。Quanまでもこちらを見ている。
+
+Celesは、ほんの数秒静かにSolを見返していた。
+
+そして。
+
+Celes「……ない」
+
+それだけだった。
+
+Sol「……」
+
+Celes「少なくとも、私はお前と会った記憶はない」
+
+Sol「そっか」
+
+Solはそれ以上追及しなかった。
+
+Veris「Sol、どうしたんですか？　何か思い出したんですか」
+
+Sol「いや、全然。思い出したっていうか……逆に何も思い出せないから変なんだよ」
+
+Quan「記憶に存在しない情報に既視感を覚えているということか。興味深いな。認知的には――」
+
+Sol「理屈屋は黙ってて」
+
+Quan「お前が聞いてきたんだろう」
+
+Stella「まあまあ……Solちゃん、Celesさんとは初めましてじゃなかったの？」
+
+Sol「うん、そうなんだけどなあ……」
+
+Veris「……どうせ適当こいてるだけじゃないですか？あまりCelesさんを困らせないでください」
+
+Sol「そんなぁ～」
+
+Solは困ったように頭を掻き、周囲が笑い始めた。
+
+一方Evaだけはその様子を横目で見ながら、やや険しい表情をしている。
+
+まずい。
+
+直感で物事の核心に触れるSolが、今まで一度も気に留めなかったCelesに対して明確な違和感を覚え始めている。
+
+Sol「……まあいいっか。ゲームやろ」
+
+そう言いながらも、Solはその後しばらく何気なく聞き流していたCelesの声を少し注意して聞くようになっていた。
+
+Celesが笑えばSolも黙ってその声を聞くし、Celesが立ち上がればその足音を追う。CelesがEvaを弄ればその言葉遣いをじっと聞いている。
+
+本人にもそれが何のためなのか分かっていない。
+
+ただ、気になる。
+
+それだけだった。
+
+Celes「……どうした。そんなに見られても何も出てこないぞ」
+
+Sol「あー……やっぱ分かる？」
+
+Celes「これでも人間観察には自信がある。お前のように分かりやすい人間なら尚更だ」
+
+Sol「なんかさ、Celesって変だよな」
+
+Celes「随分と失礼な事を言ってくれるじゃないか。私はいたって普通だぞ」
+
+Sol「そういうところがさ……」
+
+Celes「……そうか」
+
+淡々と返すCeles。
+
+Evaはソファに座ったまま、その一部始終を見ていたが何も口を挟めない。
+
+自分がここで余計なことを言えば、Solの疑念を逆に決定的なものにしてしまうからだ。
+
+SolはずっとCelesを見つめている。
+
+Celes「……Sol？」
+
+Sol「……やっぱりそうだ」
+
+Celes「……何がだ」
+
+Solは珍しく頭の中で何かを猛烈な勢いで組み立てているように、指先で机を叩きながらやがてぽつぽつと言葉を落としていく。
+
+Sol「私……昔のことってあんまり覚えてなかったんだよ。順番がめちゃくちゃだったり、途中だけ妙に鮮明だったりするの。だからみんなにも言ってなかった」
+
+Veris「……急にどうしたんですか」
+
+Sol「でも、覚えてないってだけで全部消えたわけじゃないんだよな。匂いとか音とか、誰かの声とか、そういう断片だけ残ってることがある」
+
+Celes「……」
+
+Sol「で、さっきからCelesを見てると、それが妙に繋がるんだよ」
+
+Eva「……Sol」
+
+Evaが小さく声を挟むが、Solは止まらない。
+
+Sol「まずさ、私が施設にいた頃によくガラス越しに誰かがこっちを見てた」
+
+Veris「……施設？」
+
+Stella「えっ、施設って……どういうこと？」
+
+VerisとStellaが顔を見合わせる。Quanも本から顔を上げてSolを見る。
+
+Sol「私が生まれた場所」
+
+Veris「……は？」
+
+Stella「……え？」
+
+Quan「……」
+
+Sol「……そこに私はずっと暮らし……いや、実験体として飼われてた。周りは知らないやつばっかりだし、私もあんまり覚えてない」
+
+Veris「じ、実験体！？」
+
+Verisの表情が強張る。
+
+Sol「だけど、その中に一人だけ妙に印象に残ってる奴がいた。そいつ、いつも同じ場所にいたと思う」
+
+Celes「……」
+
+Sol「実験室の外側、ガラスの向こうに誰かいるんだよ。直接話したことはないし、こっちから声を掛けても反応した記憶がない。だけど、たぶん私のことを見てた」
+
+Eva「……まずいな」
+
+Sol「そいつの立ってる位置。人を見る時の目線。書類を持つ時の手の動かし方。それから声」
+
+Solはそこで顔を上げた。
+
+Sol「……Celes。あんたとすごく似てる」
+
+Stella「う、うそ！？」
+
+Quan「……本当か」
+
+Celesは目を瞑る。
+
+Celes「……考えすぎだろう」
+
+Sol「じゃあ、もう一個」
+
+Solが立ち上がってCelesを見る。
+
+その表情からは、いつものふざけた笑顔が消えていた。
+
+Sol「最初に私と会った時、お前さ、私を見て一瞬だけ固まったよな」
+
+Celes「……」
+
+Sol「そのあと普通に戻ったけど、あれもおかしかった。今考えたら尚更だな」
+
+Celes「……よく見ているな」
+
+Sol「だから言っただろ。私、こういうのは分かるんだよ」
+
+Veris「Sol……」
+
+Stella「ちょっと待って、何の話になってるの……？」
+
+StellaとVerisは完全に置いていかれている。Quanはただ黙って二人のやり取りを見ていた。
+
+そしてEvaは、両手で頭を抱えていた。
+
+Sol「Celes」
+
+Celes「……なんだ」
+
+Sol「お前、あの施設で私をずっと見ていた奴か？」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-06-3.html" class="nav-button prev">← ep6-3へ戻る</a>
+      <a href="episode-06-5.html" class="nav-button next">ep6-5へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
