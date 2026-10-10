@@ -1,0 +1,696 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep7-3</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep7:"再会、の前" sec-3</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+翌日、Stellaは講義の開始ぎりぎりまで教室に入れなかった。
+
+ドアの外で立ち止まって、入るか、今日はもう休むか、同じことを何度も考える。
+昨日の食堂で言われた言葉が、寝ても抜けなかった。
+
+"そんなつまらないことで、自分を殺してるわけ？"
+
+Evaの言葉は冷たく容赦がなかったにもかかわらず、不思議と悪意のある声ではなかった。だからこそ、余計に痛かった。
+
+教室の中では既に何人か座っている。その一角に、いつも通りEvaはいた。
+
+講義と全く関係がない医学書を開きながら、周囲なんて視界に入っていないみたいな顔である。
+
+Stellaは一瞬だけ逃げたくなったが、次の瞬間目が合ってしまった。
+
+Eva「……」
+
+Stella「……」
+
+Eva「……講義始まるけど」
+
+慰めも気遣いもない。昨日のことに触れる気配すらない。
+
+でも、自分の事を切ってもいない。
+
+そう感じたStellaは小さく息を吸って、ようやく中に入った。
+
+---
+
+講義が終わった後、Evaは席を立つなり資料をまとめながらStellaに声をかけた。
+
+Eva「発表構成、結局私が作ったけど見る？」
+
+Stella「……あ、はい」
+
+Eva「導入から現状を伝えつつ、問題点は三つで改善案二つ。で、最後に想定される反応に対する回答案。まあ普通」
+
+Stella「……すごい」
+
+Eva「別に」
+
+Stellaは紙を見下ろす。昨日自分が言ったことが、整然とした見出しになって並んでいた。
+
+* 導線の停滞
+* 心理的ハードルによる席選択の偏り
+* 返却動線と着席領域の干渉
+
+Stellaの喉が小さく動く。
+
+Stella「……これ、私が言ったことも……入って」
+
+Eva「使えるから入れただけ。けど一つ目と二つ目の間の具体例が足りないから今日もう一回だけ食堂見に行く。来る？」
+
+Stellaは少しだけ目を瞬く。
+
+……必要とされている。
+
+Stella「……行きます」
+
+Eva「おけ。じゃ五限のあとで」
+
+そのまま歩き出しかけて、Evaは少しだけ振り向く。
+
+Eva「……昨日のことで変に気遣ってるだけなら無駄だから、来ないで」
+
+Stella「……え」
+
+Eva「あんたが来るなら使うし、来ないなら一人で終わらせるだけだから」
+
+Stella「……そんなことありません」
+
+Eva「そ。変なこと聞いたね」
+
+そしてそのままどこかに行ってしまった。
+
+突き放しているのか支えているのか妙に分かりにくいが、自分を必要としてくれている。それだけでStellaには、救いになっていた。
+
+---
+
+五限後の食堂は前日より空いていた。
+
+Eva「昨日より二人組が多いな」
+
+Stella「……講義の終わり方が、今日は揃ってるからでは」
+
+Eva「根拠は？」
+
+Stella「えっと、さっきまで廊下で同じ授業の話してる人が多くて……あと、この時間は一限から詰めてる人より、午後だけの人が来るから、一人行動の人が少し減るのかも」
+
+Eva「……なるほど」
+
+Evaはノートに書く。
+
+Stella「……あの、そこ、返却口の前に一瞬人が溜まるの、トレーを返したあと進む先が二方向に分かれてるからかも」
+
+Eva「右は出口で左は給水機か。迷う人間が一歩止まってるな」
+
+Stella「……そうです。あと、後ろの人も“前の人がどっちに行くか”見てから動いてるかと」
+
+Eva「人間ってほんと鈍いね」
+
+Stellaは一瞬だけ口元を緩めたが、それから慌てて戻した。Evaはそれを見逃さなかったが、特に何も言わなかった。
+
+---
+
+その日も、翌日も、さらにその次の日も。EvaはStellaへの対応を変えなかった。
+
+冷たいし余計な慰めはない。「大丈夫？」も言わない。
+詰める時は詰めるし、曖昧な言い方にはすぐ切り込む。
+
+でも、見捨てない。
+
+Stellaが言葉に詰まれば、Evaは苛立ちながらも待った。
+上手く説明できなければ、「書け」と紙を寄越した。
+提出前の草稿を送れば、深夜でも数分で赤が入って返ってきた。
+
+Eva「この文、冗長すぎ。あと主語が曖昧」
+
+Stella「は、はい。すぐ直します」
+
+Eva「あと……ここはいいかも。最後の一文が使えそう」
+
+Stella「……ありがとうございます」
+
+EvaはStellaの顔を見向きもせずに何か書いている。
+
+彼女としては講義における対等な立場の相手、というのを貫いていただけだが、それがStellaには少しずつ効いていった。
+
+---
+
+発表前日。図書館前のベンチで二人が原稿を確認していた時のことだった。
+
+Eva「まあ……問題なさそうだね。じゃあ明日私が適当に終わらせるから。お疲れ」
+
+Stella「……はい。ありがとうございます」
+
+Evaは相変わらずだった。彼女の中ではつまらない講義、誰でもいい相手、早く終わらせることしか考えていなかった。
+
+だが、Stellaにとってはこの講義、すなわちEvaとの出会いが転換点になりかけていた。それを証明するため、やるべきことがあったのである。
+
+Stella「……あの」
+
+Eva「何」
+
+Stella「発表……私にやらせてくれませんか」
+
+Eva「……え」
+
+Stella「……各問題点の説明については私がはっきり説明できると思います。あと……ずっと迷惑かけてましたし……」
+
+Eva「別にそんなことは思ってないけど……」
+
+EvaはStellaの眼を見る。
+
+まだオドオドしている印象はあるが、出会った時とは違い視線の先ははっきりとEvaの方を見つめていた。
+
+Stella「……駄目ですか」
+
+Eva「どうぞ」
+
+Stella「え？」
+
+Eva「……私は人間観察が得意じゃない。あんたが喋ってくれるならその方がより具体的にはなるでしょ。だからはい、原稿」
+
+そう言ってあっさりと原稿を渡してきた。
+
+Stellaはそれを、数十秒ほど見つめ続けた。
+
+本人にとってはそうでもないのかもしれないが、自分の事を信じて、託してくれたのである。そう思うと、胸の奥が熱くなった。
+
+Stella「……ありがとうございます。頑張ります」
+
+Eva「……失敗したらただじゃおかないから」
+
+Stella「え！？そ、そんな……」
+
+Eva「嘘嘘。大学の五分発表で人生終わるわけじゃないでしょ」
+
+Stellaは思わず、ほんの少しだけ笑った。それは本当に一瞬だったが、前よりずっと自然だった。
+
+Eva「……笑えるくらいなら大丈夫か多分」
+
+Stella「……ひどいです」
+
+Eva「今更気づいたか」
+
+---
+
+発表当日。
+
+教壇へ向かって歩いていくStellaを見ながら、Evaは少しだけ目を細めた。
+
+数週間前なら、「私にやらせて」と自分から立ち上がることも、大勢の前に出ることも出来なかったはずだろう。流石にEvaもその変化をはっきりと感じ取っていた。
+
+教壇に立ったStella。まだ緊張しているが、それでも逃げようとはしていなかった。
+
+Stella「それでは、私たちの発表を始めます」
+
+全員が一斉に彼女を見る。最初の声は少し震えていたが、少しずつ調子を取り戻していった。
+
+Stella「今回私たちは、人間同士のコミュニケーションについて、実際の行動観察を中心に考えてみました。人が言葉だけではなく、表情や視線、身体の向きなどによって、相手に様々な情報を伝えていることが分かりました」
+
+Evaは黙って聞いていた。
+
+内容自体は、事前に二人で作ったものと大きく変わらないが、Stellaは途中から自分の言葉をかなり加えている。
+
+Stella「今回この課題をやっていて、相手の行動を観察することと相手の気持ちを決めつけることは違うんじゃないかと思いました」
+
+教室が少し静かになる。
+
+Stella「同じ笑顔でも、本当に楽しくて笑っている人もいれば、相手を安心させるために笑っている人もいると思います。だから……相手のことをよく見ることは大事ですけど、それだけで全部分かったと思わないことも大事なんじゃないかなと思います」
+
+Evaは少しだけ目を見開いた。二人で作った資料にはなかった内容だ。
+
+Stella「人のことを考えるのは大事です。でも、自分がどうしたいのかを考えることも、同じくらい大事なんだと思います」
+
+そして、直後Stellaはほんの少しだけ笑いながら告げた。
+
+Stella「……私は、最近それに気付きました」
+
+発表は、そのまま最後まで進んだ。
+
+途中で言葉に詰まることもあったり資料の順番を間違えたりもしたが、それでも最後まで自分の言葉で話し切った。
+
+Stella「以上で……発表を終わります」
+
+教授「はい、ありがとうございました。非常に興味深い発表でした」
+
+教室中から拍手が起こる。
+
+Stellaは少し呆然としたように教壇に立っていたが、やがて自分に向けられた拍手だと理解する。
+
+Stella「……ありがとうございます！！」
+
+目を丸くして顔が一気に明るくなった。そして席へ戻ってくる。
+
+Stella「Evaさん……！」
+
+Eva「終わったね。お疲れ様」
+
+Stella「私、途中で変じゃなかったですか」
+
+Eva「めっちゃ資料間違えてたね」
+
+Stella「……う」
+
+Eva「でも別に、喋ることは喋れてた。普通に無難って感じ。つまんないけど」
+
+Stellaが立ち止まる。
+
+Eva「何」
+
+Stella「……普通、なんだ」
+
+Eva「大学の授業の発表に何を求めてるの」
+
+Stellaはその場で数秒固まったあと、急に顔を背けた。
+自分が「普通」になれた、ということがどれほど嬉しかったか、Evaには全く見当もつかなかった。
+
+Eva「え……泣くほどのこと？」
+
+Stella「……泣いてない」
+
+Eva「そう」
+
+Stella「……ちょっとだけ、今までより、ましだった気がして」
+
+Evaはそれに答えず、配布資料を鞄へしまった。
+
+Eva「次、空きコマ？」
+
+Stella「……うん」
+
+Eva「じゃあ食堂寄ろか。昼まだでしょ」
+
+Stella「……行く」
+
+こうして、発表は無事に終了した。
+
+---
+
+そこから、二人は何故かつるむようになった。
+
+Evaが一人で食堂にいると、自然にStellaが対面に座ってくる。
+
+Eva「……また来たの？」
+
+Stella「……来たらダメ？」
+
+Eva「……別に」
+
+Evaにとってはあの講義限りの存在だと思っていたが、Stellaにとってはそうではなかったらしい。
+
+そして、Evaも別に拒む理由はなかった。
+
+Stella「ねぇ……今日の魔法学基礎II、全然分からなかったんだけど……」
+
+Eva「私取ってねえよそんな講義。そもそも学部違うでしょ」
+
+Stella「ご、ごめん！！」
+
+Eva「はぁ……」
+
+Stellaは相変わらず謝りがちだったが、以前ほどではなくなった。
+
+「これ言っていいかな」と怯えながらも言うようになったし、詰まっても最後まで言い切る回数が増えた。
+
+そして何より、Evaの前では少しずつ、元の明るさの欠片みたいなものが漏れるようになった。
+
+---
+
+ある日、中庭を歩きながらStellaがぽつりと言った。
+
+Stella「……ねえ、一つ思ったんだけど」
+
+Eva「何」
+
+Stella「Evaって、すっごく冷たいのに見捨てたりしないよね」
+
+Eva「……褒めてんのか？」
+
+Stella「……微妙？」
+
+Eva「……なら言わなくていい」
+
+Stella「でも、本当にそう思ったんだ」
+
+Evaは肩をすくめる。
+
+Eva「……捨てる理由がないだけ」
+
+Stella「それ、便利な言い方だね」
+
+Stellaは少しだけ声を出して笑った。
+
+---
+
+さらに数日後の夕方。
+講義終わりの人気の少ない廊下で窓から差す光が長く伸びている。
+
+さっきからStellaは両手でノートを抱えたまま、妙にEvaのそばでそわそわしていた。
+
+Eva「……何」
+
+Stella「……いや、その」
+
+Eva「……最近それ減ってきたのに、今日は珍しく元通りだね」
+
+Stella「……う」
+
+Eva「……で、何？」
+
+Stellaは何かを言おうとして、失敗して、また言い直そうとする。
+それを三回ほど繰り返したあと、急に顔をくしゃっとさせた。
+
+Eva「……は？」
+
+Stellaの目に、みるみる涙が溜まる。
+
+Stella「……っ、なんか」
+
+Eva「え……何」
+
+Stella「なんか、最近、っ」
+
+ぽろ、と涙が落ち始めた。
+Stellaは慌てて拭うがもう遅かった。次から次へと滲む。
+
+Eva「いやちょっと待って待って、何で泣くの」
+
+Stella「わかん、ない」
+
+Eva「……分からないで泣いてるの？」
+
+Stella「……ちが、違くて……分かる、けど……うまく言えなくて……」
+
+Evaは露骨に困った顔をした。
+こういう時どうすればいいのか本気で分からない顔である。
+
+Stellaは泣きながら、でもどこか嬉しそうに笑っていた。
+
+Stella「最近、前より……息しやすい、っていうか……」
+
+Eva「……」
+
+Stella「前は、何言っても、どこいても、なんかずっと、間違えそうで……人の顔見てばっかりだったのに……」
+
+言いながらまた涙が落ちる。
+
+Stella「まだ怖いし、全然、普通じゃないけど……でも、前よりちょっとだけ、自分もここにいていいのかもって思えて……」
+
+Evaは黙って聞いている。
+慰めるでもなく、急かすでもなく、ただ少しだけ困惑した顔のまま。
+
+Stella「無理して明るくしなくてもいいし……逆に、少し出ちゃっても、すぐ全部終わるわけじゃないんだって……」
+
+Eva「……」
+
+Stella「それに気づいたら、なんか……嬉しくて……」
+
+最後の方は泣き笑いだった。
+自分でも変だと思っているらしく、ぐしゃぐしゃの顔で必死に整えようとしている。
+
+Evaはしばらく沈黙したあと、ようやく口を開く。
+
+Eva「……そう」
+
+Stella「……そう、って」
+
+Eva「いや、実際そうなんじゃないの」
+
+Stella「……もっとこう、ないの……？」
+
+Eva「何が」
+
+Stella「こう……人が泣きながら喜んでる時の、もうちょっと、なんか……」
+
+Evaは本気で考え込んだ。
+
+Eva「……良かったですね、とか言えばいいか？」
+
+Stellaは涙目のまま数秒止まり、それから変な顔で笑った。
+
+Stella「へたくそ……」
+
+Eva「注文が多いわ」
+
+Stella「だって適当すぎるもん！」
+
+Eva「高度な対応を求めないで、苦手っつってるでしょ」
+
+Stellaは笑って、また少し泣いた。
+
+Evaはその様子を見下ろして、心底扱いに困るものを見る目をしている。
+だけど、その場を離れはしなかった。
+
+Stella「……ありがとう」
+
+Eva「……何に対して？」
+
+Stella「全部」
+
+Eva「知らねえよ」
+
+Stella「そこは察してよ……」
+
+Eva「嫌」
+
+Stellaはぐしゃぐしゃの顔のまま、でも前よりずっと自然に笑った。
+
+Evaはそれを見て、確かに少し変わったなと感じた。
+前より言葉が出るし目も死んでいない。たまに……妙にうるさい。
+
+Eva「……泣き止んだら帰れ。廊下で立ち止まると邪魔」
+
+Stella「ひど……でも……嬉しい」
+
+Eva「何が」
+
+Stella「そのひどさが、いつも通りだから」
+
+Eva「……」
+
+Stella「……あっ照れてる？」
+
+Evaは答えずに窓の外へ目をやった。
+
+夕方の光の中、隣ではStellaがまだ泣き笑いしていた。ひどく面倒そうな顔をしながら、結局二人はしばらくそこにいた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-07-2.html" class="nav-button prev">← ep7-2へ戻る</a>
+      <a href="episode-07-4.html" class="nav-button next">ep7-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

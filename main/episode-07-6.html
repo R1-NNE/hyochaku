@@ -1,0 +1,423 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep7-6</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep7:"再会、の前" sec-6</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室の共用スペース。
+
+話を聞いていた4人は、しばらく何も言わなかったがやがてSolが最初に口を開いた。
+
+Sol「……え、Stellaって昔そんな感じだったの？」
+
+Veris「いや、私も驚きました……Stellaさんが昔そんなに塞ぎ込んでいたなんて、今の姿からは全然想像できませんよ」
+
+Quan「まあ……今のコイツからは想像し難い。というより、よく元に戻れたな」
+
+Stella「うぅ～……だからこの話はあんまりしたくなかったのに～……」
+
+Stellaはソファに座りながら、両手で顔を隠している。その隣では喋り終えたEvaが満足そうな顔をしている。
+
+Eva「いやぁ面白い話だった。昔のStellaって何か言うたびに謝ってたしな」
+
+Stella「Eva！」
+
+Eva「しかも私がちょっと強く言っただけで勝手に落ち込むし、今とは別人かよって」
+
+Stella「もうやめてよぉ……！」
+
+Sol「あっははは！　想像したらめちゃくちゃ面白いんだけど！　今のStellaからするとありえねーｗ」
+
+Veris「Sol、笑うところじゃありませんよ……まあ、私もかなり意外ではありますけど」
+
+Quan「しかし、その頃から観察能力だけは今と同程度だったわけか。性格だけ極端に変化したと考えると興味深い」
+
+Stella「Quanちゃん分析しなくていいからぁ！！」
+
+Eva「まあまあ、いいじゃん。私としては懐かしいけどね」
+
+Sol「再現すると『Evaさん……友達になってください……』みたいな感じ？ｗ」
+
+Eva「わはははは！！ｗｗそれ似てる！ｗｗ」
+
+Veris「Sol！！！！」
+
+Quan「……くだらない」
+
+Stella「……」
+
+場が沸く中、StellaはしばらくEvaを睨み続けていた。
+
+そして、何かを思い出したように口元をにやりと歪める。
+
+Stella「……そうだね」
+
+Eva「何その顔」
+
+Stella「Evaも懐かしい話、あるよね」
+
+Eva「……は？」
+
+Stella「私達、卒業してから2年間会えない期間があったんだよ。Evaの言った通り、やっぱお互い忙しくて会う機会なんて無くてさ」
+
+Veris「……やはりそうだったんですね」
+
+Stella「それで、二年後にやっと再開するの！その時のEvaってさ！」
+
+Eva「……おい」
+
+Stella「雪の中で泥酔して転がってた！」
+
+一瞬、空気が止まった。
+
+Sol「……え？」
+
+Veris「……何ですって？」
+
+Quan「それは初耳だな」
+
+Eva「Stella」
+
+Stella「道端で雪まみれになってたのを私が必死に掘り出したんだよ！！覚えてる！？」
+
+Eva「Stella！！」
+
+Stella「私が必死に声かけても『うるさい……』とか『誰……』とか！！ありえない！」
+
+Sol「ギャハハハハハ！！　何それ！！ダル医者、そんなことあったの！？」
+
+Veris「ちょっと待ってくださいEvaさん！　どういう状況だったんですか、それ！」
+
+Quan「……医者になるために飛び級までした人間の二年後が、雪の上で泥酔して転がっているのか」
+
+Eva「……うるさい」
+
+Quan「……一人の人間に固執した奴の末路とは思えない」
+
+Eva「お前は黙ってろ」
+
+Stellaはすっかり機嫌を直していた。さっきまで恥ずかしそうにしていたのが嘘のように、楽しそうに話を続ける。
+
+Stella「病院をクビになった後だったんだよね～確か」
+
+Eva「その説明はしなくていい」
+
+Stella「お酒飲んで、たぶん一晩中飲んで、そのまま雪の上に倒れてた」
+
+Eva「……」
+
+Sol「何で！？」
+
+Stella「私も最初は何かの死体かと思ったよ！雪掘ってみて、まさかEva！？ってなってもう大変！」
+
+Veris「……どういうことなんですか本当に？」
+
+Stella「それでね～研究室に拾って帰ってみたの」
+
+Sol「拾って帰った！？」
+
+Stella「うん。研究室に連れて帰って、暖かくして寝かせて、やっとEvaが私だって気付いた！それが二年ぶりの再開って訳！」
+
+Quan「……それが研究室での共同生活の始まりだったという訳か」
+
+Stella「そう！」
+
+Sol「マジかよ！！ｗｗ」
+
+Veris「Evaさん、貴方も拾われてたんですか……」
+
+Eva「……私だって好きで雪に埋まってたわけじゃないから」
+
+Stella「でも、私が見つけなかったらそのままだったんでしょ？」
+
+Eva「……否定はできない」
+
+Sol「こいつ昔からダルかったんだなｗ」
+
+Eva「Sol、お前ちょっと黙れ」
+
+Veris「でも……何というか、今の研究室の始まりがそんな状態だったと思うと、少し感慨深いですね……」
+
+Quan「感慨深いというより、事故だろ」
+
+Stella「事故だね～」
+
+Eva「はあぁ……」
+
+顔を覆い始めるEva。Stellaは笑いながらEvaの肩を軽く叩いた。
+
+Stella「でもね、あの時のEvaを見つけた時、私はちょっと嬉しかったんだよ」
+
+Eva「……何で」
+
+Stella「だって、二年ぶりに会えたもん。それに、昔はずっと私の隣にいてくれたEvaが、今度は私のところに転がってきたんだなって思ったら、なんだかすっごく面白くて」
+
+Eva「……転がってきたって言い方やめてくれる？」
+
+Stella「でも本当でしょ！」
+
+Eva「……まあ、そうだけど」
+
+Veris「何だかんだで、その再会が今の研究室に繋がってたんですね」
+
+Quan「結果だけ見ればそうなるな」
+
+Sol「じゃあこの研究室、最初は酔っ払い一人とStellaで始まってたの？」
+
+Stella「そうだよ～」
+
+Eva「改めて言われると酷いな」
+
+Sol「そこから私たちまで集まって、今じゃこんな感じってわけか」
+
+Quan「随分と非効率な組織形成だ」
+
+Veris「あなたが言いますか、それ」
+
+Stellaは笑いながら皆の顔を見回した。
+
+昔の自分の話をするのはやっぱり少し恥ずかしかったが、ソファの隣にはあの頃から変わらずEvaがいた。
+
+そして今は、昔の自分なら想像もできなかったような仲間たちまでいる。
+
+Stella「……まあ色々あったけど、結果的にはEvaと再会できてよかったって思ってるよ」
+
+Eva「……私も」
+
+Sol「おー、珍しく素直だな」
+
+Eva「うるさい」
+
+Stella「ふふっ」
+
+Veris「……何だかんだで、いい話だったんですね」
+
+Quan「最後に雪の上で泥酔していた事実が判明したせいで、全部台無しになった気がするが」
+
+Eva「本当にお前らいい加減にしろよ」
+
+研究室には、5人の笑い声が響いた。
+
+長い年月を隔てて再び出会った二人の話は、最後にはいつものくだらない笑い話へと変わっていた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-07-5.html" class="nav-button prev">← ep7-5へ戻る</a>
+      <a href="episode-08-1.html" class="nav-button next">ep8-1へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
