@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep3-3:Quanの義足</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep3:Quanの義足 sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+義足が壊れてから数日。
+
+Quanの生活は、未だに不便極まりないものだった。
+
+流石に移動はやや慣れてきたものの、それでも時々バランスを崩すので以前のように何の躊躇もなく歩き回ることはできない。
+
+そして、その状況に対する外野の対応は見事なまでに二分されていた。
+
+---
+
+ある日の朝。
+
+Quanがソファから立ち上がろうとしていると、すぐ近くにいたVerisが気づいた。
+
+Veris「Quanさん、立つんですか？でしたら私が支えますよ。無理に一人で立とうとすると危ないですから」
+
+Quan「……必要ない」
+
+Veris「そう言うと思いました！でも、必要かどうかを判断するのは今の身体の状態を見てからにしてくださいね」
+
+Quan「……」
+
+Quanは少しだけ眉を寄せた。
+
+いつものQuanなら、この時点で「余計な介入だ」とでも言って切り捨てるところだが流石にそうはいかない状態である。
+
+Verisはもう慣れているのか平たい顔のまま手を差し出してきた。
+
+Veris「ほら、杖はこちらです。ゆっくりで大丈夫ですよ」
+
+Quan「……分かった」
+
+Quanは渋々、Verisの手を借りて立ち上がると今度は問題なく歩けた。
+
+Veris「大丈夫そうですか？」
+
+Quan「問題ない」
+
+Veris「そうですか。それなら良かったです」
+
+Quan「……」
+
+Quanはそのまま机へ向かった。だが、数歩進んだところでふと振り返り、目線を合わせないまま告げた。
+
+Quan「……ありがとう」
+
+Veris「…………え？」
+
+Quan「……何だ」
+
+Veris「い、いえ……」
+
+Verisの動きが止まる。
+
+Quan「何か問題でもあるのか」
+
+Verisは眼を見開いてしばらくQuanを見ている。
+
+Veris「……い、今、私にお礼を言いました？」
+
+Quan「……言ったが」
+
+Veris「…………」
+
+Quan「何だ、その顔は」
+
+Veris「いえ……その……」
+
+Verisが困ったように目を逸らす。
+
+Veris「え……Quanさんが素直にお礼を言うことって、ちょっと珍しくて……」
+
+Quan「……は？」
+
+Veris「いやいや！普段だったら『余計なことをするな』だとか『非合理的』だとか言うじゃないですか！」
+
+Quan「私は必要な補助を受けた。それに対して感謝を述べただけだ」
+
+Veris「り、理屈としてはそうなんでしょうけど……」
+
+まだ困惑しているVeris。その様子を少し離れたソファから見ていたバカ二人が、肩を震わせ始めた。
+
+Eva「……ふっ」
+
+Sol「ふっｗｗ」
+
+Quan「……」
+
+Sol「『ありがとう』だってｗｗｗ」
+
+Eva「普段あんなに偉そうなのになｗｗ」」
+
+Quan「……ゴミ共が」
+
+Veris「二人とも笑わないでくださいよ！」
+
+Sol「いやだってさぁ、Quanが人に素直に感謝してるんだぞ！？歴史的瞬間じゃないか？」
+
+Eva「学術的価値があるかもなｗ『Quan_Taizaにおける感謝表現の希少性について』てか？ｗ」
+
+Quan「お前ら……」
+
+Veris「やめてください！せっかくQuanさんが素直になってるんですから！」
+
+Eva「そうだな。じゃあもっとどこまで素直になるのか気になるな」
+
+Stella「私も見たいかも～」
+
+Quan「ならない」
+
+Sol「ねえねえ、私も歩くの手伝おっか？ｗ」
+
+Quan「……死ね」
+
+Sol「なんで！？！？」
+
+---
+
+その後も、Quanの態度には少しずつ変化が出始めた。
+
+Stella「Quanちゃん～お昼できたよ～　今日は食べやすいように、机まで持ってきてあげたよ！」
+
+Quan「……そこまでしなくてもいい」
+
+Stella「でも今、食器持って歩くの大変でしょ？無理して転んだら危ないし！」
+
+Quan「……そうだな」
+
+Stella「じゃあ、ここに置いておくね！食べたら食器も片づけてあげるからね～」
+
+Quan「……ありがとう」
+
+Stella「うん！」
+
+Stellaが嬉しそうに笑うが、Quanは少し気まずそうに視線を逸らしている。
+
+だが数秒後。
+
+Quan「……料理も助かっている」
+
+Stella「え？」
+
+Quan「毎日食事を用意しているだろう。今は特に負担を掛けていると思われる」
+
+Stella「…………」
+
+Stellaの顔がぱっと明るくなる。
+
+Stella「Quanちゃん、今日はすごく素直だねぇ！ほんっとにうれしい！」
+
+Quan「……そういう反応をされると逆に言いにくい」
+
+Stella「えへへ～」
+
+Veris「おお……」
+
+Eva「これは重症だな」
+
+Sol「Quanがデレた！」
+
+Quan「デレていない。尽くしてくれる人間に対して合理的に謝意を表明している」
+
+Sol「デレじゃん！！」
+
+Quan「違う」
+
+Eva「どう見てもデレだろこれは」
+
+Quan「違う」
+
+Veris「だから二人とも煽らないでください！」
+
+そうは言うものの、Veris自身も少し驚いていた。
+
+今までのQuanは、助けてもらったとしても「必要だったから受けた」という態度を崩さないことがほとんどだ。「勝手に介入するな」とか言うこともあった。
+
+それが今は、少しずつではあるが自分から感謝を言葉にするようになっている。
+
+本人としては単純に合理的な判断なのだろうが、Verisからすればかなり珍しい光景だった。
+
+そして思わず口を開く。
+
+Veris「……Quanさん」
+
+Quan「何だ」
+
+Veris「その……普段から、それくらい素直になって頂くことは……できないんですか」
+
+Quan「……何故だ」
+
+Veris「な、なぜって……」
+
+Verisは少し考えてから、ため息をついた。
+
+Veris「……普段からそうしてくれた方が、こちらとしてもずっと接しやすいんですよ。いつもは何かしても『不要だ』『非合理的だ』ばかりじゃないですか」
+
+Quan「普段は必要ないからだ」
+
+Veris「今は必要だから素直になってるんですか？」
+
+Quan「……そうだ」
+
+Veris「……普段も必要だと思います」
+
+Quan「それは非合理的だ」
+
+Veris「もう！！！」
+
+Sol「あはははは！！」
+
+Eva「結局そこは変えねえのかよ」
+
+---
+
+そんな中、Stellaだけは別の方向へ暴走し始めていた。
+
+Quanが少しでも立ち上がろうとすると、ささっと駆け寄ってくる。
+
+Stella「Quanちゃん、何するの？　私が持ってくよ！」
+
+Quan「本を取りに行くだけだ」
+
+Stella「じゃあ私が取ってくる！」
+
+Quan「……そこまでしなくていい」
+
+Stella「でも転んだら大変だよ？」
+
+Quan「転ばない」
+
+Stella「じゃあ私が一緒についていく！」
+
+Quan「……不要だ」
+
+Stella「じゃあ腕だけ貸す！」
+
+Quan「……それも不要だ」
+
+Stella「じゃあ身体ごと！」
+
+Quan「……だから不要だと言っている」
+
+とうとうQuanの眉間に深い皺が刻まれた。
+
+Sol「はははは！　Quan、完全に介護されてるじゃん！」
+
+Eva「お前、もう一人でトイレ行けないんじゃないか？Stellaに付き添ってもらえば？」
+
+Quan「……お前は本当に黙れ」
+
+Stella「Quanちゃん、杖持った？」
+
+Quan「持っている」
+
+Stella「痛いところは？」
+
+Quan「ない」
+
+Stella「疲れてない？」
+
+Quan「疲れていない」
+
+Stella「ほんと？」
+
+Quan「……Stella」
+
+Stella「なーに？」
+
+Quan「少し……黙っていてくれ」
+
+露骨に嫌そうな顔と声をするQuanに対し、ようやく察したのか黙りこくStella。
+
+Stella「うん……なんかごめんね……」
+
+分かりやすくしょんぼりするStellaを見て、VerisがQuanの前に立った。
+
+Veris「……Quanさん」
+
+Quan「何だ」
+
+Veris「気遣いくらい素直に受け取ってください！！」
+
+Quan「……」
+
+Veris「Stellaさんだって心配してるから言ってるんですよ。今のQuanさんが不便なのは事実なんですから、いちいち全部拒否しなくてもいいでしょう！」
+
+Quan「しかし過剰だ」
+
+Veris「過剰でもいいんですよ！普段は何でも一人でできる人なのは分かってます。でも今は義足が壊れてるんですから、少しくらい周りを頼ってくれたらどうですか」
+
+Quan「……」
+
+Stella「Quanちゃん……お願いね？」
+
+Quanは二人をしばらく見た後、小さく息を吐いた。
+
+Quan「……分かった」
+
+Stella「ほんと？」
+
+Quan「少なくとも、必要以上に拒絶するのはやめる」
+
+Stella「じゃあ私、これ持ってくるね！」
+
+Quan「……頼む」
+
+Stella「うん！」
+
+Stellaが嬉しそうに駆けていく。
+
+Quan「……」
+
+Veris「ほら、やればできるじゃないですか」
+
+Quan「……」
+
+Quan「ありがとう、Veris」
+
+Veris「…………」
+
+思わずまた固まるVeris。
+
+Quan「今度は何だ」
+
+Veris「……いえ」
+
+Verisはしばらく固まった後、頭を抱えた。
+
+Veris「だから、それを普段からやってくださいという話です……」
+
+Sol「ぷっ……」
+
+Eva「はははは！」
+
+Sol「今日のQuan、めっちゃ素直じゃん！！」
+
+Eva「義足一個壊れただけで人格まで壊れたか」
+
+Quan「……」
+
+Quanの顔が露骨に険しくなる。
+
+Quan「……お前らには対応を変える必要はない」
+
+Sol「戻ったｗｗｗ」
+
+Eva「安心したわ」
+
+Veris「安心しないでください！！」
+
+Stella「Quanちゃん、お茶も持ってくるね！」
+
+Quan「……それは頼む」
+
+Sol「また素直になった！」
+
+Eva「分かりやすいなこいつ」
+
+Quan「……殺すぞ」
+
+Veris「なんか、そのくらい元気ならもう大丈夫そうですね……」
+
+結局、Quanはしばらくの間だけ、普段よりほんの少し素直だった。
+
+そしてそのわずかな変化を、SolとEvaは面白がって徹底的に弄り倒すし、Verisは呆れながらも、以前より少しだけQuanが周囲を頼るようになったことを内心では悪くないと思っていた。
+
+ただし……Stellaだけは、気遣いの加減を覚えるまでにもう少し時間が必要だった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="03-2.html" class="nav-button prev">← offep3-2へ戻る</a>
+      <a href="03-4.html" class="nav-button next">offep3-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

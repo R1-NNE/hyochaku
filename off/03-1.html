@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep3-1:Quanの義足</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep3:Quanの義足 sec-1</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室の昼下がり。
+
+5人がいつも通り、それぞれ好き勝手に過ごしていた。Stellaは机の前で何かを混ぜ、Solはソファでゲーム、Verisは掃除機をかけている。Evaは当然のようにソファを占領しており、Quanだけが一人必要な資料を取りに棚へ向かって歩いていた。
+
+Quan「……この資料は棚の位置を変えた方がいいな。移動距離が無駄に長くて不快」
+
+そんなことを呟きながら、Quanがいつものように歩いている。
+
+彼女の右足は義足である。高校時代の交通事故によって長い昏睡状態となり、色々あって……現在は義足と共に生活している。普段の歩行は完全に自然体であり、研究室の中でそれを特別に意識する者もいない。
+
+だからこそ、その瞬間は唐突だった。
+
+――ガキッ。
+
+Quan「……？」
+
+右足から明らかに嫌な音がした。そして次の瞬間。
+
+ガコンッ！！
+
+Quan「っ……！？」
+
+義足が不意に力を失い、Quanが大きくバランスを崩す。
+
+Quan「……あっ！！！」
+
+ドンッッッ！！！！
+
+そうして床に盛大に倒れ込み、持っていた資料が宙を舞いながら床に散らばった。
+
+Stella「えっ！？　Quanちゃん！？」
+
+Sol「うわっ、何！？　今すごい音したけど！？」
+
+Veris「Quanさん！？」
+
+Eva「……うるさ」
+
+3人が一斉に振り返る。Evaだけは視線をちらと動かしただけである。
+
+Quan「……っ……あぁ……！！！」
+
+いつもなら何が起きようと眉一つ動かさないQuanが、珍しく苦悶の表情で右足を押さえながら床でのたうち回っていた。
+
+Quan「……っ……痛い……」
+
+Veris「……え」
+
+その一言で、研究室の空気が一瞬止まる。Quanが「痛い」と口にしたこと自体がかなり珍しいからである。
+
+Stella「だ、大丈夫！？　Quanちゃん、動かないでね！　今、私が……」
+
+Veris「大丈夫ですか！？うわっ、義足がこんなことに……」
+
+Quan「くっ……はぁ……」
+
+二人が慌てて駆け寄り、Quanの身体を支え始める。空気が張り詰め始めていた。
+
+……いや、そうでもない奴らがいた。
+
+Eva「……ぷっ」
+
+Sol「……」
+
+Veris「……Evaさん？」
+
+Eva「いや……」
+
+Evaの肩が震えている。
+
+Eva「……ふ、ふふっ……」
+
+Sol「……ふ」
+
+床で悶え続けるQuanを見つめていた二人は、やがて耐え切れなくなった。
+
+Eva「ははははははは！！！」
+
+Sol「ぶっ、あははははははは！！！！！」
+
+堰を切ったように二人が大声で笑い始めた。
+
+Veris「…………」
+
+Stella「…………」
+
+Quan「…………」
+
+Eva「いや、ごめんごめん、でもこれは……無理……！　お前……久しぶりに転んだなぁと思ったら、義足ごとぶっ壊れててさ……！」
+
+Sol「わははははは！！ｗｗ　何その倒れ方！？　すっごい綺麗にいったねｗｗ　しかも『痛い』って！ｗｗ　わははははは！！！」
+
+Quan「…………」
+
+Quanは床に倒れたまま、やや涙目になりながら二人を激しく睨み始める。しかし痛みのあまり表情が作れない。
+
+近寄って問い詰めたいくらいであるが、現在のQuanには自力で立ち上がる手段は無かった。
+
+Quan「……Eva」
+
+Eva「ふふっ……何」
+
+Quan「お前、後で、殺……す」
+
+Eva「ぶっｗｗ」
+
+Quan「……本、気で……殺す……」
+
+Eva「おー怖ｗｗ」
+
+Evaは全く反省していないどころか、寧ろ笑いを堪えながらQuanを見下ろしていた。
+
+たまらずVerisが声を荒らげた。
+
+Veris「笑ってる場合じゃないでしょうがあんたら！！Quanさん、怪我してるんですよ！？　しかも義足が壊れて立てないんですよ！？　なんでそんな状況で笑えるんですか！！」
+
+Eva「はは……すまんすまん」
+
+Evaは半笑いのままソファから立ち上がり、Quanの義足を眺め始める。
+
+Eva「いやこいつ……リハビリの時めちゃくちゃ転んでたからさ……」
+
+Veris「…………」
+
+Sol「えっ、そうなの？」
+
+Eva「ああ。歩行訓練始めた頃なんか毎日のように転んでたな」
+
+Quan「……」
+
+Eva「右足に体重かけるタイミングがまだ掴めてない頃だったかな、歩いて数歩で転ぶわ立ち上がってまた転ぶわで病室の床に何回叩きつけられてたか分からないくらいでさ」
+
+Sol「ははははは！！　何それ、めっちゃ見たい！！ｗｗ」
+
+Quan「……お前も殺すぞ……」
+
+Sol「ごめんごめんｗｗｗ」
+
+Solも全然ごめんと思っていない顔でゲラゲラ笑っている。
+
+Veris「……だからといって今笑う理由にはならないでしょう」
+
+Eva「いやさ！当時に比べたらだいぶマシになったんだよ。今じゃ普通に歩けてるしな」
+
+Veris「そういう話をしてるんじゃありません！」
+
+Eva「あと……久しぶりに見たからちょっと懐かしくてな」
+
+Quan「私は一つも懐かしくない……」
+
+Eva「そう？ｗ」
+
+Quan「全く懐かしくない！っ……」
+
+Eva「ふっｗ まあ……そりゃそうか」
+
+Quan「……」
+
+Evaは半笑いを崩さないまま砕けた義足を見つめていた。QuanはそんなEvaを無言で睨み続けている。
+
+Stellaはその二人を見ながら、完全にどうしていいのか分からなくなっていた。
+
+Stella「えっと……Quanちゃん、まだ痛い？」
+
+Quan「……痛い」
+
+Stella「立てそう？」
+
+Quan「……無理」
+
+Stella「じゃあ……私が抱っこして運んであげよっか？」
+
+Quan「それは嫌」
+
+Stella「でも立てないよ？」
+
+Quan「……嫌」
+
+Stella「うーん、じゃあどうしよう……」
+
+Stellaが困り果てる。
+
+Sol「Stellaが抱っこしたら普通に運べそうだよね」
+
+Stella「うん。Quanちゃんくらいなら全然持てるよ」
+
+Quan「……本当に嫌だ」
+
+Eva「そんなに赤ちゃん扱いされるのが嫌か」
+
+Quan「お前はマジで黙れ」
+
+Veris「では、私が支えますから立ち上がれます？」
+
+Quan「いや……それも効率が悪い」
+
+Veris「今効率の話してる場合ですか！？」
+
+Quan「……義足の接続部が破損している。無理に体重を掛ければ残存部まで損傷する可能性がある」
+
+Veris「それならなおさら動かないでください！」
+
+いつものようにVerisのツッコミが飛ぶが、Quanが床に転がったままなので妙に締まらない。
+
+Solはまだ笑っていた。
+
+Sol「いやー、でも珍しいよね。Quanがここまで盛大にやらかすのって」
+
+Eva「そうなんだよ。しかも痛がってるのが一番面白い」
+
+Quan「……」
+
+Eva「いや待て、その顔やめろって。私だって心配してるぞ、ちょっとは……ｗ」
+
+Quan「笑いながら言うな」
+
+Eva「それは無理」
+
+Quan「殺す」
+
+Eva「元気じゃんｗ」
+
+Quan「……」
+
+床には散らばった資料と完全に故障した義足。そしてそのすぐ横に、立ち上がれず仰向けになったQuan。
+
+接合部はまだ痛んでいる。やがて何かを悟り始めたのか、Quanは心底諦めたような表情で口を開いた。
+
+Quan「……誰か」
+
+咄嗟に4人の視線が向く。
+
+Quan「私を、起こしてくれ」
+
+Stella「はい！」
+
+Stellaが満面の笑みですぐに手を伸ばす。だが。
+
+Eva「待って！」
+
+Stella「え？」
+
+Eva「その前にさ」
+
+EvaがQuanを見る。
+
+Eva「もう一回だけ、その顔して」
+
+Quan「……何？」
+
+Eva「いや……珍しいからｗ」
+
+Quan「……」
+
+Quanの目がさらに細くなる。
+
+Eva「ごめんって！！ｗ」
+
+Quan「……苦しんで死ね」
+
+Sol「はははははは！！！」
+
+Veris「二人ともいい加減にしてください！！」
+
+Stella「と、とりあえずQuanちゃんを起こそう！　ね！？」
+
+結局、StellaとVerisが両側から支えながらQuanを慎重に起こし、ソファにもたれかかる形で体勢を立て直した。
+
+一方Evaはその間も時折思い出したように吹き出していた。
+
+Quan「……」
+
+Eva「何」
+
+Quan「……お前が医者だった頃、私のリハビリの様子を見て笑ったことはなかっただろ」
+
+Eva「当時は仕事だったからね」
+
+Quan「今は？」
+
+Eva「仕事じゃないからめちゃくちゃ面白い」
+
+Quan「……最低」
+
+痛みはそこそこ引いてきたものの、QuanはまだEvaを睨んでいた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="03-2.html" class="nav-button next">offep3-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
