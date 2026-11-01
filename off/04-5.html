@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep4-5:魔法学部の二人</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep4:魔法学部の二人 sec-5</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室の中央にある大きなテーブルを囲むように、五人と二人の来客が席に着いた。
+
+Tirnaはノートとペンをきっちり並べてメモを取る気満々であるが、一方Rayは隣でSolのやってるゲームに釘付けである。Evaは姿勢を一切変えてないがギリギリ起きてはおり、Quanは露骨に興味のなさそうな顔で七曜魔法と全く関係ない本を読んでいる。
+
+Verisがお茶を配り終えたくらいで、Stellaが意気揚々とホワイトボードを用意し始めた。
+
+Stella「じゃあ、さっそく七曜魔法の更なる説明を始めます！　今回は講義で話した基礎から、実際の研究でどう使っているかまで、順番に話していくねぇ」
+
+Tirna「よ、よろしくお願いします！　講義ではまだ理解しきれなかった部分も多かったので、今日はきちんと整理して帰りたいと思ってます！」
+
+Eva「真面目だねぇ」
+
+Veris「……こういう時くらい人の話を聞く姿勢くらいは見せませんか」
+
+Eva「聞いてる聞いてる。七曜魔法すごい、Stellaすごい、研究大変って話でしょ」
+
+Stella「まだ何も説明してないよ！？」
+
+Sol「七曜魔法って名前、なんか必殺技っぽくていいよな。こいつらも七曜魔法ですぐ死なねえかな」
+
+Ray「わっ今の回避めっちゃ上手いですね師匠！！」
+
+Quan「……うるさい」
+
+Stellaは苦笑しつつ、ホワイトボードに七つの属性とそれぞれの基本的な関係性を書き出していった。
+
+Stella「たとえば……火輪は火の性質を持つ魔力を単純に増やすだけじゃ、制御できる範囲にも限界があるの。そこに詠唱者の特性やら素質を介在させると、出力や性質そのものに変化を与えられるの」
+
+Tirna「なるほど……個人によって性質が異なるということでしょうか？」
+
+Stella「そうそう！　いいところに気づいたね。もちろん組み合わせれば何でもできるわけじゃなくて、それぞれ相性や制約もあるんだけどねぇ」
+
+Tirnaは勢いよくノートを取る。講義で聞いた内容が少しずつ繋がっていくような気がしていた。
+
+だが、Stellaの説明は徐々に複雑かつ抽象的になっていく。
+
+Stella「それで、七曜の特性をデータに落とし込むと単純な数式では説明できない変化が出てくるの。特に、高次詠唱の場合は魔力の流れが非線形になることがよくあるねぇ」
+
+Tirna「ひ、非線形……」
+
+ペンの勢いが止まった。
+
+Tirna「すみません、今の部分なんですが具体的にどういう……？」
+
+Stella「あっ、えっとね、同じ魔法でも色々組み合わせることによって違う反応が出ることがあるの。そんな感じかな？」
+
+Tirna「なるほど……なるほど？」
+
+Tirnaはノートを見下ろした。先ほどまで整然と並んでいた文字の横には疑問符が一つ、また一つと増えていた。
+
+Ray「Tirna、すごい勢いでノート取ってますね！　研究者みたいです！」
+
+Tirna「い、今は話を聞いているのよ！　アンタも少しは聞いたらどうなの！？」
+
+Ray「ちゃんと聞いてますよ！　属性をこう、ぐにゃっと混ぜたらなんか違う力が出るんですよね！」
+
+Quan「その理解で研究者を名乗るな」
+
+Eva「ぐにゃっとって何だよ」
+
+Sol「でもぐにゃっと混ぜるって分かりやすくない？　私もその表現でいこうかな」
+
+Veris「真面目に聞いてください！」
+
+Stellaの講義は進む。一方、Tirnaのノートには説明を聞くたびに新しい疑問が生まれていた。
+
+最初は理解できていたはずなのに、途中から前提が増え、式が出てきて、式の説明に別の式が登場する。気づけば、何を質問すればいいのかさえ分からなくなっていた。
+
+Stella「つまり、この係数が一定の閾値を超えると、属性同士の干渉が安定しなくなるの。ここは実験でもよく問題になるところだね」
+
+Tirna「…………」
+
+Stella「Tirnaちゃん？」
+
+Tirna「えっ、あ、はい！　大丈夫です！　その、係数が……一定の範囲を……」
+
+Stella「うん？」
+
+Tirna「…………すみません、もう一度お願いしてもいいでしょうか」
+
+Stella「もちろん！　えっとね、まずこの式の意味なんだけど……」
+
+Quan「待て」
+
+Stellaが説明をやり直そうとしたところで、Quanが読んでいた本を机に置いた。
+
+Quan「今の説明を理解できていないのか？　先ほどから同じ箇所を何度も聞き返しているが」
+
+Tirna「……すみません。まだ理解が追いついていなくて」
+
+Quan「……高次詠唱の線形化については」
+
+Tirna「え、えっと……」
+
+明らかに言葉に詰まるTirnaを見て、Quanは少し黙った後軽蔑したような顔をあからさまに見せつけた。
+
+Quan「この程度の基礎も理解せずに我々の時間を奪うつもりで来たのか？　そんな浅ましい考えなら最初から来るな、不快だ」
+
+Tirna「……は？」
+
+空気が変わった。
+
+Veris「Q、Quanさん！　いくらなんでもそんな言い方は……」
+
+Quan「事実を述べただけだ。基礎を身につけもしないまま専門的な説明を聞きに来て、理解できないたびに説明を止める。その準備不足を問題にしている」
+
+Tirna「わ、私は講義を聞いて興味を持ったからもっと勉強したくて来たんです！　最初から全部理解できるわけがないでしょう！」
+
+Quan「なら何故理解できる段階まで自分で勉強してから来ないのか？　ここは補習授業ではない」
+
+Tirna「そ……そんな言い方をしなくてもいいじゃないですか！　分からないことを質問するのがそんなに悪いことなんですか！」
+
+Quan「質問そのものは問題ない。問題なのは、何が分からないのかすら整理できていないことだ。お前は今、説明のどの部分を理解できていないのか正確に言語化できるか？」
+
+Tirna「それは……その……」
+
+Quan「できないのだろう。つまりお前は理解できないという状態を自覚しているだけで、理解に必要な情報が何なのかすら把握していない。質問以前の段階だ」
+
+Tirna「っ……！」
+
+滝のように攻め立てるQuan。Evaがその様子を見ながら、別に止めようとせずちょっとニヤつき始める。
+
+Eva「うわ、相変わらずアンタ容赦ないね。相手が学部1年ってこと頭から抜け落ちてるんじゃないの」
+
+Quan「それならばなおさら自分の学習状況を把握するべきだろう」
+
+Eva「お前、正論を鈍器にして殴るのが趣味なの？」
+
+Quan「少なくとも感情論で議論を妨害するよりは有益だろう」
+
+Ray「ボッコボコですね！！」
+
+Tirna「Ray！！　笑ってないで少しは助けなさいよ！！」
+
+Ray「えっ！？　で、でも、私が何か言っても余計に怒られそうですし……」
+
+Tirna「友達でしょ！？」
+
+Ray「友達ですけど、この人に口喧嘩で勝てる気はしないです！」
+
+Quan「自分の能力を正しく評価できている点においてはお前の方が優秀だな」
+
+Tirna「っ……あなたは本当に……っ！」
+
+Tirnaは反論しようとした。けれど、口を開くたびにQuanが先回りして言葉の矛盾や論点のずれを淡々と指摘してくる。
+
+Quan「そもそも、お前は研究を学びたいと言いながら現時点で必要な基礎を身につけていない。熱意があることと学ぶ準備ができていることは別の話だ」
+
+Tirna「私は……ちゃんと、勉強して……！」
+
+Quan「努力したという主張は理解できていない事実を覆さない。努力を評価してほしいなら成果を示せ。ここは感想文の発表会ではない」
+
+Tirna「…………っ」
+
+Stella「ちょちょ、ちょっと待ってQuanちゃん！　そんなに強く言わなくても……。Tirnaちゃんも、ちゃんと一生懸命聞いてくれてるんだよ？」
+
+Quan「一生懸命であることと説明を理解できることは別だ。お前がそこを混同するからさっきから研究の話が進んでいない」
+
+Stella「そ、それはそうかもしれない……！」
+
+Veris「正しいことを言っていればどんな言い方をしてもいいわけではないですよ！」
+
+Quan「では、どの部分が誤りなのか具体的に指摘してくれ」
+
+Veris「それは……っ、言い方というものがあるでしょう！」
+
+Eva「誰かコイツ止められんのか」
+
+Quan「お前はどちらの味方なんだ」
+
+Eva「面白い方」
+
+Sol「今ボス倒してるんだからお前ら静かにしてくんない？」
+
+その間、Tirnaは俯いたままぎゅっとペンを握りしめていた。
+
+悔しい。自分が理解できていないのは事実だが、せっかく興味を持って勇気を出して研究室まで来たのになんでここまで言われる必要があるのだろうか……
+
+Tirna「……そんなに、バカにしなくてもいいじゃないですか……」
+
+Quan「バカにしているのではない。お前の現状を評価しているだけだ」
+
+Tirna「お、同じです……！　私だって、わ、わかるようになりたいから……きい、きいてるの、に……！」
+
+やがて声が震え、目元に大粒の涙が浮かんできてノートの上にぽたりと落ちてしまった。
+
+Tirna「うぅ……っ、なんでぇ……あなたは……そんないいかたしか、できないんですかぁ……ひぐっ……」
+
+Stella「えっ、あっ、Tirnaちゃん！？　ご、ごめんね、私も説明が難しすぎたかな……？　えっと、ティッシュ、ティッシュどこだっけ……」
+
+Stellaは慌てて机の引き出しを開け、なぜかペン立てを取り出してから首を傾げている。
+
+Veris「Stellaさんそれ違いますよ！！というかQuanさんも少しは反省してください！泣かせてるんですよ！」
+
+Quan「なぜ私が反省する必要がある？　指摘した内容に誤りはない」
+
+Eva「凄いなお前。ガキ泣かせといて一切悪いと思ってなさそうなのは才能だろもう」
+
+Quan「泣いたことと私の指摘の妥当性に因果関係はない」
+
+Eva「そういうとこなマジで！！」
+
+Sol「お、おい大丈夫かチビ助？　まあ……Quanの言うことはだいたい正しいけど、言い方はムカつくよな」
+
+Tirna「だいたい正しいっていわないでください……！　今はそういう話じゃないんです……！」
+
+Ray「Tirna、ほら、ハンカチ使ってください！　師匠、何か面白いこと言って元気づけてあげてくださいよ！」
+
+Sol「えぇ！？ムチャ振りだって！えーっと……Quanも殴れば泣くかも！」
+
+Quan「暴行罪で訴えるぞ」
+
+Sol「ほら全然面白くないじゃねえか！」
+
+Ray「私はちょっと面白かったですよ！！！」
+
+Tirna「あんたたち本当なんなの……ひぐっ……」
+
+泣きじゃくるTirnaを見てRayとSolはますます肩を震わせた。Evaもソファに寄りかかったまま、口元を押さえている。
+
+Veris「あなたたち何笑ってんですか！　Tirnaさんは本当に傷ついているんですよ！」
+
+Eva「いや分かってるよ、分かってるけど、あのQuan相手に真正面から喧嘩売って、見事に全部返されるのは……ちょっと、な」
+
+Sol「あと、泣いてるのがかわいくてオモロい」
+
+Ray「Tirnaはいつでもかわいいですよ！！」
+
+Veris「何言ってんですかアンタら！！」
+
+Stella「えっと……Tirnaちゃん、まずは落ち着こう？　お茶でも飲む？　私、甘いものも出すからね、ね？」
+
+Tirna「……Stellaさんは、何も悪くないです……。私が、ちゃんと理解できなかっただけで……」
+
+Stella「そんなことないよ！　最初から全部分かる人なんていないんだから、ゆっくり覚えていけばいいんだよ」
+
+Quan「最初から全部理解しろとは言っていない。自分の理解度を把握しろと言っている」
+
+Veris「Quanさん！！」
+
+Quan「何故また私が責められないといけないんだ」
+
+Eva「お前、本当に分かってないんだな……」
+
+Quanは不愉快そうに一同を見回した。自分は間違ったことを言っていないし、相手が泣いたからといって事実を曲げる理由もないという意思は彼女の中で確固たるものとなっていた。
+
+一方、TirnaはStellaから受け取ったティッシュで目元を押さえながら、涙声で小さく呟いた。
+
+Tirna「……もう嫌です。私、二度とこの人と話したくありません……」
+
+Quan「私としても、会話の成立しない相手と話すのは時間の無駄だ」
+
+Tirna「うわあああああああん！！　もう！！！！本っっ当に大っっ嫌いですあなた！！！！」
+
+Ray「Tirna、落ち着いてください！　ほら、師匠もこういう時は何か言ってあげてください……！」
+
+Sol「また！？えーっと……、理屈屋、もうちょっと優しくしてあげよ？」
+
+Quan「具体的にどの発言を？」
+
+Sol「……そこから説明しなきゃダメ？」
+
+Veris「もういいです！　この話は一旦終わりにします！　Tirnaさん……少し休みましょうか。Rayさんも、今は笑っていないで友達のそばにいてあげてください……」
+
+Ray「は、はい！　すみません、Tirna……。その……私はちょっと面白かっただけで……本当に悪気はなかったんですよ！」
+
+Tirna「それが一番腹立つのよ……！」
+
+Stella「うーん……。七曜魔法の説明をするつもりだったのにどうしてこうなっちゃったんだろう……」
+
+Eva「そりゃさ、最初からここにいる人間の大半が他人に説明するのに向いてないからだろ」
+
+Sol「スケボーの改造なら事細かに教えてやれるぞ」
+
+Veris「今はその話をしていません！！」
+
+研究室には、Tirnaのすすり泣く声が結構な間響き渡っていた。
+
+肝心の七曜魔法については、まだホワイトボードの最初の数行しか進んでいない。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="04-4.html" class="nav-button prev">← offep4-4へ戻る</a>
+      <a href="04-6.html" class="nav-button next">offep4-6へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep4-4:魔法学部の二人</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep4:魔法学部の二人 sec-4</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+扉が開き、今度は見慣れた小柄な影がひょいと顔を出した。片手にはコンビニの袋、もう片方には何やら……焼き鳥のようなものを握っている。
+
+Sol「ただいまー、いやー思ったより遅くなったわ」
+
+Veris「ちょっとSol、今までどこに行ってたんですか！　買い出しに行ってた私たちより帰りが遅いって、何をしていたらそうなるんですか！」
+
+Sol「いやいや、私だってちゃんと用事は済ませてきたって！ほら見てよこれ、今日の戦利品！いや、戦利品っていうか戦果っていうか……」
+
+Ray「…………えっ」
+
+Sol「あ？」
+
+Ray「……師匠？」
+
+Sol「……あっ」
+
+Ray「師匠ーーーーーーっ！！！」
+
+Tirna「ちょっ、Ray！？　いきなり何を……！」
+
+RayはTirnaの制止を聞くより早く、弾丸のような勢いでSolのもとへ駆け寄った。小柄な身体がぴょんぴょん跳ね、研究室の大体の棚をガタガタ揺らしている。
+
+Ray「師匠！！　こんなところでお会いできるなんて！！！」
+
+Sol「おっ、その声はRayじゃん！！　えっなんでここいんの！？！？」
+
+Quan「……は？」
+
+Eva「…………何？」
+
+Stella「えっ、二人って知り合いだったの！？」
+
+Veris「師匠と呼んでいましたが……」
+
+Tirna「すみません、本当にすみません……！　Ray、何やってんのよ！！　人様の研究室でいきなり叫んで、しかも師匠って！！」
+
+Ray「何って、師匠は師匠ですよ！　私が魔法の新しい可能性を知るきっかけを作ってくださった、偉大なる師匠です！」
+
+Sol「いやぁ、そこまで言われると照れるなぁ！ｗ　まぁ……私もあの時はなかなか冴えてたからな。師匠って呼ばれるのも仕方ないかも？ｗ」
+
+Eva「何をどうしたらウチのバカ担当が魔法学部の学生に師匠認定されるんだよ」
+
+Sol「誰がバカ担当だ！！　学内でスケボーしてたらなんか興味持たれちゃったんだもん！！」
+
+Quan「説明になっていない、経緯を順序立てて説明しろ。あと学内でスケートボードに乗っていたというのは罰則に当たる可能性がある」
+
+Sol「へいへーい、あれは数日前の昼休みだったかな……私がちょっとスケボーを改造して遊んでた時の話なんだけどさ」
+
+Veris「スケボーを改造して遊んでいた、という部分からすでに聞き捨てならないんですが……」
+
+Sol「いやいやそんな大したことじゃないって。足回りをいじってさ、小型エンジンを付けてみたらちょっと浮くようになっちゃって……んで吹っ飛んだ」
+
+Eva「何をどうしたら『ちょっと浮く』スケボーが出来上がるんだよ！しかも失敗してんじゃねえか」
+
+Sol「失敗作じゃねえよ！んでそれを学内の公園で試してたら、コイツがたまたま通りかかってさ」
+
+Ray「そうです！　最初はなんだろ？って思って遠くから見ていたんですけど、師匠がスケボーに乗ったまま急旋回して、その勢いで植え込みの上を飛び越えたんです！　あの瞬間、私は確信しました。この人は天才だと！！」
+
+Tirna「な……何をやっているんですか貴方は！？　学内でそんな危険な実験をしていたんですか！」
+
+Sol「いや、飛び越えたっていうか、飛ばされたっていうか……。着地した時にボードだけ先に行っちゃって、私は地面を転がっちゃったんだけどね」
+
+Ray「そこも含めて最高でした！　どんな理論でも実際に試して、失敗して、そこから新しい発見を得る！　あの姿勢こそが研究者のあるべき姿です！」
+
+Quan「違う。単に安全性の検証を怠った馬鹿が事故を起こしただけだ。失敗から学ぶこと自体は否定しないが、失敗を美化するな」
+
+Sol「またかよ理屈屋！Ray、こういうのは気にすんなよ、研究っていうのは自由な発想が大事なんだぞ！」
+
+Ray「はい！！」
+
+Quan「……」
+
+Solが帰ってきた瞬間話が急転し始めている。だがRayは止まらない。
+
+Ray「師匠！　あの時の改造スケボー、今度は私にも乗せてください！　私も新しい可能性を試してみたいんです！」
+
+Sol「おっ、いいねぇ！　じゃあ次はもっと加速できるようにして、空中で一回転する機構とか付けちゃおうか！」
+
+Veris「絶対に付けないでください！！何を勝手に次の実験計画を立てているんですか！　しかも空中で一回転って、成功しても失敗しても危険しかないでしょう！」
+
+Stella「えー、でも空中で一回転するスケボーってちょっと楽しそうじゃない？　魔法も使って姿勢を制御できたら、着地もきれいに決まるかもしれないし……」
+
+Veris「Stellaさんまで何言ってんですか！！」
+
+Eva「この研究室まともな人間が一人もいないな」
+
+Quan「お前も含めて全くだ」
+
+Sol「ちょっとRay、今の聞いたかぁ？　師匠への敬意が足りないよなぁこいつら？」
+
+Ray「はい！　師匠を侮辱する発言は看過できません！許しません！」
+
+そう言いつつもRayは一秒たりとも満面の笑みを崩していない。
+
+Eva「お前らが師弟関係となると激烈に面倒くさいな……」
+
+Stella「Solちゃんが二人いるみたい～」
+
+Quan「さっきから煩くて頭が痛い」
+
+Ray「師匠！！！このエアガンって何なんですか！？」
+
+Sol「おっそれはだな……」
+
+Tirna「いい加減にしてください！！！！」
+
+Tirnaの声が研究室に響いた。誰もが彼女の存在を忘れかけていたが、全員の視線が集まった。
+
+Tirnaは顔を真っ赤にして拳を握りしめている。耳までぴんと立っているあたり、本人としては相当に気迫を込めたつもりらしい。
+
+Tirna「さっきから何なんですか、もう！　研究の話を聞きに来たはずなのに、どうしてスケボーの改造だの師弟関係だのそんな話になっているんですか！　そもそもRay、アンタは何しに来たの！！私と一緒にStellaさんの研究を学びに来たんでしょうが！」
+
+Ray「はい！　ですから、師匠の素晴らしさを皆さんにも知っていただこうと……！」
+
+Tirna「そういうことじゃなあああああいい！！」
+
+Sol「いや～コイツらずっと元気だね。若いっていいなぁ」
+
+Eva「お前も年で言えばあんまり変わらんだろ」
+
+Veris「もう……Tirnaさんと一応……Rayさんも、せっかくStellaさんの研究に興味を持ってここまで来てくださったんですから、とりあえず落ち着いて話をするべきじゃないでしょうか。Solも……スケボーの話はどうでもいいですからやめてください」
+
+Sol「えー、今盛り上がってたとこじゃん」
+
+Veris「あんたたちだけですよ！！」
+
+Stella「まぁまぁ、ヴェリちゃんの言う通りせっかく二人とも来てくれたんだし、とりあえず座ってお話ししようよ～。七曜魔法についてもっと教えてあげるね」
+
+Tirna「……はい、ありがとうございますStellaさん……私は本当に、講義で聞いた七曜魔法の理論についてもっと詳しく知りたくて来たんです。できれば、実際の研究でどのように応用しているのかも教えていただけると嬉しいです」
+
+Stella「うんうん、もちろんそういう話なら大歓迎だよ！ちょっと難しいところもあるかもしれないけど、できるだけ分かりやすく説明するね！」
+
+Ray「スケボーと魔法の融合についても、ぜひ議題に加えていただきたいです！」
+
+Stella「えっ、スケボーと魔法？　それも面白そうだね！」
+
+Veris「Stellaさん！！」
+
+Eva「もう好きにしろよ……。私は寝るから、ケガ人が出たら起こして」
+
+Quan「何を想定しているんだお前は」
+
+Sol「私ゲームしてるからお前ら静かにしろよ」
+
+Ray「ゲーム！？！？何やってるんですか師匠！？！？」
+
+Sol「これだよこれ、モンスタースレイヤーポーダブルの……」
+
+Ray「おおおおお私もこれめっちゃやってますよ！！！！！」
+
+Tirna「…………私、アンタ連れてきた事ちょっと後悔してるかも」
+
+Ray「そんなこと言わないでくださいよ！　師匠もいるし、憧れのStellaさんもいますし、きっと最高の一日になりますって！」
+
+Tirna「アンタがいるから不安なのよ！！」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="04-3.html" class="nav-button prev">← offep4-3へ戻る</a>
+      <a href="04-5.html" class="nav-button next">offep4-5へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

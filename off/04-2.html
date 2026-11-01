@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep4-2:魔法学部の二人</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep4:魔法学部の二人 sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究棟の七階。廊下の突き当たりに、目的の研究室はあった。
+
+扉の横の小さなプレートには「Stella_Lab」と書かれている。Tirnaはそのプレートを見上げながら、手元の資料と見比べつつもう一度プレートを見る。
+
+何度確認しても場所は合っている。合っているのだが、いざ本物を前にするとなると講義を聞いていたときとはまるで勝手が違った。
+
+Ray「着きましたね！いやぁ、大学の七階ってこんなに高かったんですね！」
+
+Tirna「お願いだから今は黙ってて。せっかく憧れの研究室に来たんだから、最初くらいちゃんとした態度で挨拶したいの」
+
+Ray「わかりました！　私も今日は礼儀正しくいきます！大きな声出しません！」
+
+Tirna「それは礼儀以前の問題なのよ……」
+
+Tirnaは一度深呼吸をしてから、扉を軽くノックした。
+
+コンコン、と廊下に音が響く。
+
+返事はない。
+
+Tirna「……？」
+
+少し待ってから、もう一度ノックする。
+
+やはり返事はない。
+
+Tirna「……あれ？　おかしいな。平日は研究室にいるって紹介にもあったのに……」
+
+Ray「留守ですかね？鍵開いてそうですし開けましょうよ！」
+
+Tirna「なんでそうなるのよ！　もう一度ノックすればいいでしょ！」
+
+だが、三度目のノックにも室内からの反応はなかった。
+
+Tirna「……」
+
+Ray「ほら！！大丈夫ですよ！」
+
+Tirna「……仕方ないわね」
+
+Tirnaは困ったように眉を下げながら扉の取っ手にそっと手を掛けた。鍵は掛かっていなかった。
+
+Tirna「し、失礼します……。LIT魔法学部のTirna_nogと申します。本日は、S、Stella先生に先日の特別講義についてお伺いしたいことがありまして……」
+
+扉を開け、なるべく丁寧な声で挨拶したが相変わらず返事はなかった。
+
+室内には机や棚、魔法研究に使うらしい器具が雑然と並んでいた。資料の山に、用途のわからない装置。誰かが飲みかけたらしいカップや、よくわからないエアガンまで置かれている。
+
+研究室というより、研究室と生活空間と物置を誰も整理せずに一つへ押し込んだような有様だった。そして、その肝心の研究者たちの姿は見当たらない。
+
+やがて研究室内へ向けて歩みを進める二人。
+
+Tirna「……あの、失礼します。どなたかいらっしゃいませんか？　先ほどから何度かノックしたのですが、返事がなかったので……」
+
+Ray「うわぁ、すごいですね！　これ、何に使うんでしょうかね？　この瓶なんか、色がものすごく綺麗ですよ！」
+
+Tirna「触らないで！　何が入ってるかわからないでしょ！！あとうるさい！！」
+
+室内に二人の声が響くが、それでも誰も現れない。
+
+Tirnaは少し不安になりながら、奥の共用スペースへ視線を向けた。
+
+するとようやくソファの上に、横たわる人影を見つけた。
+
+短いウルフカットの女性が、クッションを抱えて気持ちよさそうに眠っていた。
+
+それを見てTirnaは室内に人がいるという安心感よりも、来客がいるのに微動だにしないその態度への困惑が先に立った。
+
+Tirna「あ、あの……？　すみません、こちらの研究室の方でしょうか？　私、魔法学部のTirnaと申します。先日の特別講義を拝聴して、Stellaさんにぜひお話を伺いたいと思いまして……」
+
+動かない。
+
+Tirna「……あの、聞こえていますか？　申し訳ありませんが、少しだけお時間をいただけないでしょうか……」
+
+やはり動かない。
+
+Tirnaは声の大きさを少し上げ、何度か呼びかけた。肩を軽く叩いてみても、反応はない。
+
+Ray「寝てますね！」
+
+Tirna「見ればわかるわよ！　どうしよう、勝手に起こしても失礼じゃないかな……。でも、ここまで来たのに何も聞けずに帰るのも……」
+
+Ray「では私が起こしましょうか？任せてください！」
+
+Tirna「ちょ、何するつもり！？」
+
+Rayは返事をするより早くソファの横へ回り込んだ。そして、眠っている女性の肩を両手で掴み勢いよく揺さぶり始めた。
+
+Ray「すみませーん！　起きてくださーい！　お客さんですよー！　起きないとお昼ご飯食べちゃいますよー！」
+
+Tirna「ちょ、何してんのよ！！！もっと優しく……！」
+
+Ray「起きてくださーい！！！私達お客さんです！！しかも二人もです！！！」
+
+Eva「…………うぇ」
+
+ようやく、女性の眉がぴくりと動いた。
+
+Rayが揺さぶる手を止めると、彼女はゆっくりと片目だけを開いた。眠気の底から引きずり出されたような半目で、二人を順番に眺めている。顔には歓迎の意志は微塵もない。
+
+Eva「……あ、……誰？」
+
+Tirna「す、すみません！　何度かノックしたのですが返事がなかったので、勝手ながら入室させていただきました！　私、LIT魔法学部のTirna_nogと申します。先日の七曜魔法に関する特別講義を拝聴して、Stella先生の研究に非常に興味を持ちまして、ぜひ直接お話を伺いたいと思って本日は参りました！」
+
+Tirnaは緊張で早口になりながらも用意していた言葉を一息に伝えた。憧れの研究室にようやく辿り着いたのだ。相手が少々厄介そうでもここで怯むわけにはいかない。
+
+Evaは片眼を閉じたまましばらく黙っていた。そして、姿勢を一切変えないままボヤいた。
+
+Eva「……何、このガキンチョ」
+
+Tirna「…………は？」
+
+Ray「えっ！」
+
+Tirna「い、今……何とおっしゃいました？」
+
+Eva「……いや、ガキンチョが二人で人の昼寝を邪魔しに来た訳？　んで……何？　七曜魔法……に興味がある？　へぇ、そう。よかったね」
+
+Evaはそれだけ言うと再び目を閉じた。会話は終わった、とでも言いたげにクッションを抱え直してソファの背もたれへ顔を埋めた。
+
+Tirna「ちょ、ちょっと待ってください！　私は真面目にご挨拶しているんですが！？　そもそも、ガキンチョって何ですか！　私たちは列記としたここの学生です！」
+
+Eva「んー……、学生ねぇ。……最近のLITって、昼寝してる人間を揺さぶり起こすのが必修科目になったの？」
+
+Ray「それなら私も単位取れるかもしれません！！」
+
+Tirna「今はアンタの話してないのよ！」
+
+Eva「……うっさ」
+
+Evaは片手で耳を塞ぎながらしかめっ面をしている。
+
+その態度を見てTirnaの額に青筋が浮かび始める。憧れの研究者の研究室に本人がいないかと思えば、よく分からない女に初対面でガキンチョ呼ばわりされた挙げ句、まともに話すことすら拒否されている。
+
+ここまでの扱いを受けてなお丁寧な態度を保つのにも限界が来ていた。
+
+Tirna「失礼ですが、あなたは本当にここの研究室の方なんですか！？　仮にそうだとしても、来客への対応としてあまりにも……！」
+
+Eva「そうだよ。で、用件は聞いたから、もう帰っていいよ。Stellaは今いない、私は眠い、はい終わり」
+
+Tirna「終わってません！！なんなんですか！！！」
+
+とうとうRayが横で声を上げて笑い始めた。
+
+Ray「ふふっ、あははは！　Tirna、すごい顔してますよ！　さっきまであんなに緊張してたのに、今は怒りで耳までぴんと立ってますって！」
+
+Tirna「Ray！！　あなたも少しは怒りなさいよ！　初対面の相手にこんな扱いをされてるんだから！」
+
+Ray「えー、私は面白いと思いますよ！　この人、すっごく寝るのが好きなんですね！　私も講義中によく寝てるからわかります！」
+
+Tirna「アンタの親近感なんて今はどうでもいいのよ！」
+
+Eva「……あー、もうお前ら声でかいな……こっちはただ寝てただけなんだけど。何で知らんガキに説教されなきゃいけないわけ？」
+
+Tirna「知らんガキではなく、Tirna_nogです！」
+
+Eva「ティル……何？　ガキンチョでいいでしょ」
+
+Tirna「よくない！！！！」
+
+Evaは薄目を開け、怒りで顔を赤くしているTirnaを数秒ほど眺めた。そしてほんのわずかに口元を緩めた。
+
+Eva「……若いっていいね、元気で。私はもう無理だから、さっさと他所でそのエネルギー使ってきたら」
+
+Tirna「人を勝手に元気の消費先にしないでください！！」
+
+Ray「私は元気ならたくさんありますよ！　いりますか？」
+
+Eva「押し売りされるタイプの元気でしょ、それ」
+
+Ray「よくわかりましたね！　私、一度あげたものは返して、とか絶対に言いませんよ！」
+
+Eva「最悪だ……」
+
+Tirnaがさらに何かを言い返そうとした、そのときだった。
+
+背後の扉が、ガチャリと音を立てて開いた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="04-1.html" class="nav-button prev">← offep4-1へ戻る</a>
+      <a href="04-3.html" class="nav-button next">offep4-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

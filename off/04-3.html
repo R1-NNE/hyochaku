@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep4-3:魔法学部の二人</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep4:魔法学部の二人 sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+扉が開いて、三人が研究室へ入ってきた。
+
+先頭を歩いていたStellaが買い物袋を両手に勢いよく進み、Verisはその後ろから軽そうな買い物袋を持って続き、最後尾のQuanは片手に持ったレシートを眺めながら既に帰宅後の面倒事を予感しているような顔をしていた。
+
+Stella「ただいまー！　いやぁ、今日は安売りしててよかったー！卵もお野菜もいっぱい買えたし、これでしばらくは……って、あれ？　お客さん？」
+
+Tirna「ひゃっ……！」
+
+Stellaを一目見たTirnaが飛び上がるように反応すると、慌てて背筋を伸ばした。
+
+さっきまでEvaに対して怒鳴り散らそうとしていたことなどは、憧れの本人を目の前にした瞬間頭の中から綺麗さっぱり吹き飛んでいた。
+
+Tirna「す、Stellaさん！　お、お邪魔しております！　私、LIT魔法学部のTirna_nogと申します！　先日の七曜魔法に関する特別講義を拝聴しまして、先生の研究に大変興味を持ち、ぜひ一度お話を伺いたいと思って参りました！　突然の訪問となってしまい、申し訳ありません！」
+
+Stella「えっ、もしかして私の講義を聞いて来てくれたの！？　わぁーっ、嬉しい！わざわざここまで来てくれたんだね！」
+
+Stellaは買い物袋をVerisに投げると、ぱっと顔を輝かせてTirnaの前まで歩み寄った。
+
+Stella「七曜魔法ってまだまだわからないことだらけだし、講義だけじゃ説明しきれないこともいっぱいあるからねぇ～　興味を持ってもらえたなら私としてもすっごく嬉しいよ！　あっ、立ったままじゃなんだし、ゆっくりしていってね！」
+
+Tirna「は、はい！　ありがとうございます！　あの、講義でお話しされていた術式の位相干渉について、少しお伺いしたいことがありまして……！」
+
+すぐにTirnaは真剣な面持ちになり何かしゃべり始める。
+
+Stellaの言葉には講義で感じた独特の魅力がこの瞬間にも確かにあった。理論の説明は時折かなり飛躍するし、結論に至るまでの道筋も妙に感覚的なのだが、根底にある探究心だけは疑いようもなく本物だった。
+
+……もっとも、ソファの上からそれを眺めていた人物は、まるで違う感想を抱いていた。
+
+Eva「……へぇ。コイツの適当な言葉に魅力を感じる奴っていたんだな。世の中って広いな」
+
+Tirna「またあなたですか！！　さっきから人の話に水を差さないでください！」
+
+Eva「いや、別に感想を言っただけだけど……研究室の紹介ページに書いてなかった？　当研究室では根拠の薄い思いつきと勢いを大切にしています、って」
+
+Stella「そこまでは書いてないよ！？」
+
+Eva「じゃあ詐欺じゃん」
+
+Stella「ちゃ、ちゃんと研究もしてるよ！」
+
+Eva「誰が？」
+
+Stella「私！」
+
+Eva「自分で言うか……」
+
+Tirna「S、Stellaさんの研究を馬鹿にしないでください！　先日の講義は確かに説明が少し抽象的すぎるところもありましたが……それでも七曜魔法の可能性を考える上で非常に示唆に富んだ内容でした！　少なくとも、あなたのように寝ているだけの人に評価できるものではありません！」
+
+Eva「……うわ、めんどくさ。Stella……また面白いの拾ってきたね」
+
+Stella「拾ってきたわけじゃないよ！？　この娘、自分から来てくれたんだよ！」
+
+やんややんやし始める中で、やがて買い物袋を押し付けられたVerisが口を開いた。
+
+Veris「……あの、Stellaさん。とりあえず買ってきたものを冷蔵庫に入れたいので通路を空けてもらえますか？　あとEvaさん、来客がいるのに寝ているのはどうかと思います。せめて起きて挨拶くらいしてください」
+
+Eva「したよ。『あんたら誰？』って」
+
+Veris「それは挨拶ではありません！！」
+
+いつもの光景に近い応酬を繰り広げながら、Verisはようやく二人の来客へ目を向けた。
+
+Tirnaは背筋を伸ばしたまま、Stellaの言葉を聞き逃すまいと真剣な表情を浮かべている。一方のRayは、研究室をきょろきょろ見回しながら棚に置かれた謎の装置を遠慮なく眺めていた。
+
+Veris「ええとお二人は……Stellaさんの講義を聞いて来てくださったんですね。私はVerisと申します。ここの研究室で雑務……いえ、研究の補助などをしています。来てくださってありがとうございます」
+
+Tirna「あ、こちらこそ、突然お邪魔してしまって申し訳ありません！　魔法学部のTirna_Nogと申します！お忙しいところ恐れ入りますが、少しだけ研究のお話を伺えればと思いまして……！」
+
+Ray「私はRayです！　Tirnaについてきました！　よろしくお願いします！」
+
+Veris「TirnaさんとRayさんですね。よろしくお願いします。……それにしても」
+
+Verisは二人をしばらく見比べた。
+
+Tirnaは丁寧に頭を下げ、Rayはその隣でにこにこと笑っている。二人とも真面目に挨拶をしているつもりなのだろうが、どうにも視線が自然と下へ向かってしまう。
+
+特に、Tirnaの頭でピコピコと動くケモミミにVerisの視線は行っていた。
+
+Veris「……お二人とも、背が小さいんですね。なんか……かわいいです」
+
+Tirna「…………は？」
+
+Veris「えっ？」
+
+Tirna「い、いえ……今、何とおっしゃいました？」
+
+Veris「えっ、あの、その……かわいい、と……」
+
+Tirna「わ、私たちは研究の話をしに来たんです！　そもそも、背が低いからかわいいって……私は真剣に研究に取り組んでいる学生であって、見た目の感想を求めに来たわけでは……！」
+
+Veris「す、すみません！　そんなつもりではなくて、つい口から出てしまっただけで……！」
+
+Ray「えっ、もしかして私かわいいって言われたんですか！？　ありがとうございます！　Tirnaもかわいいですよね！」
+
+Tirna「あなたは少し黙ってなさい！！」
+
+Stella「えへへ、二人とも仲良しなんだねぇ」
+
+Tirna「そ、そういう話ではなくてですね……！」
+
+Eva「……来て早々にヴェリに謝罪させるとは中々だな……才能あるよ、ガキンチョ」
+
+Tirna「あなたは本当に黙っていてください！！」
+
+Eva「はいはい」
+
+やり取りが展開されていた一方、Quanは入口付近で買い物袋を置いて騒動を無言で観察していた。
+
+彼女は最初から全く口を開いていなかったが、Tirnaの自己紹介、Evaとの口論、Stellaへの敬意、Verisの失言、そしてRayの無邪気な追撃。
+
+その一部始終を眺めた結果、彼女の中では既に来客に対する評価が固まりつつあった。
+
+Quan「……学生が二人来ただけか」
+
+Tirna「は、はい！　魔法学部のTirna_nogと申します。七曜魔法の研究について、Stellaさんにお話を伺いたくて……」
+
+Quan「無駄に大きい声のせいで既に知っている」
+
+Tirna「……すみません」
+
+Quan「……それで、研究の話をしに来たと言いながらここに入ってから騒いでいる時間の方が長いな。研究の邪魔をするつもりなら帰ってくれ」
+
+Tirna「…………え」
+
+Quan「そもそも研究室は学生の見世物ではない。興味があるというだけで無条件に歓迎されると思うな」
+
+Tirna「なっ……！」
+
+Ray「おおっ、この人ものすごくはっきり言いますね！」
+
+Quan「事実を述べているだけだ。お前達のように感情的な反応をされても困る」
+
+Tirna「な……感情的って……！　私は先ほどから、初対面の方々に子ども扱いされたり、見た目をからかわれたり、挙げ句の果てには研究の邪魔だと決めつけられたりしているんですが！？　これで怒るなという方が無理でしょう！」
+
+Quan「子ども扱いされたくないならそんな振る舞いをするな。少なくとも、怒鳴っているだけの今のお前はうるさいガキとしか感じられない」
+
+Tirna「～～～～っ！！」
+
+Tirnaの顔が一気に赤くなった。Quanの言葉はあまりにも容赦がなく、しかも一部だけは妙に筋が通っているせいでどこから言い返せばいいのかさえわからない。
+
+Veris「ちょ、ちょっとQuanさん！　初対面の方にそこまで言わなくても……！」
+
+Quan「だからこそだ。今後も来るつもりなら最低限の振る舞いを覚えて貰いたい」
+
+Eva「お前、寝てる私よりよっぽど感じ悪いな」
+
+Quan「お前はそもそも起きていなかった方がこいつらにとって有益だっただろう」
+
+Eva「……あ？」
+
+Stella「ま、まあまあ！　せっかく研究に興味を持って来てくれたんだからそんなに怒らなくてもいいじゃないかな？　Tirnaちゃんもごめんね、Quanちゃんはちょっと言い方が厳しいだけで、悪気があるわけじゃ……」
+
+Quan「悪気がないことは発言の妥当性と関係があるのか」
+
+Stella「そこはもうちょっと優しく言おうよぉ！」
+
+Ray「ははは！！皆さん、初対面なのにすごく遠慮がなくてずっと前から仲良しみたいです！」
+
+Tirna「どこがよ！！　私はもう仲悪いわよ！！」
+
+Veris「皆さん、お願いですから落ち着いてください！　研究室に来てくださったお客様ですよ！？　初対面の人を全員怒らせてどうするんですか！」
+
+Eva「寝てただけじゃん私」
+
+Quan「事実を述べただけだ」
+
+Stella「私は歓迎してるよ！」
+
+Ray「私は楽しいです！」
+
+Veris「そういうことを言ってるんじゃありません！！」
+
+研究室の空気は、もはや収拾がつかないところまで来ていた。
+
+Tirnaは怒りで肩を震わせ、Rayはその隣で面白がり、Verisは全員を止めようとして逆に声を張り上げている。Stellaは何とか場を和ませようと笑顔を保っていたが、Evaは既に寝直す姿勢に入り、Quanはこの騒動を非生産的な時間の浪費として切り捨てていた。
+
+そのとき。
+
+再び入口のドアノブが動いた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="04-2.html" class="nav-button prev">← offep4-2へ戻る</a>
+      <a href="04-4.html" class="nav-button next">offep4-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

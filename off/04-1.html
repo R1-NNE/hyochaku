@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep4-1:魔法学部の二人</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep4:魔法学部の二人 sec-1</h1>
+    </section>
+
+<p>※新キャラが出ます。<font color="#800080"><a href="../subcharacters.html">サブキャラ</a></font>のページを参照ください。</p>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+Lethia Institute of Technology、通称LIT。
+
+魔法学を正式な学術分野の一つとして扱う、そこそこ名の知れた国立大学である。研究棟には今日も研究者たちが出入りし、講義棟では学生たちが眠気と戦い、学食では昼食の値段に文句を垂れる学生たちが列を作っていた。
+
+そんな学食の一角に、二人の女子学生が座っていた。
+
+Tirna「それで……昨日言ってた話って何よ」
+
+一人はTirna_nog。眼鏡と頭に生えたケモミミが特徴的な、魔法学部の女子学生である。
+
+彼女は真面目かつ努力家で、特に魔法研究に対する熱意は人一倍強い。もっとも、その熱意が学業成績に比例しているかといえばそこはまた別の問題ではあった。あと……背がかなり小さい。
+
+Ray「魔法でパンを膨らませられるなら、ものすごく大きなパンを作ればそこに住めるんじゃないですか！？」」
+
+もう一人はRay_kjavika。同じく魔法学部に属する女子学生で、短い髪と活発な雰囲気が印象的である。Tirnaとは大学入学以来の友人であり、よく一緒に行動していた。
+
+だが……Tirnaが慎重に考えてから行動するタイプなら、Rayは行動してから考えるタイプである。しかも……成績もかなり悪い方であった。
+
+Tirna「……そう」
+
+Ray「パンの家ですよ、パンの家！朝起きたら壁を食べて、昼になったら床を食べて、夜には屋根を食べれば食費が浮くんです！これ、かなり画期的な発想じゃないですか！？」
+
+Tirna「……建築基準法と衛生面と耐久性を全部無視したら、そうね」
+
+Ray「えっ、建築基準法ってパンにも適用されるんですか！？」
+
+Tirna「されるわけないでしょ！というか、そういう問題じゃないし！」
+
+Tirnaは友人のバカげた発想を適当にあしらいながら、手元のパンフレットに目を落としていた。
+
+Ray「ちなみに、床を食べるときはクッキー生地にしておくと良いと思うんですよね。硬い方が耐久性も上がりますし、焼き加減を調整すれば――」
+
+Tirna「……Ray」
+
+Ray「はい！」
+
+Tirna「ちょっと静かにしてて。今これ読んでるから」
+
+Ray「えー、私の話より面白いんですか！？何ですかそれ！？」
+
+Rayは身を乗り出してTirnaの手元を覗き込む。
+
+読んでいたのは大学内の研究室や研究プロジェクトを紹介する冊子だった。中には各研究室の紹介ページが並んでおり、別段珍しいものではない。
+
+だが、Tirnaが開いているページには何度も読み返したらしい折り目がついていた。
+
+Ray「……Stella_Lab？」
+
+Tirna「そう。Stellaさんの研究室」
+
+Ray「……Stellaさんって、こないだの特別講義をしてた人ですか？白い髪で、背中にちっちゃい羽が生えてて、七曜魔法がどうとか言ってた人！」
+
+Tirna「そう、そのStellaさんよ！」
+
+先ほどまで気の抜けた返事ばかりしていたTirnaの声が、明らかに弾んだ。
+
+Tirna「私、あの講義を聞いてからずっと考えてたの。魔法って、既存の術式を覚えて使うだけじゃなくて、まだ誰も理解していない現象を自分で解き明かしていくこともできるんだって。勿論そんなことは分かってるけど、Stellaさんのお話は……正にそれって感じで！」
+
+Ray「へえー！なんかすごかったんですね！」
+
+Tirna「なんか、じゃないわよ！本当にすごかったんだから！」
+
+Tirnaはパンフレットを両手で持ち直した。ページには研究室の概要や研究分野、代表者の紹介などが記載されている。
+
+七曜魔法という一般的な魔法学の分類だけでは説明しきれない領域を扱う研究室。その説明文を追うTirnaの目は真剣だった。
+
+Tirna「特に、ここの七曜魔法の相互作用についての説明が……完全に理解できたわけじゃないけど、既存の理論だけで説明できない部分をちゃんと研究対象として扱っているところがすごいの。普通なら後回しにしてしまいそうな問題にも真正面から取り組んでるのって本当に憧れるな、って思って！」
+
+Ray「つまり、まだよく分かってないものを研究してるってことですか？」
+
+Tirna「言い方！……まあ、間違ってはないけど」
+
+Ray「何が起きるか分からないのって面白いですよね！私も好きです！」
+
+Tirna「……あんたの場合は、分からないものを好き勝手に混ぜているだけでしょ。レポートの提出期限くらい守りなさいよ」
+
+Ray「あ、あれは……ロケットスケボーに夢中になってたら忘れてて！」
+
+Tirna「何してんのアンタ！？」
+
+Tirnaは勢いよく言い返したものの、すぐに咳払いをして姿勢を正した。
+
+せっかく憧れのStellaについて語れる機会なのに脱線している場合ではない。彼女は気を取り直し、パンフレットの紹介文を指でなぞった。
+
+Tirna「とにかく、私はもっとStellaさんの研究について知りたいの！あの講義だけでは分からなかったこともたくさんあるし、実際に研究室を訪問できれば、何か学べることがあるかもってさ」
+
+Ray「研究室って、見学できるんですか？」
+
+Tirna「大学の施設だから大丈夫だと思う、ほら、紹介ページにも場所乗ってるし……」
+
+Ray「このビル行ったことないです！」
+
+そこまで話して、Tirnaはふと顔を上げた。
+
+その表情には、先ほどまでの学食での雑談とは明らかに違う強い決意が浮かんでいた。
+
+Tirna「……よし決めた。今日行こう」
+
+Ray「今日！？」
+
+Tirna「今日！講義聞いてからずっと気になってるの！こういうのは、思い立ったときに行動するべきでしょ？」
+
+Ray「いいですね！そうと決まれば行きましょう！」
+
+Tirna「えっ」
+
+あまりに即答だったので、Tirnaは思わず言葉を失った。
+
+Tirna「……Ray、あんたも来るの？」
+
+Ray「だって面白そうじゃないですか！あのビル行ったことなかったですし、七曜魔法なんて名前からして強そうです！もしかしたら、研究室の中にすごい魔法の道具とか、見たこともない実験装置とかがあるかもしれませんよ！」
+
+Tirna「いや、見学だからね？アンタ勝手に触って物壊しそうでしょ」
+
+Ray「分かってますって！」
+
+Tirna「……あやしい」
+
+Ray「ひどい！私そんなに信用ないですか！？」
+
+Tirna「ないわよ」
+
+Ray「即答！？」
+
+Rayは大げさに肩を落としたが、数秒後にはもう立ち直っていた。
+
+Ray「でも、Tirnaがそんなに尊敬してる人なら私も会ってみたいです！もしかしたらすっごく怖いのかもしれませんけど！」
+
+Tirna「講義だとそんな感じではなかったでしょ……。むしろ、研究の説明も丁寧で、質問にも真剣に答えてくださって、すごく親しみやすくて優しそうな人だった」
+
+Ray「じゃあ、パンを家にする研究も応援してくれそうですかね！？」
+
+Tirna「その話はもういいわよ！」
+
+Tirnaはパンフレットを閉じ、鞄の中に丁寧にしまった。やがて立ち上がりつつ、Rayが食べ終えた皿を放置しているのを無言で睨み始める。
+
+Ray「……あっ、はい、片付けます！」
+
+Tirna「まったく……。ほら行くわよ。迷子にならないでよね」
+
+Ray「七階って高いですね！エレベーターに乗った方がいいですかね？」
+
+Tirna「アンタ階段で行くつもりだったの？」
+
+目的も、動機も、研究に対する姿勢もまるで違う二人はやがて学食を出ていき、研究室のあるビルに向かって歩み始めた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="03-5.html" class="nav-button prev">← offep3-5へ戻る</a>
+      <a href="04-2.html" class="nav-button next">offep4-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
