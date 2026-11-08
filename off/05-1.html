@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep5-1:フリマに出る</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep5:フリマに出る sec-1</h1>
+    </section>
+
+<p>※サブキャラがちょい役で出ます。<font color="#800080"><a href="../subcharacters.html">サブキャラ</a></font>と<font color="#800080"><a href="../main/episode-06-1.html">ep6</a></font>と<font color="#800080"><a href="../off/04-1.html">offep4</a></font>辺りを見ておくと楽しめるかも。</p>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+いつもの研究室。
+
+共同部屋のテーブルに大学から回ってきた紙が一枚置かれていた。
+
+Stella「ねえねえみんな見てこれ！あした大学の中庭でフリマやるんだって！」
+
+Eva「へえ」
+
+Sol「反応うっす！」
+
+Eva「だって私に関係ある？　売るほど物持ってねえよ」
+
+Veris「いや、色々持ってませんでした？よく分からないガラクタとか、よく分からない服とか、よく分からない箱とか……」
+
+Eva「何だと思ってんだよ」
+
+Quan「お前の部屋は足の踏み場が無いくらい物で溢れている」
+
+Eva「人の部屋をゴミ屋敷認定すんな」
+
+Stellaが紙をひらひらさせながら、楽しそうに身を乗り出してくる。
+
+Stella「せっかくだし、みんなで出そうよ！絶対面白いって！」
+
+Veris「……面白さだけで動こうとしてません？」
+
+Stella「だって面白そうなんだもん！あと……ちょっとお小遣いにもなるし」
+
+Eva「やります」
+
+Veris「露骨！！」
+
+Sol「いいじゃんいいじゃん、研究室総出の露店って青春って感じするしさ！」
+
+Quan「お前がそういうことを言う時は大抵ロクでもなくなる」
+
+Sol「失礼だな！売れそうなものを持ち寄って、適当に並べて、適当に値切られて、適当に揉めるだけだろ！」
+
+Veris「揉める前提なんですか……」
+
+Quan「対外の人間と接触を行いたくない」
+
+Sol「Quanってさ、店番してたら客に“その値段は妥当だが、お前にはふさわしくない。売らない”とか言いそうだよなｗ」
+
+Quan「不要な相手に売る意味は薄い」
+
+Veris「薄くないですよ！フリマなんですから……」
+
+Stella「昔出したことあるけど、意外と売れて楽しいよ！」
+
+Sol「Stellaって笑ってるだけでだいたいどうにかなる感じあるよな」
+
+Eva「でもコイツどうにもならない時まで笑ってるぞ」
+
+Stella「ひどい！！」
+
+そう言いながらも、Stellaはまったく堪えていない顔でにこにこしていた。
+
+Stella「それでそれで、みんなどんなの持ってこれそう？」
+
+Veris「私は……服なら少し。あとは……小物とか余ってたかもしれません」
+
+Sol「私は変なやついっぱいあるぞ！昔ノリで買ったやつとか、景品で当てたやつとか！」
+
+Quan「九割ゴミだな」
+
+Sol「いやいや、そういう“絶対いらないけどちょっと気になる”みたいなの、フリマだと売れるんだよ～」
+
+Stella「分かる！妙にかわいい置物とか、意味ないキーホルダーとか買いたくなるよね！」
+
+Eva「その辺はお前らの担当でいいよ。私はもっと実利寄りで行くから」
+
+Veris「……実利寄り？」
+
+Eva「使ってない……生活用品とか、読まない……専門書とか、その辺」
+
+Veris「適当ですね……」
+
+Stella「私は服とかアクセサリー！あと……試薬も」
+
+Veris「試薬はダメです！！」
+
+Quan「大学のフリマで正体不明の試薬を流通させるな」
+
+Stella「えぇ～なんでぇ～……」
+
+Eva「なんでぇ～じゃねえよ」
+
+Sol「Quanは何売るの？」
+
+Quan「……古本くらいしか無い。私は欠席でいいか」
+
+Stella「だめ！！」
+
+Quan「……」
+
+顔をしかめるQuan。そろそろこの研究室で拒否権が発動しないことを理解し始めていた。
+
+Stella「よし、じゃあ決まり！明日それぞれ売れそうなもの持ってきてね！」
+
+Sol「イエーイ！！」
+
+Eva「まあ……たまにはいいか。どうせ休日だし」
+
+Veris「私はちゃんとした形にしたいので、値札と袋くらいは用意しておきます」
+
+Sol「出た委員長！」
+
+Eva「助かる」
+
+Veris「助かる、じゃないんですよ！少しは自分でもやってください」
+
+そうして各々なんだか共用部屋をうろつきながら、既に売れそうなものを探し始めていた。
+
+Sol「でもちょっと楽しみだな。誰の何が売れるか賭けようぜ」
+
+Eva「順当に行けばヴェリだろうな」
+
+Quan「需要が読める品を持ってくるのがVerisしかいないとも言えるな」
+
+Veris「……褒められてるのか微妙です」
+
+Stella「私はねー、Solちゃんの変な雑貨が変な人にまとめて買われるに一票！」
+
+Sol「“変な人”で括るなよ！」
+
+Eva「いやでもありそうじゃね？」
+
+Quan「十分あり得るな」
+
+Sol「なんだよー！」
+
+その後もそれぞれが何を持ち出すか考えていたが、どう考えてもまともな店にはならなさそうだった。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="04-7.html" class="nav-button prev">← offep4-7へ戻る</a>
+      <a href="05-2.html" class="nav-button next">offep5-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

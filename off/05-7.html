@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep5-7:フリマに出る</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep5:フリマに出る sec-7</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+TirnaとRayが帰っていった後も、フリーマーケットはしばらく続いた。
+
+Solは最後までRayに「次はもっと凄い物を用意しておくから！！」と大声で約束していたが、Tirnaは振り返りもせずに彼女を連れていった。Verisはその背中を見送りながらようやく一息つく。
+
+Veris「……あの二人が帰っただけで、急に静かになった気がしますね」
+
+Sol「はぁ～あとちょっとで五千円取れたのに」
+
+Veris「弟子から金を巻き上げるな！！」
+
+Eva「あの子なら次に来たときも普通に騙されそうだよなぁ」
+
+Sol「将来有望だな！」
+
+Veris「どこがですか……」
+
+その後も客足は途切れず、Stellaの手作り品は相変わらず悪くない売れ行きであった。Verisの服も、Tirnaが購入したあとから流れが来たのか女性客がぽつりぽつりと買っていき、本人は満足そうである。
+
+一方、Solの売り場は相変わらず怪しい品ばかりだったがまちまちと捌いている。Evaは……何も残っていない。
+
+Eva「…………次から金は全部ポケットに入れる」
+
+Veris「そうじゃないでしょうそうじゃ！盗品を持ってこなければいいだけの話です！！」
+
+Eva「うるさいもう、機嫌悪い、話しかけないで、バカ」
+
+Veris「な……！！！」
+
+Sol「まだ言ってるよｗｗ」
+
+Stella「あはは……そういえばQuanちゃんは？」
+
+Quanはというと、専門書や古い部品を並べた自分の売り場にひたすら座り続けて売り物の本を読んでいた。客が来ているかどうかは本人も周りも気にしていない。
+
+Quan「全く売れていない」
+
+Stella「そんなぁ～」
+
+Sol「誰も欲しがらねーよこんなのｗ」
+
+Quan「お前みたいな馬鹿に買われたら本が可哀想だ」
+
+Veris「まあ……本人が満足ならいいんじゃないですか」
+
+やがて日が傾き、フリマ終了間近のアナウンスが流れ始めてきた。周囲の出店者たちも少しずつ片付けを始めている。
+
+Stella「そろそろ終わりかなぁ。みんな、今日はお疲れさま！」
+
+Veris「ふぅ……思ったよりは売れましたし、私としては満足です」
+
+Sol「うーん、もうちょっと委員長の写真撮っとけばなー」
+
+Veris「帰ったら3時間説教ですから」
+
+Sol「はぁ！？」
+
+各々が売れ残った品を箱に戻し始めていた、その時だった。
+
+初老の男性が、片付けかけていたQuanの売り場に近づいてきた。地味なジャケットに革鞄という出で立ちでどこか大学教授を思わせる雰囲気がある。
+
+男性「すみません、まだやっておられましたらこちらの本を少し拝見してもよろしいでしょうか」
+
+Quan「……構わないが」
+
+男性は机の隅に置かれていた魔法工学に関する専門書を手に取った。かなり古い版らしく、紙も黄ばんでいる。
+
+男性は本をじっと見つめた後、数ページ進んだところで突然手を止めた。
+
+男性「……これは、まさか」
+
+Quan「何か問題か」
+
+男性「いえ、失礼……こちらは初版ですか……それにこの余白の書き込み……著者本人の校正ではありませんか」
+
+Quan「恐らくそうだろうな。筆跡が一致していると思われる」
+
+男性「貴方、この方をご存じだったのですか？」
+
+Quan「魔法工学分野の権威というのは知っているが、市場価値までは調べていない」
+
+男性はもう一度本を閉じ、表紙をじっと見つめた。明らかに興奮を抑えている様子だった。
+
+男性「……こちら、ぜひ譲っていただきたい。実は私は魔法工学史を専門にしていまして、この本をずっと探していたのです。現存する同書の中でもこれほど状態の良いものはまずありません」
+
+Quan「そうか。二千円で良いか」
+
+男性「いやいや、二千円ではあまりにも申し訳ない！！　こちら十万円あります、それで如何でしょうか」
+
+その場の空気が止まった。
+
+Veris「……え？」
+
+Sol「……は？」
+
+Eva「……十万？」
+
+Stella「え、ええっ！？　十万円！？」
+
+男性はカバンから妙に分厚い財布を取り出して万札を数え始める。やがてQuanは丁寧に手渡された札束を受け取ると、特に感慨もなさそうに本を男性へ渡した。
+
+男性「本当にありがとうございます……こちらは大切に保管させていただきます」
+
+Quan「是非そうしてくれ。その本も本望だろう」
+
+男性は何度も礼を言いながら、まるで貴重な資料を扱うように本を鞄へしまってそのまま会場を後にした。
+
+Stella「えっえっ、すごーい！！！　Quanちゃん、十万円だって！！！　今日の売上で一番でしょ！！！」
+
+Quan「金額だけを見ればそうなるな」
+
+Stella「えへへ、よかったねぇ！　最後にこんな良いことがあるなんて！！！」
+
+Stellaは心から嬉しそうに笑いながらQuanの肩を軽く叩いている。Quanは表情一つ変えてない。
+
+一方、その光景を見ていた他三人はどうにも納得がいかない顔をしていた。
+
+Veris「……ちょっと待ってください。どうして最後の最後にそんなのが出てくるんですか」
+
+Quan「売り物の中にあった。それだけだ」
+
+Veris「そ、それだけって……！　私なんて朝から一生懸命売って、ようやく売れたと思ったら数千円ちょっとですよ！？」
+
+Eva「私なんか元上司に売上を根こそぎ持っていかれたんだぞ」
+
+Quan「知るか。売れたものは売れたものだしEvaに至っては自業自得だろ」
+
+Sol「いやいやいや！　おかしいでしょ！！！なんで仏調面で本読んでるだけの奴がこんな稼いでんだよ！！」
+
+Veris「そもそも、なんでそんな貴重な本を二千円で出していたんですか！？値段を付ける前に確認してくださいよ！」
+
+Quan「煩いな……私にとっては不要な本だったからだ」
+
+Eva「尚更ムカついてきたな……なんでコイツが最後の最後にいい思いしてんだよ」
+
+Sol「そうだそうだ！！！」
+
+騒ぎ立てる三人をよそに、Stellaは笑顔のまま片づけを続けていた。
+
+Stella「えー、でもQuanちゃんが喜んでくれたなら私も嬉しいよ！　今日はみんな頑張ったし、帰ったらちょっと豪華なご飯にしちゃおうかな？」
+
+Veris「Stellaさんはどうしてそんなに素直に喜べるんですか……！」
+
+Sol「そうだよ！　なんかこう、もうちょっと不公平だって思わない！？」
+
+Eva「まあStellaはそういうとこあるから……いやでもマジでムカつく、ほんまに嫌、ボケ、カス」
+
+Quan「見苦しい。さっさと片付けろ」
+
+最後の最後に思わぬ大金が転がり込んだQuanは文句を垂れ続けている三人をよそに平然とした顔を貫いている。喜んでいるのはStellaだけだった。
+
+こうしてそれぞれのフリマは幕を閉じた。
+
+---
+
+フリマを終えた一行は、売れ残った品を詰めた箱を抱えながら大学構内を歩いていた。
+
+それぞれの売上はまちまちであったが、最後にQuanが手にした十万円という金額だけはどうにも他の四人の頭から離れないらしい。
+
+Sol「ねえねえQuan、せっかくだし夕飯くらい奢ってよ」
+
+Quan「断る。その金で専門書を買う予定だ」
+
+Sol「えー！　十万もあるんだからちょっとくらいいいじゃん！」
+
+Quan「購入予定の書籍を考慮すれば余裕はない」
+
+Eva「こっちは今日の売上を全部失ったんだけど」
+
+Veris「そうですよ！　私たちも一日頑張ったんですから、少しくらい還元してくれてもいいんじゃないですか？」
+
+Quan「お前たちが何を頑張ったかは知らん。私の売却益とは無関係」
+
+Sol「冷たっ！」
+
+Eva「本当に可愛げのない奴だな」
+
+Veris「もう少しこう……せっかくの臨時収入なのに、専門書ばかり買っても仕方なくないですか……」
+
+Quan「仕方なくない。知識はいくらあっても良いからな」
+
+Sol「美味しいものもいくらあってもいいだろ！」
+
+Quan「食事は知識と違って一時的な物だろう」
+
+Sol「じゃあ何回も食べればいいじゃん！」
+
+Quan「一人でやってろ」
+
+三人があの手この手で食い下がる一方、Stellaは少し後ろを歩きながら楽しそうに会話を聞いていた。やがてQuanの隣に並ぶと、いつもの調子で口を開く。
+
+Stella「まあまあ、Quanちゃんが頑張って手に入れたお金なんだから好きに使わせてあげなよ！」
+
+Sol「えー、Stellaまでそっち側なの！？」
+
+Stella「だって、欲しい本があるんでしょ？　それなら買った方がいいと思うよ！」
+
+Veris「Stellaさんがそう言うなら、私もあまり強くは言えませんけど……」
+
+Eva「こっちに一円も回ってこないのが気に入らねえんだよ」
+
+Quan「知るか」
+
+Stella「Quanちゃんが欲しいものを買って嬉しそうにしてたら、私も嬉しいなー、ってなるよ！」
+
+Quan「……そうか」
+
+Quanは一瞬だけStellaの方を見た。
+
+そして、何かを思いついたような意地の悪い笑みをほんの少しだけ見せながら呟いた。
+
+Quan「その理論で行けば、Stellaにだけは何か買ってやってもいい」
+
+Stella「えっ！？いいの！？」
+
+Quan「大学前の超高級ケーキが云々といつも言っているだろう……この投資で将来うるさくならないと考えると今奢るのが合理的だと判断した」
+
+Stella「えええ！？！？本当！？？　ありがとうQuanちゃん！！　大好き！！！」
+
+Sol「はあああああ！？　な、なんでStellaだけなの！？」
+
+たまらず三人が割って入る。
+
+Veris「ちょ、ちょっと待ってください！！！　私たちだって朝からずっと働いていたじゃないですか！」
+
+Eva「お前さっきまで専門書以外に使う気はないって言ってたよな！？」
+
+Quan「黙れ。お前らが非合理的な理論で私の売上を無心する中、Stellaだけは私の意思を尊重した。そこに明確な違いがある」
+
+Sol「わ、私もQuanの好きに使っていいかな～って」
+
+Quan「遅い」
+
+Veris「不公平です！　私もあのケーキずっと食べたいって思ってたんですよ！！」
+
+Eva「今日無一文の私に慰めとか無いわけ？」
+
+Quan「自業自得だ。これ以上喚くな」
+
+三人「はぁぁ！！！？？」
+
+声が綺麗に揃って、Stellaだけがけらけら笑った。
+
+Stella「ふふっ、今日はそういう日ってことでいいじゃん！」
+
+Sol「何一つよくない！！」
+
+Eva「せめて安いやつくらいでも買えよ」
+
+Veris「そうです！！最低限の良心くらい見せてもいいじゃないですか！！」
+
+Quan「見せる必要がない」
+
+Stella「ふふ、じゃああとで紅茶煎れよっか！！　一番いいやつ煎れちゃう！」
+
+Sol「完全に受け入れてるじゃん……」
+
+Eva「裏切り者め……」
+
+結局、Quanは最後まで三人に一円も奢る気を見せず、Stellaだけがご機嫌だった。
+
+Sol「はーあ。今日いちばん得したのって、結局QuanじゃなくてStellaだったんじゃないの」
+
+Eva「それはあるな」
+
+Veris「かなりありますね」
+
+Quan「知るか。とっとと帰るぞ」
+
+Stella「ケーキ♪ケーキ♪」
+
+三人「…………」
+
+その後も暫くあの手この手で売上を無心していた三人だったが、敵う事はなかった。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="05-6.html" class="nav-button prev">← offep5-6へ戻る</a>
+      <a href="06-1.html" class="nav-button next">offep6-1へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

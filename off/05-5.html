@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep5-5:フリマに出る</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep5:フリマに出る sec-5</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+フリーマーケットは午後に入っても賑わいを見せていた。
+
+Stellaの手作り小物には相変わらず子供と……一部の大人が集まり、Solのブースには例の写真で妙な人だかりができている。
+
+一方、Verisはもう諦めたのかしおれた顔で自分のブースで丁寧に陳列し直す作業だけを繰り返している。Quanも同様だったが、こちらは特に気にしてなさそうである。
+
+そして……最も景気が良かったのはやはりEvaだった。
+
+古い医学書や医療用品を露骨に怪しく妙に羽振りの良い客たちに次々と売りさばき、いつのまにか彼女の手元の売上袋はすっかり膨らんでいた。
+
+Eva「ふふ……いやぁ、今日はいい日だねぇ。こんなに簡単に金が増えるとは思わなかった」
+
+Sol「うわ、お前なんかずっとニヤニヤしてるじゃん。そんなに儲かったの？」
+
+Eva「んー……まあまあかな」
+
+Veris「……世の中は理不尽です。特にこ、こんな人が一番売れてるなんて……」
+
+Eva「売れるものを売って何が悪いんだよ、需要と供給だっつーの」
+
+Quan「他人の所有物を無断で販売してる癖に正当化するな」
+
+Eva「るっせーな、今日は勝ってる側なんだから黙ってろ」
+
+Evaは売上袋を軽く持ち上げもう一度中身を確認した。紙幣と硬貨が擦れる音が小気味良く鳴り、彼女の機嫌をさらに良くしていた。
+
+そのときだった。
+
+「……おや」
+
+背後から聞き覚えのある声がし、Evaの笑顔が目に見えて固まる。
+
+Celesが普段と変わらない落ち着いた服装に、柔らかな笑みを浮かべて立っていた。
+
+Stella「あっCelesさん！」
+
+Celes「ごきげんよう。丁度余暇が出来たので気晴らしに来てみたが、まさかお前らも出店しているとはな」
+
+Eva「……あー、最悪。なんでいるの」
+
+Celes「随分な挨拶だな。偶然通りかかっただけだというのにそんな顔をされると心外だ」
+
+Eva「偶然ならそのまま通り過ぎてくれない？　今ちょっと忙しいからさ」
+
+Celes「ほう、忙しいのか。となればずいぶん景気が良さそうじゃないか」
+
+Sol「そうなんだよ、コイツ超儲けててさ！ムカつく！」
+
+Celesの視線がEvaの売っている盗品もとい医療器具と、Evaの手元にある売上袋へと移る。
+
+Celes「……ふむ」
+
+Eva「な、何」
+
+Celes「いや、別に。随分とかっぱらってきたじゃないか」
+
+Evaが咄嗟に袋を手で覆い始める。
+
+Eva「いや……これはだな」
+
+Celes「……コイツは医療器具を転売して私腹を肥やしているという事で良いか」
+
+Veris「その通りです」
+
+Eva「おい！！！」
+
+Celesは小さく笑ったが、先ほどまでの柔らかい表情はそのままなのにどこか目つきが変わっている。
+
+そして、ゆっくりとEvaの方へ身を乗り出した。
+
+Celes「……Eva」
+
+Eva「何だよ」
+
+Celes「その売上、全部置いていけ」
+
+Eva「は？」
+
+Celes「聞こえなかったか？　全部だ。紙幣も硬貨も、余さず私に渡せ」
+
+Eva「いや、何言ってんの？　お前、頭おかしくなった？」
+
+Celes「往生際が悪いな。この事を全部病院にブチまけてやってもいいんだぞ」
+
+Eva「…………」
+
+Celes「予備の医療機器が不足していると言っている奴がいた、その事について私が懇切丁寧に説明してやろう。なに、私は話すのが得意だからきっとそいつも興味を持ってくれるだろうな」
+
+Eva「ちょ、おま……そんなん通用すると思ってんのか」
+
+Celes「こっちの台詞だ。早くしろ」
+
+Eva「ふざけんなよ……なんで私が稼いだ金をお前に渡さなきゃいけないんだっつーの」
+
+Celes「おい、私とお前の関係を忘れたのか？　元上司に対する敬意というものが少しはあってもいいと思うが」
+
+Eva「恐喝してくる奴に敬意なんて持てるか！！！」
+
+やがて話を聞く間もなくCelesの手が素早く売り上げ袋に伸びる。
+
+Eva「おまっ！！やめろコラ！！！！」
+
+Celes「中々抵抗するな……Stella、コイツちょっと抑えてくれないか」
+
+Stella「え？　はーい」
+
+Eva「おい！！！！！！」
+
+何も聞いてないStellaに抑え込まれるEva。そのスキにCelesは売上袋を丸ごとひったくっていった。釣銭皿に残っていた小銭まで手際よく回収している。
+
+Eva「返せ！！！！　私の金！！！！」
+
+Celes「ほう、やはりなかなかいい稼ぎだったようだな。今日は実に有意義な日になった、感謝するぞ」
+
+Stella「よくわからないけどよかった！」
+
+Celes「では諸君、私はこれで失礼する。良い休日を」
+
+Eva「待て！！　マジで殺すぞ！！　返せこの野郎！！！！！　ボケケモミミ！！！！」
+
+Celesは肩を揺らして笑いながら人混みの中へ消えていった。そして、その場には売上袋を失ったEvaと、何とも言えない沈黙だけが残った。
+
+Sol「…………」
+
+Quan「…………」
+
+Veris「…………」
+
+Stella「あっブース戻らなきゃ」
+
+Eva「…………」
+
+Sol「っ、ぶっ……」
+
+Eva「……おい」
+
+Sol「あっははははははは！！！！！！」
+
+Solがとうとう耐えきれず机に突っ伏して大笑いし始めた。
+
+Sol「何今の！！！！ｗｗｗｗ　Eva、完全にカツアゲされてたじゃん！！！！ｗｗｗｗ」
+
+Eva「笑ってんじゃねえ！！！！　お前も少しは止めろ！！！！」
+
+Sol「無理無理無理！！ｗｗ　あんなの止められるわけないじゃん！！ｗｗ　あのCelesがあんな悪い顔して売上全部持っていくんだよ！？　ギャハハハハ！！ｗｗｗｗ」
+
+Eva「何がそんなに面白いんだよ！！！！　私の！！金！！だぞ！！！！！」
+
+Quan「……うるさい」
+
+Eva「うるさくなるだろこんなことされたら！！！！」
+
+Quan「知るか。嫌なら売らなければ良かっただろ」
+
+Eva「はぁ！！？？？」
+
+Quanはそれ以上何も言わず、手元の専門書を読み直し始めた。どうやら本当に興味がないらしい。
+
+その横ではVerisが売れ残ったアクセサリーを並べ直していたが、よく見ると口元がわずかに緩んでいる。
+
+Veris「……ふふっ」
+
+Eva「……おい」
+
+Veris「い、いえ別に……何でもありませんが」
+
+Eva「その顔で何でもないは無理があるだろ」
+
+Veris「……日頃の行いというものは大切だなと思っただけです。いつも他人をからかったりズルい事するからこういう目に遭うんですよ」
+
+Eva「私が何したっていうんだよ！」
+
+Veris「何でもしまくりでしょう……まあ……なんというか……」
+
+普段の彼女なら他人が金銭を奪われたことを喜ぶような真似はしないが、今回ばかりはあまりに因果応報過ぎて笑いを堪え切れていない。
+
+Veris「……Celesさん、ありがとうございます……ｗ」
+
+Sol「委員長、めっちゃ嬉しそうじゃんｗｗｗ」
+
+Veris「……人が嫌な目にあってこんなに嬉しい事って初めてかもしれません」
+
+Eva「……お前ら、後で覚えてろよホンマ」
+
+そんな騒ぎの隣で、Stellaはいつの間にか自分のブースに戻って接客していた。目の前の子供に手作りの髪飾りを見せながら、いつも通りの柔らかな笑顔を浮かべている。
+
+Stella「これは手作りだよ！色違いもあるからゆっくり見ていってね～」
+
+Eva「……Stella」
+
+Stella「え？」
+
+Eva「あなたのせいで、私の、金が、全部持っていかれたんですが」
+
+Stella「そうだね～」
+
+Eva「そうだね～じゃないだろが！！　何アイツの手助けしてんだよあそこで！！！」
+
+Stella「え～……あっ、この髪飾りもおススメだよ！　コレはね、私の研究室で栽培してる花がモチーフで……」
+
+Eva「…………」
+
+Stellaは全く聞く気が無いらしい。
+
+Evaは暫く呆然としていたが、やがて諦めたように椅子へ腰を下ろした。
+
+Eva「……なんなんだよ……もう……私の金……」
+
+Sol「ｗｗｗｗｗｗｗｗｗｗｗ」
+
+Quan「いつまでも嘆くな、見苦しい」
+
+Veris「真っ当に生きるのも悪くないと思いますよ！」
+
+Eva「うるさい、全員うるさい、マジで。……もう帰りたい」
+
+Stella「えー、まだフリマ終わってないよ？」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="05-4.html" class="nav-button prev">← offep5-4へ戻る</a>
+      <a href="05-6.html" class="nav-button next">offep5-6へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep5-2:フリマに出る</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep5:フリマに出る sec-2</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+翌日、大学中央広場。
+
+休日にもかかわらず広い敷地内には学生や教職員、近隣住民が集まりそこかしこでフリーマーケットの準備が進められていた。
+
+衣類、古本、手作りアクセサリー、家電製品。いかにも大学らしい出店が並ぶ中、広場の一角に五人の姿があった。
+
+Stella「みんなおはよー！今日はいっぱい売ろうね！」
+
+Veris「おはようございます、私は少し早くから来ていたのですが……皆さん、今の時点で既に不安しかないんですけど」
+
+Sol「委員長、朝から心配性だなぁ！ｗフリマなんて楽しんだもん勝ちだろ！」
+
+Veris「……その両手に抱えているものを見て言ってください。どうして段ボール箱が三つもあるんですか」
+
+Sol「いやぁ、探してみたら意外と出てきちゃって……昔遊んでたおもちゃとか、拾ったけど使ってないものとか、なんかよく分からないけど捨ててないものとか……」
+
+Veris「最後は完全にゴミじゃないですか！」
+
+Sol「失礼だな！ほら見ろよこの片方だけのスリッパ、これなんか逆に希少性があるだろ！」
+
+Quan「希少性と価値を混同するな」
+
+Sol「理屈屋、二百円でいいぞ」
+
+Quan「消えろ」
+
+Eva「二百円で殺意が買えるのはお得だな」
+
+Solはどこ吹く風といった様子で段ボール箱を地面に置く。中からは片方だけのスリッパ、妙な形の栓抜き、錆びた金属製の何か、用途不明のプラスチック製品などが次々に姿を現す。
+
+一方、その隣ではStellaが自分の荷物を広げていた。
+
+Stella「見て見て、この羊毛フェルトの動物さんたち！　あと、布で作った小さなポーチとか、髪飾りとか！」
+
+Veris「わあ……！これ、Stellaさんが作ったんですか？すごく可愛いですね！　縫製も丁寧ですし、色の組み合わせも素敵です！」
+
+Stella「えへへ、ありがとう！あとね……こっちも持ってきちゃった！」
+
+Stellaが嬉しそうに取り出したのは、小さな瓶に詰められた色とりどりの液体だった。ラベルには手書きで「発光促進液」「高濃度魔力活性剤」「試作・混合禁止」などと記されている。
+
+Veris「……Stellaさん」
+
+Stella「なあに？」
+
+Veris「その瓶は何ですか」
+
+Stella「えっとね、研究で余った薬品！　見た目が綺麗だし、魔法学部の人なら欲しいかな～って！ほら、この青いやつなんか、光に透かすとすっごく綺麗なんだよ！」
+
+Veris「売るな」
+
+Stella「えっ」
+
+Veris「売れるかそんなもん！！そもそもラベルに劇薬って書いてあるじゃないですか！」
+
+Stella「で、でも、単体なら大丈夫だし？」
+
+Eva「……この発光促進液って、皮膚に付着したらどうなるんだ？」
+
+Stella「えーっと……？」
+
+Veris「分からないものを売るな！全部持ち帰ってください！」
+
+Stella「え～……頑張って持ってきたのに～……」
+
+Veris「そういう問題じゃないですよ！！大学にまた何か言われたらどうするんですか！！」
+
+Sol「前もコイツの試薬でビルが異臭騒ぎになってたよな」
+
+Stella「……危なそうじゃないやつだけでも！」
+
+Veris「全部ダメです！！」
+
+来て早々怒りエネルギーを消化しつつ、Verisは呆れた顔のまま自分の荷物を広げ始めた。
+
+出てきたのはフリルのついたブラウス、繊細な刺繍の入った小物入れ、妙に凝ったデザインのヘアアクセサリー。
+
+一見すると普通の服に見えるものの、よく見ると左右非対称だったり、肩の部分だけ大胆に開いていたりする衣類の数々だった。
+
+Stella「わっ、ヴェリちゃんの服可愛い！これ全部売っちゃうの？」
+
+Veris「……はい、以前買ったけど結局あまり着なかったものがいくつかありまして……」
+
+Eva「……何この服？」
+
+Veris「な……」
+
+Sol「委員長って普段はあんなに真面目なのに、服だけ妙に攻めてるよな。なんかこう、風紀委員が文化祭で着る衣装を間違えてる感じ」
+
+Veris「誰が風紀委員ですか！！それに服は別に悪くなくないですか！？」
+
+Quan「……本人の意図と服装の印象に乖離があるのは事実だな。特にその肩の開口部は機能的な意味が見当たらない、意味が分からない」
+
+Veris「これはデザインなんです！　機能性だけで服を選ぶわけじゃないでしょう！」
+
+Eva「でも実際なんで肩出してんの？　寒くない？」
+
+Veris「……可愛いからです」
+
+Eva「おお」
+
+Sol「はｗｗｗ」
+
+Veris「うるさいです！　服の好みくらい自由でしょうが！」
+
+続いてEvaが大きなバッグを開け始める。
+
+Eva「はいはい次私。なんか意外とあったわ」
+
+Veris「……Evaさんは何を持ってきたんですか？」
+
+Eva「……使ってないもの」
+
+バッグの中から出てきたのは、聴診器、医療用の器具、専門書、未使用らしき医療用品、そして大量の書類が入ったファイルだった。
+
+Veris「……Evaさん」
+
+Eva「……」
+
+Veris「これは、まさか」
+
+Eva「えー、普通の聴診器に、普通の医療器具に、普通の医学書に……普通のファイル」
+
+Veris「売るな」
+
+Eva「まだ何も言ってないだろ」
+
+Veris「言う前から分かりますよ！！どうして仕事道具をフリーマーケットに持ち込んでるんですか！！！」
+
+Eva「いやもう使わないし持ってても邪魔だから……」
+
+Quan「個人情報が含まれている可能性が高いな。廃棄するにしても適切な処理が必要なタイプか」
+
+Eva「いや患者の情報が載ってるものは持ってきてないって！これは一般的な手順書とか、私が自分用にまとめてた資料とかだし」
+
+Veris「それでもダメでしょう！用途や管理方法が分からない人が購入したらどうするんですか！」
+
+Eva「買う側の責任じゃない？」
+
+Veris「売る側にも責任があります！！」
+
+Stella「医療道具って格好いいよね～　私、ドラマとかで見ると使ってみたくなっちゃう」
+
+Eva「どうせ使ってないし欲しいならやるけど」
+
+Stella「えっいいの！？」
+
+Veris「駄目に決まってるでしょうが！！」
+
+Eva「うるせえなさっきから……」
+
+Veris「あんたらが悪いんでしょうが！！！！！！」
+
+Verisが強火になり始める中、Quanはやや迷惑そうな顔のまま足元に置いていた箱を開けた。
+
+中には厚さ数センチの専門書が何冊も詰まっていた。数理論理学、非線形系の安定性解析、比較認知科学、古典的意思決定理論など、一般のフリーマーケットではまず見かけない文字列が並んでいる。
+
+その下には、用途不明の金属部品、分解された機械のパーツ、古い測定器らしきものまで入っていた。
+
+Sol「……理屈屋お前何持ってきてんの？」
+
+Quan「本と不要な器材」
+
+Sol「いやそういうことじゃなくて！！タイトル読んでも何の話なのか全然分からんぞ！」
+
+Quan「お前が理解できないことと商品としての価値は無関係だ。専門書は定価も高い、必要とする人間にとっては十分に価値がある」
+
+Eva「まあそこはそうかも……学生が中古で安く買いたいって需要はあるだろうし」
+
+Stella「でも、これどういう内容なの？」
+
+Quan「本による。例えばこれは非線形系の安定性についての理論を整理したもので、条件によって挙動が大きく変わる系の解析に使える。他にも……」
+
+Stella「へぇー！　なんかすごいね！」
+
+Quan「聞いてないだろ」
+
+そう言いつつも全員がせっせと準備を始めていた。Verisの言うことは一切聞いていない。
+
+Veris「ちょっと皆さん、本当に売る気があるんですか！？　フリーマーケットは不要品を処分するだけの場所じゃありませんよ！買ってくれる人がいて、初めて成立するんです！」
+
+Quan「お前の服飾品より対象となる購入者が明確だ」
+
+Veris「私の服はちゃんと需要があります！」
+
+Sol「私の片方だけのスリッパも？」
+
+Quan「そんな需要は存在しない」
+
+Stella「みんな見て見て！かわいく配置できたと思う！」
+
+Veris「……だから薬品片づけろって言ってるでしょうが！！！」
+
+Quan「Veris、さっきからお前の仕分け基準は曖昧だ。用途不明の品物でも説明を付ければ購入者が判断できる。お前が知らないというだけで販売対象から外そうとするのは非合理的だ」
+
+Veris「そういう屁理屈を言ってるんじゃありません！　何に使うのか分からないものを説明もなしに売ろうとするから言ってるんです！」
+
+Stella「私説明できないかも～」
+
+Veris「ああああああ！！！！！」
+
+Eva「ヴェリ、落ち着け。少なくともQuanはまともな事言ってるだろ、腹立つ言い方をしてるだけで」
+
+Veris「その言い方が腹立つんですよ！！！」
+
+Stella「ヴェリちゃん、お茶飲む？」
+
+Veris「はぁ…………これからお客さんが来るのに、こんな調子で本当に大丈夫なんでしょうか……」
+
+Sol「大丈夫だって。こういうのは勢いが大事なんだよ」
+
+Eva「売れなかったら持って帰ればいいだけでしょ」
+
+Stella「売れたらみんなでおいしいもの食べたいな！」
+
+Sol「おっいいね！私焼肉で！」
+
+Eva「今のところ一番売れそうなの、Stellaの手芸品くらいだぞ」
+
+Veris「私の服も売れますよ！」
+
+Eva「はいはいそうですね」
+
+Veris「その言い方絶対に期待してないでしょう！」
+
+やがて全員の陳列も終わり、ぽつぽつと人が増え始めてきた。もう既に売買を行っているグループも見られる。
+
+Veris「……もういいです。本当にまずい時以外は皆さんの判断に任せます。でも問題が起きたら本当に知りませんからね！」
+
+Eva「おう」
+
+Sol「頼りにしてるぜ委員長！」
+
+Quan「責任者が責任を持つのは当然だろう」
+
+Veris「誰が責任者ですか！！　私は皆さんの監督役じゃありません！！」
+
+こうして、フリマ開始時刻になった。
+
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="05-1.html" class="nav-button prev">← offep5-1へ戻る</a>
+      <a href="05-3.html" class="nav-button next">offep5-3へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

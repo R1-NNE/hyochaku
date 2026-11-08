@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - offep5-3:フリマに出る</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.78) 58%, rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">offep5:フリマに出る sec-3</h1>
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+学内フリーマーケットの開始を告げるアナウンスが流れると、中央広場には学生や教職員、近隣住民まで入り交じった人だかりができ始めた。
+
+その一角に、明らかに場違いな品々を並べたStella研のブースがあった。やがて最初に客を集め始めたのはStellaのブースだった。
+
+女児A「これ、かわいい！　このうさぎさん、耳がふわふわしてる！」
+
+女児B「こっちの猫ちゃんも欲しい！　ねえねえお姉さん、これって自分で作ったの？」
+
+Stella「そうだよ～、お姉さんがひとつずつ作ったの！ほかにもいっぱいあるから、ゆっくり見ていってね！」
+
+女児A「じゃあ私、このうさぎと猫ちゃんが欲しい！　あと、この髪飾りも！」
+
+Stella「わぁ、ありがとう！」
+
+少女たちは楽しそうに品物を選び、Stellaも終始にこにこと応対している。値札も手頃で手作り品の品質も申し分ない。周囲から見れば、実に理想的なフリーマーケットの光景だった。
+
+ただし、その輪の中には少しばかり異質な人物も混ざっていた。教授らしき中年男性が一人、女児たちの後ろから妙に真剣な顔で商品を眺めている。
+
+男性「……そちらの小瓶は、どういった用途のものですかな」
+
+Stella「あっ、そっちは……発光促進液です！　ちょっと魔力を活性化させると、身体が二日くらい光るんですよ～」
+
+男性「……ほう。濃度と作用機序について、もう少し詳しく伺っても？」
+
+Stella「えっと……こっちが普通ので、こっちが高濃度のやつ！前間違ってつけちゃったけど……多分大丈夫！」
+
+男性「……なるほど。こちら頂けるかな」
+
+Stella「はい！！」
+
+Stellaは何の疑いもなく小瓶を取り出し、男性へ差し出した。
+
+男性「……面白いな。研究棟で解析してみるとしよう」
+
+Stella「ありがとうございます！　使うときは気を付けてくださいね～」
+
+Veris「……待ってください、今の人に何を売ったんですか」
+
+隣から一部始終を目撃していたVerisが慌てて呼び止めようとするが、男性はすでに小瓶を鞄へしまい満足げな顔で人混みの中へ消えて行った。
+
+Veris「Stellaさん！！！あの人どう見ても一般のお客さんじゃなかったですよね！？　というか、試作品を売るなってさっき言いましたけど！？」
+
+Stella「えっ、でもお金払ってくれたし……それに、すっごく真剣に聞いてくれたから、研究が好きな人なんだと思う！」
+
+Veris「そういう問題じゃなくて！！あの人がどこの誰で、何に使うつもりなのかも分からないんですよ！？」
+
+Stella「うーん……でも、二日くらい光るだけだし大丈夫じゃない？」
+
+Eva「その適当さ加減で何回研究室吹き飛ばしてるんだよ」
+
+Veris「もおおおおおう！！！！！」
+
+一方、Verisのブースにも客が来ていた。
+
+女子中学生A「ねえ、これって売り物ですか？」
+
+Veris「は、はい、そうですよ！試着もできますので、気になるものがあれば遠慮なく言ってくださいね」
+
+女子中学生B「うーん……なんか、すごいね。これ、どこで着るの？」
+
+女子中学生A「こっちの服とか、肩のところどうなってんの？　左右で違うし、色もなんか……その、個性的」
+
+Veris「こ、個性的というのは……」
+
+女子中学生B「いや、別に悪いって言ってるわけじゃないけどさ……ちょっとセンスが独特っていうか」
+
+Verisの顔が引きつり始める。
+
+女子中学生A「あと……このアクセサリーも……すごい。今回は……いいかな」
+
+女子中学生たちは悪気のない様子で品物を戻した後、そのまま別のブースへとさっさと歩いていった。
+
+Veris「…………」
+
+Sol「……服のセンスが独特って、要するにダサいってことじゃね？」
+
+Veris「黙ってください。私が着る服をどう選ぼうと私の自由ですし、そもそも今日は売りに来ただけで、ファッション評論を受けに来たわけじゃないんですが！」
+
+Sol「いやいや、私だって別に悪く言ってるわけじゃないって！　ほら、個性って大事だしさ、その中で委員長のセンスがちょーーっとだけ、珍しい方向に向いてるって話でさ……」
+
+Veris「それを悪く言っているというんです！！」
+
+Solはけらけらと笑いながら自分のブースへ戻っていった。そしてそのSolのブースでは、別の意味で商売が順調に進んでいた。
+
+学生A「すみません、これって何に使うものなんですか？　ただの金属片に見えるんですけど」
+
+Sol「おっ、いいところに目を付けたな！　これはな、用途が限定されてないからこそ面白いんだよ。何に使うか決まってないってことは、逆に言えば何に使ってもいいってことだからさ」
+
+学生A「……なるほど？」
+
+Sol「しかもさ、こういう古い部品って今から同じものを作ろうとすると意外と手間がかかるんだよね。素材の質感も現代の量産品とは違うし、工作とか模型作りが好きなら結構使い道あると思うぜ。値段も安いしさ、よくね！？」
+
+学生A「うーん……じゃあこれください」
+
+Sol「毎度ありぃ！　いやぁ、分かる人には分かるんだよな、こういうの！」
+
+学生Aが去っていくと、Solは売上を数えながら満足げに笑った。
+
+Sol「いやー商売って楽しいな！意外と売れるもんなんだな！」
+
+Eva「お前の場合売る理由をその場で発明してるだけだろ」
+
+Sol「細かいこと言うなって！売れたらいいんだよ売れたら！」
+
+Eva「まあ買った奴が満足してるなら好きにすればいいけどさ……」
+
+客A「すいません、この変な形の栓抜き……？って」
+
+Sol「おっまた目の付け所がいいじゃないか！これは私が昔懸賞に応募したときな……」
+
+やがてSolの言葉を聞いていた客が面白そうに笑いながら栓抜きを買っていった。その後もSolはガラクタに見える物の特徴やら希少性やらを適当に説明していたが、少なくとも本人は嘘をついているつもりすらないようだった。
+
+Veris「……なんであれで売れるんですか」
+
+Sol「うーん、愛嬌があるから？」
+
+Veris「な、なんで私はダメなんですか！！」
+
+Eva「そこじゃないと思うよ……」
+
+一方、Evaのブースに妙な客層が形成されつつあった。
+
+並んでいるのは相変わらず使わなくなった医学書や古い医療器具、聴診器などだが訪れる客の雰囲気がどうにもおかしい。
+
+黒い服に身を包んだ大柄な男、顔に古傷のある中年男性、サングラスをかけた周囲をやたら警戒している男。その全員が無言で商品を眺め、時折眠そうなEvaの顔を確認している。
+
+男A「……あんた、医者か？」
+
+Eva「元、ね。今はただの無職……に近い何か」
+
+男A「そうか。……この本は、まだ使えるのか」
+
+Eva「内容が古くなってる部分はあるけど、基礎的な知識なら問題ないんじゃない。少なくとも通販の変な本よりは役に立つと思うよ」
+
+男A「……いくらだ」
+
+Eva「千円」
+
+男Aは無言で千円札を置き、医学書を受け取って去っていた。続いて後ろに並んでいた別の男が一歩前に出る。
+
+男B「この器具は何だ」
+
+Eva「あー、展示用に置いてるだけなんだけど……」
+
+男B「……五千でどうだ」
+
+Eva「売った！」
+
+Veris「売った、じゃないでしょうが！！」
+
+また慌ててVerisが怒号を飛ばすが、男は金を置いてささっとどこかに行ってしまった。
+
+Veris「あんだけ売るなと言ったのに何売ってんですか！！！！」
+
+Eva「……なんだっけアレ」
+
+Veris「とぼけるな！！どう見てもあれ手術道具でしょうが！！！」
+
+Sol「わははｗｗ　あの人たち、なんか裏社会っぽくてかっこいいな！」
+
+Eva「はあ……需要があるのは別にいいけどさ、なんか私のとこだけ学内の催しから逸脱してる感じがするんだよな。もう少しこう、子どもが手作りの小物を買いに来るような平和な場所で商売したかった」
+
+Veris「あんたが原因でしょうが！！！！！」
+
+やかましい外野をガン無視しながら、Quanは異様に難しい本と謎の機械を無造作に地面に置いたまま、自身も売り物の異様に難しい本を読みつつ客を待っていた。
+
+そもそも売る気があるのかすら怪しい態度だったが、しばらくすると年配の男性が一人静かに足を止めた。
+
+男性「……この本は、初版か」
+
+Quan「そうだ。改訂版では削除された章が含まれている。内容を理解しているならの話だが価値はあると思われる」
+
+男性「ふむ。値段は？」
+
+Quan「二千」
+
+男性「……安いな。いただこう」
+
+男性は余計なことを一切言わずに代金を支払って本を持ち去った。しばらくして、今度は眼鏡をかけた女性教授らしき人物がやってきた。彼女はテーブルの品々をじっくりと眺めた後、古い機械部品を手に取った。
+
+女性「これは何の装置の部品だろうか。規格が少し特殊に見えるが」
+
+Quan「用途は不明。少なくとも現在流通している一般的な機器の部品ではないと思われる」
+
+女性「出所が不明なのに売るのか」
+
+Quan「必要な事項は説明した。購入するかどうかはそちらの判断だ」
+
+女性「……なるほど」
+
+女性は少し考え込んだ後、その部品を購入していった。
+
+Sol「……理屈屋のところ、なんか客まで理屈っぽいな。さっきからみんな、品物を見ながら難しい顔してほとんど喋らずに帰っていくじゃん」
+
+Quan「聞こえているぞ。そもそも私のブースは商品の性質上購入者が限定される。無理に客層を広げる必要はない」
+
+Eva「お前のところが騒がしすぎるんだよ。ゴミの価値を捏造するのは詐欺だけにしてくれ」
+
+Sol「なんだと！！でもさ、もうちょっと愛想よくした方が売れるんじゃない？　笑顔で『いらっしゃいませ～』って言うだけで、売上が倍になるかもしれないじゃん」
+
+Quan「根拠のない仮説だな。笑顔を作るための筋肉運動と発声に消費するエネルギーを考慮すると、売上増加が確認されない限り実行する合理性はない。後、単純に不快」
+
+Sol「うわ出たよｗｗ」
+
+Quan「お前こそ、錆びた金属片に希少性という架空の価値を付与している。私の販売方法を批判する前に自分の行為を定義し直せ」
+
+Sol「架空じゃねえよ！可能性を売ってるんだよ、可能性を！」
+
+Veris「……他3人に比べたらQuanさんのところは全然マシだと感じます」
+
+Sol「うるせえ！」
+
+Eva「知るか」
+
+Stella「私も！？」
+
+フリーマーケットはまだ始まったばかりだったが、Verisの胃痛の原因だけは開始時点から順調に増加していた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="05-2.html" class="nav-button prev">← offep5-2へ戻る</a>
+      <a href="05-4.html" class="nav-button next">offep5-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
