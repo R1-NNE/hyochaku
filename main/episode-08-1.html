@@ -1,0 +1,515 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep8-1</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep8:"続・七曜魔法研究" sec-1</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+研究室の午後は、相変わらず統一感というものに恵まれていなかった。
+
+机の上には七曜魔法の術式を書き散らした紙、その隣には誰が持ち込んだのかも分からない菓子の袋、ホワイトボードにはStellaが描いたらしい円と矢印の集合体。研究資料なのか落書きなのか作者以外には判別できそうにない。
+
+Verisは紙束を整理しながら、時折ため息をついていた。
+
+Veris「……どうして研究資料の中に買い物メモとゲームの攻略情報が混ざっているんですか」
+
+Sol「研究ってのは分野を越えて繋がるものだから！」
+
+Veris「この『次のボスは右から殴る』という記述が、七曜魔法とどう繋がるのか説明してから言ってください」
+
+Sol「右から殴ると勝てるから」
+
+Veris「答えになってません！！」
+
+ソファではEvaが寝転がったままやり取りを聞いていた。手元には資料が一冊あるものの、開かれているページはここ数十分まったく変わっていない。
+
+Eva「相変わらず進捗ねえな今日も」
+
+Stella「Evaもさっき資料の余白になんか落書きしてなかった？」
+
+Eva「……暇つぶし」
+
+Veris「……さっきから一ミリもページ進んでないですよ」
+
+一方、少し離れた机ではQuanだけが黙々と作業を進めていた。
+
+術式の展開図、魔力の流量など七曜魔法の基礎理論を確認しなが、既存の魔法体系との相違点を洗い出している。必要な情報を集め、仮説を立て、検証し、結果を記録するだけの実に淡々とした作業だったが、その進捗は他の四人と比べて明らかに良かった。
+
+Quan「……この部分は既存の術式を流用できるな。問題は魔力の変換効率か」
+
+Stella「Quanちゃん、もうそんなに進んでるの？」
+
+Quan「基礎部分に大した新規性は無いから大した負担ではない。お前らも働け」
+
+Eva「寝るので忙しい」
+
+Sol「今レイドボス」
+
+Veris「貴方たち！！！」
+
+Quan「……烏合の衆」
+
+Stellaは会話を聞きながらQuanの机を覗き込む。数式と術式の図が整然と並んでおり、特に自身の担当する火輪についてはStellaがやっていたものよりずっと先に進んでいた。
+
+Stella「わっ、Quanちゃんすごいね！　火輪のことかなり分かってきた感じ？」
+
+Quan「現時点では既存の魔法と異なる特性をいくつか確認した程度だ。完成には程遠い」
+
+Stella「でも進んでるのは進んでるよね！さっすが！」
+
+Quan「……まあ、そうだな」
+
+ほんのわずかに間を置いてQuanは頷く。
+
+Sol「理屈屋が素直に認めるくらいには進んでるんだ」
+
+Quan「お前たちが進捗を生み出さないことと私の研究成果は無関係だ」
+
+Veris「わ、私はちゃんと進めていますよ！　ただ、月輪の術式が……その……」
+
+言いかけてVerisは手元の資料に視線を落とす。
+
+黒い文字列のように絡み合った術式。その性質を理解すること自体はできても、実際に扱うとなると彼女はどうにも気が進まなかったらしい。
+
+Veris「……いえ、進めます、進めますけど……なんでこう、月輪って全部気色悪いんですか……」
+
+Sol「似合ってるじゃん、委員長」
+
+Veris「どこがですか！！！！」
+
+Eva「お前が怒鳴ってる時の雰囲気にぴったりだろ」
+
+Stella「ヴェリちゃん魔女みたいでかっこいいよ！」
+
+Veris「うるさい！！！！」
+
+いつも通り騒がしくなり始める研究室。やがてSolがふと思い出したように首を傾げた。
+
+Sol「……ねえ、そういえばさ」
+
+Stella「んー？」
+
+Sol「結局、七曜魔法のマスターってどういうことだったの」
+
+それまで好き勝手に話していた面々が少しだけ静かになった。
+
+Sol「いやさ、術式を使えるようになればいいのか、普通の魔法より強くなればいいのか、それともなんか特別な技を覚えるのか。そもそもどこまでできたら完成なのコレ？」
+
+Stella「んー……」
+
+Stellaは腕を組んで天井を見上げる。
+
+一瞬だけ真剣に考えているような表情が浮かんでいたが、三秒ほど経過したところで元の平たい顔に戻って机の引き出しをごそごそと漁り始めた。
+
+Eva「分かってねえ顔だな」
+
+Stella「うーん……ママのノートに書いてあった気がするんだよねぇ」
+
+Quan「研究の具体的な目標くらい最初に提示してくれないか」
+
+Eva「ダメだったから今こうなってるんだろ」
+
+Stella「ひどい！　……えーっと、……あった！」
+
+取り出されたのは使い込まれた一冊の実験ノート。表紙には細かな傷があり、ページの端は何度もめくられたせいでボロボロである。
+
+Stellaはぱらぱらとページをめくり、やがて何かを見つけると得意げに全員へ向けて掲げた。
+
+Stella「ここだここ！　七曜魔法の習得条件！えーっとね……『七曜魔法は、単に術式の行使技術を習得しただけでは成就せず。各々の輪は、術者自身の信条、思想、精神性と深く結びついた時、初めてその者の魔法として完成する』……だって」
+
+Veris「……」
+
+Quan「……」
+
+Sol「……は？」
+
+Eva「……何て？」
+
+Veris「いや、今ので分かったことほとんど何もなくないですか？」
+
+Quan「具体的な判定基準が何もない」
+
+Sol「マスターしたと思ったらマスターってこと？」
+
+Eva「その通りだな。アホか」
+
+Stellaは慌ててもう一度ノートに目を落とす。
+
+Stella「えーっと、つ、続きがあるよ！『精神性との結びつきについては個人差が大きく、画一的な測定方法は現時点で確立されていない』……」
+
+Eva「研究者として最低限の良心は残っていたらしいな」
+
+Stella「それで……『各自、己の内面と向き合い、試行錯誤を重ねること。ガンバレ！』だって！」
+
+Sol「急に根性論！！！」
+
+Veris「研究ノートですよね、これ？」
+
+さらにページをめくってみても、肝心の習得条件については驚くほどふんわりとした説明しかなかった。
+
+Stella「『理屈をこねても仕方がないので、とりあえず回数回数！』」
+
+Veris「脳筋！！」
+
+Stella「ママ、たまにこういうところあったから……」
+
+Quan「はぁ……七曜魔法研究の第一人者が、習得条件の説明を精神論と実践論に丸投げしているのか」
+
+Eva「親が親なら子も子か……」
+
+Stella「悪口言われてる気がする……」
+
+Quanは呆れた顔でノートの記述をもう一度確認していたが、やがて小さく息を吐き手元の資料へ視線を戻す。
+
+Quan「……まあ、今の段階で定義に文句をつけても仕方がない。少なくとも術式を行使できることだけが習得条件ではないという点は分かった」
+
+Eva「じゃあそういうことで、今日はお開き」
+
+Veris「終わらせようとしないでください！　とりあえずやってみたらいいんじゃないですか？」
+
+Eva「ノート書いた奴みたいな事言い始めるな」
+
+Stellaはノートを大切そうに閉じると、ぱん、と両手を打った。
+
+Stella「うーん、ヴェリちゃんの言う通りだと思うし、今日も実験しにいこっか！」
+
+Sol「おっ、いいね！」
+
+Veris「いいですけどまだ資料の整理が……」
+
+Eva「置いとけ置いとけ。どうせ戻ってきたらまた散らかる」
+
+Veris「散らかす前提で話を進めないでください！！」
+
+—
+
+研究室を出て地下研究棟に来た5人。
+
+七曜魔法が各人の信条や精神性と結びついた時に完成する。というのは言葉にすればそれらしく聞こえるが実際に何をすればいいのかは誰にも分かっていない状態である。
+
+Eva「で、今日は何を壊すの」
+
+Stella「うーん、またみんな色々出してみる感じで！」
+
+Quan「具体的に言え」
+
+Stella「ほら、やってみないと分からないってママも言ってたし！」
+
+Quan「その部分だけ都合よく採用するな」
+
+Sol「ま、案外何か起きるかもしれないよ。前もそんな感じだったでしょ」
+
+Veris「事故だけはやめてくださいね……」
+
+やがて五人はそれぞれ七曜魔法を試し始める。五人は進捗にも理解度にもそれぞれ差があり、そもそも研究に対する熱意があるのか疑わしい者も若干名いる。
+
+その中で、Quanだけはすでに次の実験条件を頭の中で組み立てていた。既に区画の中央に立ち、手元の記録板を何やら確認している。
+
+Quan「火輪の実験をやる。圧縮率と温度の関係を重点的に調べる、お前ら下がってろ」
+
+Sol「はいはい、理屈屋の火遊びの時間ね」
+
+Quan「黙れ。私の火輪は何かを燃やしているわけではない」
+
+Eva「一般人からすれば熱いものが出た時点で大体火遊びだよ」
+
+Quan「一般人の語彙に合わせて研究内容を説明する必要はない」
+
+Stella「火輪ってすごいよねぇ。空気をぎゅーってして、熱くするんでしょ？」
+
+Quan「不快な言い方だが概ね間違ってはない」
+
+Stella「ぎゅー！！」
+
+Quan「……」
+
+そんな会話の最中にもQuanは術式を展開していた。
+
+彼女が片手を軽く持ち上げると、空間の一点に向かって目には見えない圧力が集中していく。そして、甲高い音とともに極僅かな光点が生まれたかと思えば、一瞬で強い輝きを放って正面のラットが燃え始める。やがて跡形もなくなり白い蒸気が研究棟を覆い始めた。
+
+Veris「……相変わらずですね」
+
+Stella「すっごーい！」
+
+Sol「いやーやっぱロマンあるわこれ、もう1回やってよ～」
+
+Quan「見世物ではない」
+
+Sol「え～」
+
+Quanはその後も表情一つ変えずに何か分析している。今回の魔力消費量に対する発熱量は事前の予測をわずかに上回っていたが、術式の構造も安定しており制御に大きな問題はない。
+
+実験としては十分な成果だったが、それでもQuanの表情はさほど明るくなかった。
+
+Stella「あれ、Quanちゃんどうしたの？　上手くいったのになんだか難しい顔してるね」
+
+Quan「……先ほどの記述が気になっている」
+
+Eva「『信条や精神性と結びついて初めて完成する』っていう、あのフワッとしたやつ？」
+
+Quan「そうだ。現状、火輪の性能は術式の構造と魔力の制御によって説明できる範疇だと認識している」
+
+Veris「さっきのを見たらそうかもしれませんけど……」
+
+Quan「ならば、信条だの精神性だのという要素は何に寄与する？　少なくとも今の実験では何も観測できていない」
+
+彼女は記録板を見下ろした。
+
+Quan「七曜魔法を完成させるという目的に対して、術式の性能向上は明確な進歩だと思う。ならば、測定できない要素を追いかけるよりまずは測定できる部分を改善する方が合理的ではないか」
+
+Eva「まあ言ってること自体は間違ってないかも。実際にこの前からは威力も上がってるわけだしさ」
+
+Veris「ただ、ノートに書いてある以上何か意味はあるんでしょうけど……」
+
+Sol「でもさ、Stellaママもとりあえず回数！って言ってたじゃん。だったらなんも考えずに強くしてみるのもアリなんじゃないの」
+
+Stella「う－ん、どうなんだろうね……」
+
+Quan「……」
+
+七曜魔法が何をもって完成とするのか、その基準すら曖昧な中で明確な方針を見つけるのは誰にとっても困難であった。
+
+やがてEvaが口を開く。
+
+Eva「ま、少なくとも今のところは順調だし別に急いで答えを出す必要もないんじゃないの。あんたなりにやってればいいと思うよ」
+
+Quan「……そうだな」
+
+Quanは再び標的に向き直った。
+
+Quan「ならば、まずはSolの言う通り出力を上げる。圧縮効率を改善し、同じ魔力消費量でより高い温度を得ることを目標とする。術式の安定性も並行して検証する予定だ」
+
+Sol「分かりやすくなってきたな！」
+
+Veris「まあそうなりますね……」
+
+Eva「珍しく素直で良かったな」
+
+Stella「じゃあ、次はもっとすごいのが見られるってこと！？」
+
+Quan「理論上はな」
+
+Stella「やった！！！」
+
+Veris「うーん、大丈夫でしょうか……」
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-07-6.html" class="nav-button prev">← ep7-6へ戻る</a>
+      <a href="episode-08-2.html" class="nav-button next">ep8-2へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

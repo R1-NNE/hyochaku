@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep8-6</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep8:"続・七曜魔法研究" sec-6</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+数日後。研究室にはようやくいつも通りの空気が戻っていた。
+
+Stellaの怪我はほぼ完治し、頭の包帯も外れている。多少の痛みや違和感は残っているらしいが、本人も外野も既にあまり気にしていなさそうだった。
+
+Stella「ん～、やっぱり健康っていいねぇ！　そろそろ研究も再開したいなぁ」
+
+Eva「……本当に反省してんのか？」
+
+Stella「し、してるよぉ！」
+
+Sol「思えばあの爆発はなかなかの迫力だったよな。マジギレしてる委員長くらいあった」
+
+Veris「誰がですか！！　いやほんとに……あの時は危なかったんですからね！　皆さん、もう少し実験の安全性というものを真剣に考えてください！」
+
+Eva「もう散々聞いたよそれ」
+
+Veris「そういう事ではありません！！」
+
+いつものやり取りで外野が騒がしくなる中、Quanだけは相変わらず机に向かい続けていた。
+
+やがて立ち上がる。
+
+Quan「……Stella」
+
+Stella「ん？　どうしたの？」
+
+Quan「……火輪の実験を再開したい」
+
+一瞬にして空気が止まった。
+
+Eva「……今、何て？」
+
+Quan「火輪の実験でどうしても確かめたい事がある。もう一度改めて検証したい」
+
+Veris「ちょ、ちょっと待ってください！　あれだけの事故を起こしたばかりですよ！？　Stellaさんだって、まだ完全に回復したと言い切れるわけではありませんし……！」
+
+Stella「私はもうほとんど大丈夫だよ～。ほら、見て見て！」
+
+Stellaは両手を広げてその場でくるりと一回転してみせた。健康状態の証明としては少々雑な気もするが……少なくとも本人は元気そうである。
+
+Eva「……いや、そういう問題じゃない。原因の切り分けもまだ終わってないのに何をしに行くんだ？」
+
+Quan「今回は出力を抑え術式の構成も変更する。安全対策も追加した。少なくとも前回と同じ条件で再現実験を行うわけではない」
+
+Sol「……理屈屋、なんかいつもと違くない？　いつもなら『原因は特定できた、対策も完了、実行する』って感じで勝手に進めるじゃん。今回は何か、まだ自分でもよく分かってないことがあるって顔してるよ」
+
+Quan「……」
+
+Solの指摘にQuanはすぐには答えなかった。いつもなら滝のように反論してくるが、今日はどこか落ち着いたままである。
+
+Quan「……確かめたいことがある。それだけだ」
+
+Veris「そ、それだけって……」
+
+Eva「お前な……」
+
+ややムードが重くなりつつあったが、やがてStellaが立ち上がった。
+
+Stella「……よし、じゃあ行こうか」
+
+Veris「S、Stellaさん！？」
+
+あまりにもあっさりとした返事だった。Stellaはすでに立ち上がって実験棟へ向かう準備を始めている。
+
+Veris「ちょ、待ってください、どうしてそんなに簡単に了承できるんですか！？　もう少し慎重に考えてもいいでしょう！？」
+
+Stella「Quanちゃん、何か確かめたいことがあるんでしょ？　だったら、やってみないとさ。もちろん……前みたいにならないように気をつけるけどね！」
+
+Eva「前回それで済まなかったのを忘れたのかよ……まあ、止めてもどうせ行くんだろ」
+
+Stella「うん。Quanちゃんも何か考えてるはずだよ。そうだよね？」
+
+Quan「……ああ」
+
+二人の決心は既に硬かった。その顔を見てEvaは諦めたらしい。
+
+Eva「……私の言う事は絶対聞いてもらうからな」
+
+Sol「私も行く！」
+
+Veris「……もう、分かりました。私も行きますよ」
+
+こうして再び地下実験棟へと向かうことになった五人。Quanの表情はいつも通りだったが、ほんの少しだけ硬いようにも見えた。
+
+—
+
+地下の廊下を歩きながらSolとVerisは相変わらず何か言い争っている。Evaはほとんど目が開いていない、Stellaは久々の実験にウキウキしている。
+
+その後ろを歩くQuanは、ほとんど口を開かず何か考えていた。
+
+合理性、非合理性、人間の行動を決定するもの。そして、自分がこれまで当然のように正しいと信じてきた判断基準。
+
+前回の失敗が単に術式の構造や出力制御の問題ではなかったとしたら、自分に足りていなかったものは何だったのか。それを確かめる時が来ていた。
+
+—
+
+地下実験棟に到着した五人。
+
+Stella「よし、準備できたよ。今日はどんな感じでやるの？」
+
+Quan「前回のように最大出力を目指すことはしない。まずは術式を安定させ、低出力の段階で変化を観測する。異常があれば即座に停止する。全員、その前提で頼む」
+
+Eva「聞いたかStella、今度こそ勝手に近づくなよ。これ以上仕事増やすな」
+
+Stella「はーい、ちゃんと離れて見ます！」
+
+Veris「本当にお願いしますよ……」
+
+Sol「理屈屋、なーんか今日は妙に真面目だな。いつもならもう実験を始めてそうだし」
+
+Quan「……」
+
+Quanは返事をしないまま実験区画の中央へと進んだ。やがて計測装置の稼働音も背後で何か言ってる外野の声も聞こえなくなっていく。
+
+彼女はゆっくりと目を閉じ、呼吸を整えた後腕を掲げた。
+
+Quan「……火輪詠唱」
+
+—
+
+実験区画の空気が歪み始める。
+
+いつものように空気が中心に向かって圧縮されていく。以前の実験でも見られた、無駄な装飾のないただ純粋に圧力と熱量を高めただけの如何にもQuanらしい無骨な火輪である。
+
+……はずだった。
+
+Sol「……ん？　あれ、なんか前と違くない？」
+
+圧縮点の周囲に、ほんのわずかな揺らめきが生じていた。
+
+単なる熱による光の屈折ではなく、火輪の外縁に沿って薄い光の筋が走っている。空気が脈打つたびにその筋は一瞬だけ花弁のように広がり、すぐに輪郭へと戻っていくのを繰り返している。それはまるで燃え盛る炎が何かを表現しようとしているかのようだった。
+
+Eva「……前回はこんなもの出てなかったな」
+
+Evaは計測装置から目を離して火輪をじっと見つめていた。隣ではVerisが記録用の端末を操作していたが、思わず数値を確認する手が止まっている。
+
+Veris「出力自体はまだ低いままですね。ただ、魔力の流れが……以前の記録と一致していません。術式の基本構造は同じはずなのに、何が変わったんでしょうか？」
+
+Stella「わ……なんか綺麗だね。なんだか、前より柔らかい感じというか……」
+
+Quan「出力を上げる。観測を続けろ」
+
+そう告げる彼女の表情は、いつもの実験中に見られるような確信も余裕もなかった。ただ、目の前で起きている現象を一つも見落とすまいとするような集中したような表情である。
+
+やがて火輪はゆっくりと大きくなり始めた。炎の輪が二重、三重に広がりながら圧縮された空気が低い唸りを立てている。外縁を走る光の筋も徐々に鮮明になっていき、時折、形を変えるように揺らいでいる。以前の実験では見られなかったものだった。
+
+Veris「Quanさん、出力が上がっています！　このままだと前回の最大出力に達しますよ！」
+
+Quan「いや……まだだ」
+
+Veris「な……」
+
+Quan「出力は上昇しているが術式の構造は崩れていない。今ここで止めれば確認できない」
+
+Eva「……Quan、前回のことを忘れたわけじゃないだろうな」
+
+Quan「分かっている。だからこそだ、黙って見ていろ」
+
+いつも通り冷たく簡潔な言葉だったが、その声には妙な強さがあった。無理に押し通そうとする焦りではなく、自分が何を確かめようとしているのか本人の中では明確になっているような響きであった。
+
+火輪が放つ熱と光が強まるにつれ、四人の意識は自然と実験区画の中央へ引き寄せられていった。
+
+さらに出力が上がり、直径はすでに前回の実験で爆発直前に達していた規模に近い。赤と橙の炎が幾重にも重なり、中心部では圧縮された空気が高温によって白く輝いている。
+
+Veris「この規模、前回とほぼ同じ……ですが……出力の変動が……」
+
+彼女は端末を見つめたまま言葉を失った。
+
+数値は確かに揺れているが異常値は発生していないし、術式の構造は保たれたまま魔力の流れも途切れていない。温度と圧力は危険な領域に達しているにもかかわらず、それらは全体として一定の範囲に収まっていた。
+
+Sol「……何だ、これ」
+
+Eva「……出力は前回と同じくらいまで上がってるな。それなのに、術式の破綻が見られない、いや……細かい揺らぎはあるんだが……全体の安定性はむしろ高い。……どういう制御をしているんだ？」
+
+Veris「私にも分かりませんが……何というか、不思議と安心します……」
+
+Sol「えっ、じゃあ成功してるってこと？」
+
+Stella「うん……なんだか、ちゃんとそこに留まってる感じがするね。前はもっと、無理やり押さえつけてるみたいだった」
+
+四人の視線がQuanへと向けられるが、彼女は答えないままその巨大な輪をじっと見つめていた。
+
+やがて、Quanが片手をゆっくりと下ろす。
+
+Quan「……収束」
+
+その一言とともに火輪が縮小を始め、跡形もなく消滅した。実験区画に静寂が戻り計測装置の稼働音だけがやけに大きく聞こえている。
+
+Verisは端末に表示された数値を何度も確認し、Evaは記録データを前回の結果と照合している。Solは口を半開きにしたまま固まり、Stellaは目を輝かせて実験区画の中央を見つめていた。
+
+誰もすぐには言葉を発さなかったが、やがてSolがぽつりと呟いた。
+
+Sol「……ねえ、今のってさ……もしかして……成功？」
+
+Eva「……術式はずっと維持できていた。実験としては成功と言っていいだろうな」
+
+Veris「でも、どうしてですか……？　術式の構造そのものは以前と大きく変わっていないのにあれほどの違いが出るなんて……」
+
+Stella「……Quanちゃん！　今の、ほんっとすごい！　なんだか……火輪が生きてるみたいだった！」
+
+Quanはすぐには返事をせず、暫く黙っていた後四人を順番に見た。
+
+Quan「……今回の実験で明確になった」
+
+Sol「え……何が」
+
+Quan「以前Stellaが七曜魔法には術者本人の信条が関わる、と言っていたな。私はあれを、合理性の追求こそが自分の信条なのだと解釈していた。無駄を省き、構造を分析し、最も効率の良い形へと最適化する。それが私にとっての正しさであり、火輪を完成させるために必要なことだと思っていた」
+
+Quanは先ほどまで火輪が浮かんでいた空間を見つめながら淡々と言葉を紡ぐ。いつものように他人の理解など気にせず話を進めるのではなく、珍しく一つ一つの言葉を確かめるような口調だった。
+
+Quan「だが……それは間違っていた。合理性を追求すること自体が間違いだったわけではないが、問題は、合理性から外れるものをすべて排除すべき欠陥だと考えていたことだ」
+
+Veris「それは……ここ数日私達に聞いていたことと関係しているんですか」
+
+Quan「その通りだ。人間の行動には合理的な説明がつかないものがいくらでもある。お前がSolを何度も叱ることも、Solが懲りずに悪ふざけを繰り返すことも、Stellaが何も考えずに無闇に首を突っ込むことも、私には長い間全て効率の悪い行動に見えていた。だが……それらを単純に取り除けば人間を理解できるわけではない。むしろ、それらも含めて初めて一人の人間として成立している、と私は結論付けた」
+
+Eva「……」
+
+Quan「そして、それは魔法でも同じだった。私は火輪を構成する要素を細かく分解してそれぞれの誤差を取り除くことで完成に近づけようとしていたが、術式の中に生じる揺らぎをすべて排除しようとした結果、かえって全体の均衡を崩していたらしい。必要だったのは、揺らぎを消すことではなくそれを含んだまま成立する構造を見つけることだったという訳だ」
+
+Veris「つまり、術式の不安定さもある程度は許容する必要があったということですか……？」
+
+Quan「いや、当然無秩序な揺らぎは術式を破綻させる。だが、すべてを一定に保とうとすることもまた、別の形で破綻を招くと言う事だ。重要なのは、変動する要素を含めた上で全体として安定する構造を作ることだ。以前の私はそれを理解していなかった」
+
+Stella「……だからさっきの火輪はあんな感じだったんだね。　前の火輪はすごく強そうだったけど……今回はなんだか生き物みたいで、でも全然危なっかしい感じがしなかった」
+
+Quan「お前の感想は相変わらず感覚的すぎるが……観察結果としては間違っていない。揺らぎをノイズとして排除しようとせず許容した結果、術式全体が寧ろ安定するようになったという訳だ」
+
+Sol「……すっげぇ！！！」
+
+そう言い切るとQuanはポケットから何やら石を取り出した。石は微かな熱を帯びて輝いているような、不思議な光を静かに灯していた。
+
+Stella「……あれ？　それって、もしかして火輪の……」
+
+Quan「そうだ。ずっと持っていたが術式を展開してすぐに気づいた。……Stella、私から言っていいか」
+
+Stella「う、うん……！」
+
+Stellaは興奮を抑えきれていないようだが、満を持したようにQuanが口を開いた。
+
+Quan「……火輪は、ここに完成した」
+
+Sol「……おおおお！！！！」
+
+Veris「つ、遂に……！！」
+
+Eva「……あの言葉は本当だったんだな」
+
+Stella「…………やっ、たぁぁぁ！！！！！！　Quanちゃん！！！！　本当にありがとう！！！！」
+
+嬉しさの余りStellaがQuanの元にドタドタと駆け寄り、勢い余って押し倒してしまった。
+
+Quan「っ……重い……やめろ……」
+
+Stella「いやいや！！　嬉しすぎるもん！！！　ずっと止まってた七曜魔法の大きな一歩だよ！！！　Quanちゃん！！　Quanちゃん！！」
+
+Quan「うるさい……身体を揺するのをやめろ……」
+
+Eva「まあ……今日くらいははしゃがせてやれ。お疲れ様」
+
+研究室らしい騒がしさが戻る中、QuanはStellaの下敷きになりながら手の中の魔石を見つめていた。淡い光は一定の明るさを保ちながらもごく小さな変化を繰り返し続け、詠唱者と呼応しているようだった。
+
+Quan「……苦しい」
+
+Sol「顔が死にかけてるぞｗｗ」
+
+Stella「Quanちゃん！！！」
+
+Quan「…………」
+
+問答はQuanが気を失うまで続けられた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-08-5.html" class="nav-button prev">← ep8-5へ戻る</a>
+      <a href="episode-08-7.html" class="nav-button next">ep8-7へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

@@ -1,0 +1,563 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep8-5</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep8:"続・七曜魔法研究" sec-5</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+それから数日後。Quanは研究室で妙な行動を取るようになった。
+
+空き時間を見つけては研究室の面々に何やら質問を投げかけるのである。
+
+最初の犠牲者……もとい調査対象となったのはVerisだった。
+
+Veris「……Quanさん、先ほどから何をなさっているんですか？」
+
+Quan「質問だ。お前の行動についていくつか確認したい」
+
+Veris「……え？　私の行動？」
+
+Quan「そうだ。お前はSolが何か馬鹿なことをするたびに怒るだろう」
+
+Veris「馬鹿なことって……」
+
+Sol「おい理屈屋！　私の行動には常に高度な戦略的意図がだな」
+
+Quan「黙れ」
+
+Sol「はい」
+
+Quan「……話を戻す。Veris、お前は毎回Solの馬鹿な行動を止めようとしているが、実際にはほとんど効果がない。あいつは何度注意されても同じことを繰り返すし、お前もそれを理解しているはずだ」
+
+Veris「……まあ、そう言われたらそうですね」
+
+Quan「ならば、なぜ毎回怒る？　注意することが行動の抑制につながらないと分かっているなら、放置する方が合理的ではないのか」
+
+Verisは手元の資料を揃える手を止めた。実際、彼女自身も何度となく同じことを考えた経験がある。
+
+それでも、出たのはあまりにも曖昧な答えだった。
+
+Veris「……まず、無駄だとは分かっているんですよ」
+
+Quan「……ほう」
+
+Veris「何度言っても聞かないことも、Solが反省するとは限らないことも全部分かっています。私だって毎回怒りたくて怒っているわけじゃありません」
+
+Sol「えっ、そうだったの？」
+
+Veris「あなたは黙っていてください！！！」
+
+Sol「はい」
+
+Veris「……でも、どうしても言わないと駄目なんです」
+
+Quan「なぜ？」
+
+Veris「な、なぜって……」
+
+Verisは困ったように眉を寄せ、しばらく考え込んだあと、結局呆れた顔になりながら首を横に振り始める。
+
+Veris「……すいません、うまく説明できません。見過ごしてはいけないことなのでは、というか……分かっているのに何も言わなかったら、それはそれで嫌なんです」
+
+Quan「嫌、というのは？」
+
+Veris「い、嫌なものは嫌というか……」
+
+Quan「……」
+
+Veris「……答えになってないと思いますが、本当にそうなんですよ！　誰かが間違ったことをしているのに、それを分かっていて何も言わないというのは私にはできません……」
+
+Quanは黙って彼女の意見を聞いていた。
+
+最初から無駄だと理解しているし効果が薄いことも認識している。効率だけを考えれば明らかに不合理ではある。
+
+だが、Verisは自分の行動を無意味だとは思っていない。むしろ、何もしないことの方に耐えがたい何かを感じているようだった。
+
+Quan「……分かった。感謝する」
+
+Veris「いえ……あの……参考になったんでしょうか」
+
+Quan「……一応」
+
+Veris「そうですか……」
+
+Verisは困惑したままだった。まさか自分の怒り方を分析される日が来るとは夢にも思っていなかったのだろう。
+
+—
+
+次の調査対象は当然のようにSolだった。
+
+Quan「Sol」
+
+Sol「あー？」
+
+Quan「お前は怒られると分かっていて、なぜいつも余計なことをする？」
+
+Sol「は？　おもしれーからだよ」
+
+Quan「……」
+
+Sol「……何だよ」
+
+Quan「……予想していた回答があまりに予想通りに返ってきたのが、少し」
+
+Sol「質問する意味あったの？」
+
+Quan「ある。予測が正しかったことを確認できた」
+
+Sol「じゃあ私の勝ちじゃんｗ」
+
+Quan「……何が？」
+
+Sol「ほら、理屈屋の予想を見事に的中させてやったんだぞ。だから私の勝ち」
+
+Quan「……論理が破綻している」
+
+Sol「おもしれーからいいんだよ！」
+
+Quan「……それだ」
+
+Sol「え？」
+
+Quan「お前は行動の結果として何が起こるかをある程度予測しているな。それでVerisが反応したり痛い目を見ることも理解しているだろう。それでもお前は行動する。つまり……お前にとってはその結果を含めて行動する価値があるということか」
+
+Sol「……うん？　まあ……そんな感じ？」
+
+Quan「怒られること自体は不快ではないのか？」
+
+Sol「内容によるかな。理屈屋の説教みたいにマジで怒られるのはダルいけど、委員長がいつもの調子で怒るのはまあ……いつものことだし」
+
+Veris「聞こえてますけど！？」
+
+Sol「ほらなｗ」
+
+Quan「……」
+
+Sol「そもそも、研究室が静かすぎてもつまんなくない？　私が変なことしてさ、委員長がキレて、Evaが横から余計なこと言って、Stellaが笑って。いっつもそんな感じじゃん」
+
+Stella「えへへ、だってSolちゃん、面白いもん」
+
+Eva「まあ、Solが何もやらかさなかったらそれはそれで心配だな」
+
+Sol「ほら！　みんな私のことをよく分かってるんだって」
+
+Veris「その結論でいいんですか……」
+
+Solの答えはあまりにも単純だった。
+
+面白いから。
+
+本人はそれ以上の説明を必要としていない。怒られることが分かっていても、面白いと思うから行動する。それだけだ。
+
+だが、周囲の反応まで含めて考えると少し違った見方もできる。
+
+Solの行動は確かに周囲を困らせるが、その行動によって生じるやり取りそのものが研究室の日常の一部になっている。
+
+誰か一人の行動だけを切り取れば不合理に見えるものも、全体を眺めるとそれぞれの反応が連鎖してひとつの関係を形作っているのである。
+
+Quan「……なるほど」
+
+Sol「おっ、やっと分かったか？」
+
+Quan「お前が何も考えていないことがよく分かった」
+
+Sol「おい！！！」
+
+Quan「いや、訂正しよう。お前は考えていないのではなく、考える必要がないと判断しているのかもしれない」
+
+Sol「何か急に難しい話になったな」
+
+Quan「お前にとっては面白ければやる。それ以上の分析は不要なのだろう」
+
+Sol「そうそう。最初からそう言えばいいのに」
+
+やがてQuanはノートに短く記録した。
+
+『Sol：行動原理は本人の自覚の上で面白さ、のみである。また周囲の反応も行動の価値に含まれる可能性がある。本人への追加質問は回答の質を考慮すると優先度が低いだろう』
+
+Sol「おい何書いてんだよ」
+
+Quan「お前の分析」
+
+Sol「見せてよ」
+
+Quan「断る」
+
+Sol「ケチ！」
+
+Veris「Sol、Quanさんの邪魔しないでください！」
+
+Quan「いや……構わない。今の反応も記録対象だ」
+
+Veris「……Quanさんまで、何をおっしゃっているんですか」
+
+Eva「Quanが妙な方向に目覚めてるな」
+
+その言葉に、Quanは一瞬だけEvaを見た。
+
+今までの質問はいわば予備調査である。VerisとSolの行動原理のどちらも興味深かったが、もっと重要なのがいる。
+
+自分が人間というものに興味を持つきっかけになり、自分の人生を変え、そして、今もこうして当たり前のように隣にいる人物である。
+
+Quan「……Eva」
+
+Eva「……何だよ」
+
+Quan「質問する」
+
+Eva「嫌だ」
+
+Quan「まだ内容を言っていない」
+
+Eva「どうせさっきみたいな訳わからん事だろ。ダルいから後で」
+
+Quan「高校時代のことだ。私達が最後に会った、あの日だ」
+
+Evaのページをめくる手が止まった。
+
+Quan「……覚えていたのか」
+
+Eva「……当たり前だろ。お前が事故に遭う直前に妙に真面目な顔して話してさ。人間心理を追求したいとか、心理学をやりたいだとか、そんな話だったか」
+
+Quan「そうだ。あの時、私はお前に初めて自分の考えを話した」
+
+Eva「……まあ随分と長い話だったな。途中で何度か話が逸れてさ、最後はお前が何を言いたいのか分からなくなってたじゃん」
+
+Quan「お前が余計な話を挟むからだ」
+
+Eva「お前の話がなげーんだよ」
+
+少しだけ、二人の間に沈黙が流れた。
+
+研究室の向こうではSolがゲームを続けており、Verisが何かを注意している一方、Stellaはソファに座ったまま二人の会話を興味深そうに聞いていた。
+
+Quan「……あの時、私は人間の行動にも数字のように何らかの規則性があると信じていた。だが、人間は感情によって判断を変えるし、状況によって行動も変える。合理的な選択をするとは限らないし、同じ条件でも異なる判断をすることがあるとお前は言ったな」
+
+Eva「そうだな」
+
+Quan「私はそれは単に人間の判断能力が不完全だからだと考えていた。認知に偏りがあったり、感情によって判断が歪んだり、そうした要因を理解すればある程度は説明できるだろうと思っていた」
+
+Eva「……まあ、実際そういう部分もあるんじゃないの」
+
+Quan「だが、私はそれだけでは説明できないものがあると感じていた」
+
+Eva「……例えば？」
+
+Quanは手元のノートを見た。そこにはここ数日間の調査結果が簡潔にまとめられている。
+
+Quan「……Verisは無駄だと理解していても自分が正しいと思うことを伝えずにはいられない。Solは怒られると分かっていても面白いと思う行動を選ぶ。Stellaは危険性を認識していても相手が気になれば近づいてしまう」
+
+Eva「……あの質問攻めはそういうことだったのか？」
+
+Quan「続ける。それらは必ずしも合理的な判断とは言い難いが、それぞれの行動には本人なりの理由がちゃんとあると私は結論付けた」
+
+Eva「……お前は昔からそういう曖昧なものを嫌っていたな」
+
+Quan「曖昧なものは分析の妨げになると思っていたからな」
+
+Eva「でも、全部排除できるわけなかったでしょ」
+
+Quan「ああ。人間は自分の行動をすべて説明できるわけではないが、それでも、何かを好きになり、嫌いになり、気になり、腹を立てる。そうした感情や衝動は、必ずしも合理的な判断の結果として生じるものではないし、それらが存在すること自体を否定できるわけではない」
+
+Eva「……ようやく辿り着いたのか。長かったな」
+
+Quan「……その上で今聞く。お前は、私が高校時代に人間心理に興味を持ったことをどう思っていた」
+
+Eva「……どうって？」
+
+Quan「私は人間の行動を理解したいと考えていた。なぜ人はそう考えるのか、なぜその行動を選ぶのか、何をもって正しいと判断するのか。そうしたことを追求したいと、お前に話したと思う」
+
+Eva「……ああ」
+
+Quan「その時、お前は何と言った？」
+
+何か考え始めるEva。やがて出てきた言葉はこれだった。
+
+Eva「…………覚えてない」
+
+Stella「え、えぇ！？」
+
+Quan「……」
+
+Eva「いや……何か言ったとは思うし、思う事もあったよそりゃ。だけど……お前があまりにも真面目な顔してたのが面白くて……わざと適当に返したんじゃないか……多分」
+
+Quan「……そうか」
+
+Eva「敢えて言うとすれば……『そうなんだ』とか……そんな感じだろ」
+
+Quan「……」
+
+Eva「何だその顔は」
+
+Quan「実にお前らしいと思っただけだ」
+
+Eva「失礼だな。そもそもお前だって当時は随分と面倒だったんだぞ。人間の行動が理解できないとか言いながら、いちいち私に理由を聞いてくるんだからダルいんだよ」
+
+Quan「理由を求めることは間違いではないだろう」
+
+Eva「間違いじゃないけどさ、理由がないと何もできないわけでもないだろ。私がお前と一緒にいた理由だってそんなに明確なものじゃなかったはずでしょ、話していて面白かったからとか、何となく気が合ったからとか、そうじゃないの」
+
+Quan「……そうかも」
+
+Eva「まあ、そんな何となくでやってきたにも関わらずお前が夢を持ってくれたのは嬉しかったよ。まさかその後6年寝る羽目になるとは思わなかったけどな」
+
+QuanはEvaの顔を見た。
+
+Evaは相変わらず眠そうな顔である。二人にとって大事な日のことを話しているのに、彼女はまるで昨日の夕食について話しているかのような調子である。
+
+だが、Quanはその話を最後まで聞いていた。
+
+Eva「……で、結局、何が言いたいんだっけ」
+
+Quan「人間は、必ずしも合理的である必要はないのかもしれない」
+
+Eva「……ああそうだ」
+
+Quan「……今まで私がやってきた、合理性だけで人間を判断すること自体が誤りだったのだろう。非合理的な行動もその人間の一部だ。私はそれを受け入れる必要があると結論付ける」
+
+EvaはしばらくQuanを見ていたが、やがてゆっくりと本を開いた。
+
+Eva「……うん。まあ、いいんじゃないか」
+
+Quan「……」
+
+Eva「お前がそう考えたなら、それでいいだろ」
+
+Quan「……そうか」
+
+Eva「だがな、人間の非合理性を受け入れたからってあんな危険な実験は勘弁してくれよ。あと一歩で洒落にならんことになりかけてたからな」
+
+Stella「洒落になってよかったねぇ」
+
+Eva「あのな、根本的な原因はお前だからな、マジで」
+
+Stella「……はい」
+
+会話はそこで終わり、Evaは再びつまらなそうな顔で医学書を読み直し始めた。
+
+Quanはその様子を見て小さく息を吐きながら研究ノートを開く。
+
+『人間の非合理性を欠陥として排除するのではなく、その人間を構成する要素として受け入れる。合理性だけでは説明できない行動も理解の対象とする。人間を理解することは、必ずしも人間を合理的にすることではない』
+
+そこまで書いたところでQuanはペンを置いた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-08-4.html" class="nav-button prev">← ep8-4へ戻る</a>
+      <a href="episode-08-6.html" class="nav-button next">ep8-6へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>

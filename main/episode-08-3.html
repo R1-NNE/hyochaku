@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>漂着 - ep8-3</title>
+  <style>
+    @font-face {
+      font-family: "OCR A Site";
+      src: local("OCR A Extended");
+      unicode-range: U+0000-007F;
+    }
+
+    :root {
+      --ink: #4d5b5f;
+      --ink-deep: rgba(42, 57, 62, 0.82);
+      --ink-soft: rgba(77, 91, 95, 0.14);
+      --paper: rgba(255, 255, 255, 0.72);
+      --line: rgba(91, 108, 113, 0.78);
+      --accent: #6fc3f2;
+      --font-main: "OCR A Site", "メイリオ", Meiryo, sans-serif;
+      --font-ja: "メイリオ", Meiryo, sans-serif;
+      --art-height: calc(100vw * 1.25878);
+      --layout-left: clamp(44px, 8vw, 120px);
+      --title-safe-right: 74vw;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: #fff;
+    }
+
+    body {
+      position: relative;
+      isolation: isolate;
+      min-height: max(100vh, var(--art-height));
+      margin: 0;
+      color: var(--ink);
+      font-family: var(--font-ja);
+      background-color: #fff;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image:
+        linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+        url("../418alt3.png");
+      background-position: center top, center top;
+      background-size: 100% 100%, 100% 100%;
+      background-repeat: no-repeat, no-repeat;
+      background-attachment: fixed;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      width: calc(100vw - var(--layout-left) - clamp(18px, 2.8vw, 36px));
+      min-height: max(100vh, var(--art-height));
+      margin-left: var(--layout-left);
+      padding: clamp(52px, 8vw, 92px) clamp(18px, 2.8vw, 36px) 64px;
+      margin-right: 0;
+    }
+
+    .section {
+      margin-bottom: clamp(28px, 5vw, 48px);
+    }
+
+    .ribbon {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      min-height: 46px;
+      margin-left: 0;
+      padding: 8px 58px 9px clamp(18px, 3vw, 34px);
+      color: #fff;
+      background: var(--ink-deep);
+      font-family: var(--font-main);
+      font-size: clamp(1.45rem, 4vw, 2.6rem);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0;
+      text-decoration: none;
+      text-transform: lowercase;
+      white-space: nowrap;
+      filter: drop-shadow(0 5px 9px rgba(33, 45, 48, 0.16));
+    }
+
+    .ribbon.small {
+      min-height: 36px;
+      padding-top: 7px;
+      padding-bottom: 7px;
+      padding-right: 44px;
+      font-size: clamp(1rem, 2.7vw, 1.55rem);
+    }
+
+    /* Episode Page Styles */
+
+    .intro-header {
+      margin-bottom: clamp(32px, 6vw, 52px);
+      padding-bottom: clamp(18px, 3vw, 28px);
+      border-bottom: 3px solid var(--line);
+      width: 100%;
+    }
+
+    .intro-content {
+      background: var(--paper);
+      border: 3px solid var(--line);
+      border-radius: 6px;
+      padding: clamp(24px, 4vw, 44px);
+      min-height: clamp(300px, 60vh, 600px);
+      margin-bottom: clamp(32px, 6vw, 52px);
+      line-height: 1.8;
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: rgba(62, 76, 80, 0.95);
+      white-space: pre-wrap;
+      overflow-wrap: break-word;
+    }
+
+    /* Navigation Buttons */
+    .nav-buttons {
+      display: flex;
+      gap: clamp(16px, 3vw, 24px);
+      margin-bottom: clamp(20px, 3vw, 32px);
+    }
+
+    .nav-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.9rem, 2vw, 1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .nav-button:hover,
+    .nav-button:focus-visible {
+      background: var(--paper);
+      outline: none;
+    }
+
+    .nav-button.prev:hover {
+      transform: translateX(-5px);
+    }
+
+    .nav-button.next:hover {
+      transform: translateX(5px);
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(28px, 5vw, 48px);
+      padding: 8px 16px;
+      background: rgba(255, 255, 255, 0.5);
+      border: 2px solid var(--line);
+      border-radius: 4px;
+      color: var(--ink);
+      font-family: var(--font-main);
+      font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+      text-decoration: none;
+      transition: background-color 150ms ease, transform 150ms ease;
+      cursor: pointer;
+    }
+
+    .back-link:hover,
+    .back-link:focus-visible {
+      background: var(--paper);
+      transform: translateX(-5px);
+      outline: none;
+    }
+
+    @media (max-width: 660px) {
+      .page {
+        width: 100%;
+        margin-left: 0;
+        padding-top: 42px;
+      }
+
+      .nav-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="section intro-header" aria-labelledby="intro-title">
+      <h1 id="intro-title" class="ribbon small">ep8:"続・七曜魔法研究" sec-3</h1>
+
+    </section>
+
+    <section class="section" aria-labelledby="intro-title">
+      <div id="content" class="intro-content">
+
+翌日、研究室には妙な停滞感が漂っていた。
+
+地下実験棟は使用停止。機材の点検と破損箇所の修復が終わるまで七曜魔法の実験は一旦中断となった。何より、実験の中心人物であるStellaが負傷してしまったのだから続けられる理由が無かった。
+
+当のStellaはというと、幸い命に別状はなかったものの腕や肩の火傷に加えて頭を打った影響もあり、暫く安静にしているようEvaから厳命されていた。
+
+研究室のソファに横たわるStella。その傍らには水と薬、そしてみんなが適当に持ってきたらしい菓子が置かれている。
+
+Eva「一週間くらい大人しくしてろ。余計なことし始めたら縛り付けるからな」
+
+Stella「ええー……でも、研究室の仕事が……」
+
+Eva「これ以上、仕事を、増やすんじゃ、ねえ」
+
+Stella「はい……」
+
+Sol「はー、コイツが動けないおかげで実験もなしだし、つまり休日だな今日は」
+
+Veris「休日ではありませんから！　それにStellaさんがケガしたことを何だと思っているんですか！」
+
+Sol「いや……事故じゃんもうアレは」
+
+Veris「そういう話をしているんじゃありません！！　もうほんとにアンタはくどくどくどくど……」
+
+Stella「静かにしてよ～……」
+
+Veris「…………」
+
+Eva「ふふっｗ」
+
+安静期間は必要なものの深刻なケガではなかったので、研究室はすぐにいつも通りの騒がしさを取り戻していた。
+
+……ただ一人を除いて。Quanだけが会話に加わらず、机に向かい続けていた。
+
+目の前には火輪の実験記録と事故の直前までに得られた数値が並んでいる。出力、圧力、温度、制御の精度と、どこを見ても技術的な進歩は明白である。
+
+だが、問題はその先にあった。あの時、なぜ制御が破綻したのかという原因そのものはある程度推測できるし、出力を上げすぎたことで想定外の挙動を引き起こしたというのなら、条件を見直し、制御方式を改善すればいいだけである。
+
+だが、Quanの頭の中ではどうもそんな単純な話でこの件が解決するとは思っていなかった。
+
+Nebulaのノートのあの言葉と、引き起こした事故。
+
+Quan「……」
+
+ひとしきり一人で何か考えた後、Quanはペンを置いた。
+
+Quan「……Stella」
+
+Stella「んー？　なあに、Quanちゃん」
+
+Quan「お前、あの時なぜ防護壁の近くにいた」
+
+Stella「え？」
+
+Quan「あの時、私は今までで最大出力の試験をしていたにも関わらずずっと至近距離で見ていただろう。責めるつもりは毛頭無いが、何故そんなことをした」
+
+Stella「あー……それはね」
+
+Stellaは少しだけ考え始める。ちゃんと真面目な顔で考えていたとは思うが、やがて返ってきた答えは、Quanの予想していたどの方向性とも違っていた。
+
+Stella「なんか……珍しい顔してたから気になっちゃって」
+
+Quan「……何だと？」
+
+Stella「なんかさ、Quanちゃんって普段は実験しててもすーっごく冷静でしょ？　でもあの時だけ、なーんか難しい顔してたの。いつもと違うこと考えてるのかなーって思って、気になってずっと見たくなっちゃって」
+
+Quan「……」
+
+Stella「あはは……でも、まさかあんなことになるとは思わなかったかも」
+
+Quanはしばらく黙っていた。
+
+その表情は、呆れているようにも、何かを必死に理解しようとしているようにも見えた。
+
+Quan「お前は、自分が何を言っているのか分かっているのか」
+
+Stella「えっ、変なこと言ったかな！？」
+
+Quan「危険な実験の最中に、私の顔が普段と違ったという理由で接近したのか？」
+
+Stella「う、うん」
+
+Quan「……合理性の欠片もないな」
+
+Stella「そ、そうかな……」
+
+Stellaはしょんぼりと肩を落としかけたが、傷に響いたのかすぐに顔をしかめた。
+
+Stella「いたた……」
+
+Eva「おい動くな。何してんださっきからお前ら」
+
+Stella「ごめん……」
+
+Quan「……そんなに私の顔は変だったか」
+
+Stella「うーん、なんて言えばいいのかな……Quanちゃん、なんかすごく頑張ってる感じだったから、何か困ってるのかなって思ったんだよね」
+
+Quan「……」
+
+Stella「七曜魔法のこともまだぜーんぜん分かってない中で、Quanちゃんが一歩前に進んでくれてすっごく頑張ってくれてるの見ると、何かしてあげたくなっちゃったというかね……まあ、その結果こうなっちゃったんだけど……」
+
+Stellaは困ったように笑った。Quanは返事をしなかった。
+
+最初に聞いた話だと単に危険を軽視した結果だと思っていたが、七曜魔法について熟知しているStellaがその危険性を理解していなかったわけではないだろう。普段もQuanの作業を邪魔をしないくらいには配慮の行き届いた人物である。それでも、あの時だけ何か困っているのではないかと思い、手助けできないかと考えたらしい。
+
+その判断に明確な合理性があるとは言い難いが、本人の中では一応の筋が通っている。
+
+Quan「……お前は、私が困っていると判断した根拠を説明できるか」
+
+Stella「ええっ、こ、根拠？」
+
+Quan「表情の変化だけで私に何らかの問題が発生していると推測したのだろう。ほかに何かあったのか」
+
+Stella「うーん……なんとなく？」
+
+Quan「……」
+
+Stella「いや、だってさ、いつもと違うなって思ったんだもん！　言葉にするのは難しいよ」
+
+Sol「まあ、いつもと違うなというのは私も思ったよ」
+
+Veris「アレに近づこうとは私は思いませんでしたけど……」
+
+Quan「……それでも、お前は行動した」
+
+Stella「……うん。気になっちゃったから」
+
+Quanは再び黙り込んだ。
+
+説明可能な根拠がまるでない。危険を伴う行動を自覚した上で行動して、結果として負傷したというのは普段の彼女の分析対象として見ればあまりにも問題の多い判断だし、すぐに切り捨てるべき対象である。
+
+それなのに。
+
+Quan「……お前は、私が失敗するかもしれないとは考えなかったのか」
+
+Stella「か、考えたよ？　実験だし、失敗することもあるでしょ？」
+
+Quan「ならば、尚更何故だ」
+
+Stella「うーん……それでもQuanちゃんが頑張ってたのは知ってたし……何かあったら、私も手伝えるかもって……」
+
+Quan「……」
+
+Stella「それに、Quanちゃんが一生懸命考えてるのに私だけ何もしないで遠くから見てるのも、なんだかなあって」
+
+段々と曖昧な会話になっていき、二人とも言葉が途切れた。
+
+Quanは再び机の上の実験記録に目を落とす。あの時の自分は何を考えていたのだろう。
+
+事故が起きたからといってそれまでの判断がすべて誤りだったことにはならないが、技術的な改善を続けるだけであの違和感は最後まで解消されなかった。むしろ、性能が向上するほど何かが足りないという感覚が強くなっていたまである。
+
+そして今、目の前のStellaはその足りない何かを説明できないまま、危険を承知で自分のそばに来たと言っている。
+
+これまでにないくらい考え込むQuan。やがて出た言葉は意外だった。
+
+Quan「……合理的な判断は、理想ではないのか」
+
+Stella「えっ？」
+
+Quan「いや……独り言だ」
+
+Sol「合理的っていいことじゃないの？　いっつも言ってるじゃん」
+
+Quan「そうだ」
+
+Stella「じゃあ、何が問題なの？」
+
+Quan「……分からない」
+
+Eva「……珍しいな、そこまで詰まってるの」
+
+Stella「Quanちゃんだって分からないことがあるんだねえ」
+
+Quan「……人を何だと思っている」
+
+Sol「理屈屋なら世の事人の事なら何でも分かってるのかと思ってた」
+
+Quan「そんなわけがないだろう」
+
+Quanの表情は硬いままだったが、Stellaは柔らかい笑みを返した。
+
+Stella「そっかあ。ふふ、なんか安心した」
+
+Quan「……何に安心しているんだ」
+
+Stella「Quanちゃんにも分からないことがあるなら、私が分からないことがいっぱいあるのもそんなに悪いことじゃないのかなー、って」
+
+Quanは返答に窮した。
+
+Stellaはいつもこうだ。何かを深く考えているようで、大抵こちらの想定から大きく外れた結論に飛びつくし、それを指摘すれば本人は不思議そうな顔をする。
+
+だが、今の言葉を単なる間違いとして切り捨てることはできなかった。
+
+Quan「……その結論には飛躍がある」
+
+Stella「えへへ、そう？」
+
+Quan「褒めていない」
+
+Eva「昨日は大変だったけどなんかいつも通りに戻ってきたな。よかったよかった」
+
+Veris「……あの」
+
+ソファの反対側で実験記録を整理していたVerisがようやく口を挟んできた。
+
+Veris「その……Stellaさんは別として、いつまで与太話を続けてるんですか」
+
+Eva「至って真面目な話してるだろ」
+
+Veris「いや……さっきから合理性がどうたらこうたらと、研究に関係あるんですか？」
+
+Quan「……あるかもしれない」
+
+Veris「えっ？」
+
+Quan「……いや、何でもない。Verisの言う通りだ、さっさと研究を再開しよう」
+
+Sol「えーヤダ！！」
+
+Eva「Stellaの容態が良くない、だからサボ……もう少し診たい」
+
+Stella「もう治るまでやる事ないでしょ？」
+
+Eva「余計な事言うな！！」
+
+Veris「働け！！！！」
+
+Quan「…………」
+
+嫌々ながら研究資料を手に取り始める外野をよそに、Quanはまだ何か考えていた。
+
+      </div>
+    </section>
+
+    <div class="nav-buttons">
+      <a href="episode-08-2.html" class="nav-button prev">← ep8-2へ戻る</a>
+      <a href="episode-08-4.html" class="nav-button next">ep8-4へ進む →</a>
+    </div>
+
+    <a href="../index.html" class="back-link">← 戻る</a>
+  </main>
+</body>
+</html>
